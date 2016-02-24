@@ -12,7 +12,9 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
     echo $this->Form->input('excerpt');
     echo $this->Form->input('content');
     echo $this->Form->input('featured_img');
-    echo $this->Form->input('category');
+    echo $this->Form->input('category',[
+        'options' => $categories,
+    ]);
     echo $this->Form->input('created_by');
     echo $this->Form->input('modified_by');
     echo $this->Form->input('publish_date');

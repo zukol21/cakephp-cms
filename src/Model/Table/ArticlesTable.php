@@ -13,6 +13,7 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+    public $categories = [];
 
     /**
      * Initialize method
@@ -27,6 +28,7 @@ class ArticlesTable extends Table
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');
+        $this->setCategories();
 
         $this->addBehavior('Timestamp');
     }
@@ -95,5 +97,49 @@ class ArticlesTable extends Table
     {
         $rules->add($rules->isUnique(['slug']));
         return $rules;
+    }
+
+    /**
+     * Returns the label of the category based on the provided valid key.
+     *
+     * @param  string $key Valid key of the categories property
+     * @return string
+     */
+    public function getCategoryLabel($key = null)
+    {
+        if (empty($this->categories) && is_array($categories)) {
+            throw new \RuntimeException('Categories property is empty or not array.');
+        }
+
+        if (!isset($this->categories[$key])) {
+            return false;
+        }
+
+        return $this->categories[$key];
+    }
+
+    /**
+     * Accessor method of categories property
+     *
+     * @return array
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Mutator method of categories property
+     *
+     * @return void
+     */
+    public function setCategories()
+    {
+        $this->categories = [
+            'day-msg' => __d('primetel', 'Message of the day'),
+            'calendar' => __d('primetel', 'Calendar'),
+            'ads-promos' => __d('primetel', 'Advertising & Promotions'),
+            'telecom' => __d('primetel', 'TELECOM News'),
+        ];
     }
 }
