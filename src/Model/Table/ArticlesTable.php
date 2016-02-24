@@ -71,14 +71,6 @@ class ArticlesTable extends Table
             ->notEmpty('category');
 
         $validator
-            ->requirePresence('created_by', 'create')
-            ->notEmpty('created_by');
-
-        $validator
-            ->requirePresence('modified_by', 'create')
-            ->notEmpty('modified_by');
-
-        $validator
             ->date('publish_date')
             ->requirePresence('publish_date', 'create')
             ->notEmpty('publish_date');
