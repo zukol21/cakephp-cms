@@ -10,10 +10,6 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
     </div>
     <table class="table table-striped" cellpadding="0" cellspacing="0">
         <tr>
-            <td><?= __('Id') ?></td>
-            <td><?= h($article->id) ?></td>
-        </tr>
-        <tr>
             <td><?= __('Title') ?></td>
             <td><?= h($article->title) ?></td>
         </tr>

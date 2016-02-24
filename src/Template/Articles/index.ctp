@@ -6,7 +6,6 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
 <table class="table table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th><?= $this->Paginator->sort('id'); ?></th>
             <th><?= $this->Paginator->sort('title'); ?></th>
             <th><?= $this->Paginator->sort('slug'); ?></th>
             <th><?= $this->Paginator->sort('featured_img'); ?></th>
@@ -19,7 +18,6 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
     <tbody>
         <?php foreach ($articles as $article): ?>
         <tr>
-            <td><?= h($article->id) ?></td>
             <td><?= h($article->title) ?></td>
             <td><?= h($article->slug) ?></td>
             <td><?= h($article->featured_img) ?></td>
