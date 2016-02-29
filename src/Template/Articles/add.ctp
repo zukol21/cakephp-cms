@@ -9,8 +9,8 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
     <?php
     echo $this->Form->input('title');
     echo $this->Form->input('slug');
-    echo $this->Form->input('excerpt');
-    echo $this->Form->input('content');
+    echo $this->Form->input('excerpt', ['type' => 'textarea', 'id' => 'editor1']);
+    echo $this->Form->input('content', ['type' => 'textarea', 'id' => 'editor2']);
     echo $this->Form->input('featured_img');
     echo $this->Form->input('category',[
         'options' => $categories,
