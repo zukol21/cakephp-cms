@@ -63,10 +63,6 @@ class ArticlesTable extends Table
             ->notEmpty('content');
 
         $validator
-            ->requirePresence('featured_img', 'create')
-            ->notEmpty('featured_img');
-
-        $validator
             ->requirePresence('category', 'create')
             ->notEmpty('category');
 
