@@ -60,6 +60,10 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
+                //Upload the featured image when there is one.
+                if (!$this->request->data['file']['error']) {
+                    $this->_upload($article->get('id'));
+                }
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
@@ -117,5 +121,27 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Uploads and stores the related file.
+     *
+     * @param  int|null $articleId id of the relate slide
+     * @return boolean           flag
+     */
+    protected function _upload($articleId = null)
+    {
+        $entity = $this->Articles->ArticleFeaturedImages->newEntity();
+        $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
+            $entity,
+            $this->request->data
+        );
+
+        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
+            $this->Flash->set(__('Upload successful'));
+            return true;
+        }
+
+        return false;
     }
 }
