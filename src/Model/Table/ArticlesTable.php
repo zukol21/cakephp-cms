@@ -31,6 +31,13 @@ class ArticlesTable extends Table
         $this->setCategories();
 
         $this->addBehavior('Timestamp');
+        $this->hasMany('ArticleFeaturedImages', [
+            'className' => 'Cms.ArticleFeaturedImages',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
+            ]
+        ]);
     }
 
     /**
