@@ -30,6 +30,12 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         <div class="form-group">
             <label class="control-label" for="featured-image">Featured Image sizes</label>
         </div>
+        <?php
+        /**
+         * @todo: Read the configuration and make the following dynamic. The application can override the config
+         * and have different sizes.
+         */
+        ?>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#small" aria-controls="small" role="tab" data-toggle="tab">Small</a></li>
