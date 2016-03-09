@@ -95,6 +95,10 @@ class ArticlesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
+                //Upload the featured image when there is one.
+                if (!$this->request->data['file']['error']) {
+                    $this->_upload($article->get('id'));
+                }
                 $this->Flash->success(__('The article has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
