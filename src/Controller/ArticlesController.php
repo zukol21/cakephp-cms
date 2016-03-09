@@ -22,6 +22,10 @@ class ArticlesController extends AppController
         foreach ($articles as $article) {
             $article->category = $this->Articles->getCategoryLabel($article->category);
         }
+        if ($articles->isEmpty()) {
+            $this->Flash->set(__('No articles were found. Please add one.'));
+            return $this->redirect(['action' => 'add']);
+        }
         $this->set(compact('articles'));
         $this->set('_serialize', ['articles']);
     }
