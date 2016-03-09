@@ -10,9 +10,9 @@ class ArticleFeaturedImagesTable extends ImageStorageTable
      * Please note this is a child of the ImageStorageTable.
      *
      * @see ImageStorageTable class
-     * @param  [type] $articleId [description]
-     * @param  [type] $entity    [description]
-     * @return [type]            [description]
+     * @param  uuid $articleId the id of the article
+     * @param  object $entity  Entity object
+     * @return boolean         Flag whether the record has got stored or not
      */
     public function uploadImage($articleId, $entity)
     {
