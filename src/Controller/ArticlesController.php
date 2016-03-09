@@ -90,7 +90,13 @@ class ArticlesController extends AppController
     public function edit($id = null)
     {
         $article = $this->Articles->get($id, [
-            'contain' => []
+            'contain' => [
+                'ArticleFeaturedImages' => [
+                    'sort' => [
+                        'created' => 'DESC'
+                    ]
+                ]
+            ]
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);

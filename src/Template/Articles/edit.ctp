@@ -19,6 +19,37 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
     echo $this->Form->input('modified_by');
     echo $this->Form->input('publish_date');
     ?>
+    <div class="form-group">
+        <label class="control-label" for="featured-image">Featured Image</label>
+        <?php
+        echo $this->Form->file('file');
+        echo $this->Form->error('file');
+        ?>
+    </div>
+    <div>
+        <div class="form-group">
+            <label class="control-label" for="featured-image">Featured Image sizes</label>
+        </div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#small" aria-controls="small" role="tab" data-toggle="tab">Small</a></li>
+            <li role="presentation"><a href="#medium" aria-controls="medium" role="tab" data-toggle="tab">Medium</a></li>
+            <li role="presentation"><a href="#large" aria-controls="large" role="tab" data-toggle="tab">Large</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="small">
+                <?= $this->Image->display($article->article_featured_images[0], 'small', ['class' => 'img-responsive']); ?>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="medium">
+                <?= $this->Image->display($article->article_featured_images[0], 'medium', ['class' => 'img-responsive']); ?>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="large">
+                <?= $this->Image->display($article->article_featured_images[0], 'large', ['class' => 'img-responsive']); ?>
+            </div>
+        </div>
+    </div>
 </fieldset>
-<?= $this->Form->button(__("Save")); ?>
+<?= $this->Form->button(__("Save"), ['class' => 'btn-primary']); ?>
 <?= $this->Form->end() ?>
