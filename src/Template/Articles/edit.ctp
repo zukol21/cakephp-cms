@@ -1,4 +1,5 @@
 <?php
+use Cake\Core\Configure;
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
 $this->assign('title', __d('QoboAdminPanel', 'Articles'));
 $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
@@ -26,36 +27,29 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         echo $this->Form->error('file');
         ?>
     </div>
-    <div>
+    <?php if (!empty($article->article_featured_images)) : ?>
         <div class="form-group">
-            <label class="control-label" for="featured-image">Featured Image sizes</label>
+            <label class="control-label" for="featured-image">Featured Image preview</label>
         </div>
         <?php
-        /**
-         * @todo: Read the configuration and make the following dynamic. The application can override the config
-         * and have different sizes.
-         */
+        $sizes = array_keys(Configure::read('FileStorage.imageSizes.' . $article->article_featured_images[0]->model));
         ?>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#small" aria-controls="small" role="tab" data-toggle="tab">Small</a></li>
-            <li role="presentation"><a href="#medium" aria-controls="medium" role="tab" data-toggle="tab">Medium</a></li>
-            <li role="presentation"><a href="#large" aria-controls="large" role="tab" data-toggle="tab">Large</a></li>
+            <?php foreach ($sizes as $index => $size) : ?>
+                <li role="presentation" class="<?= (!$index) ? 'active' : ''; ?>"><a href="#<?= $size ?>" aria-controls="<?= $size ?>" role="tab" data-toggle="tab"><?= ucwords($size) ?></a></li>
+            <?php endforeach; ?>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="small">
-                <?= $this->Image->display($article->article_featured_images[0], 'small', ['class' => 'img-responsive']); ?>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="medium">
-                <?= $this->Image->display($article->article_featured_images[0], 'medium', ['class' => 'img-responsive']); ?>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="large">
-                <?= $this->Image->display($article->article_featured_images[0], 'large', ['class' => 'img-responsive']); ?>
-            </div>
+            <?php foreach ($sizes as $index => $size) : ?>
+                <div role="tabpanel" class="tab-pane fade in <?= (!$index) ? 'active' : ''; ?>" id="<?= $size ?>">
+                    <?= $this->Image->display($article->article_featured_images[0], $size, ['class' => 'img-responsive']); ?>
+                </div>
+            <?php endforeach; ?>
         </div>
-    </div>
+    <?php endif; ?>
 </fieldset>
 <?= $this->Form->button(__("Save"), ['class' => 'btn-primary']); ?>
 <?= $this->Form->end() ?>
