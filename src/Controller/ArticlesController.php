@@ -18,7 +18,16 @@ class ArticlesController extends AppController
      */
     public function index()
     {
-        $articles = $this->paginate($this->Articles);
+        $query = $this->Articles
+            ->find('all')
+            ->contain([
+                'ArticleFeaturedImages' => [
+                    'sort' => [
+                        'created' => 'DESC'
+                    ]
+                ]
+            ]);
+        $articles = $this->paginate($query);
         foreach ($articles as $article) {
             $article->category = $this->Articles->getCategoryLabel($article->category);
         }
@@ -40,7 +49,13 @@ class ArticlesController extends AppController
     public function view($id = null)
     {
         $article = $this->Articles->get($id, [
-            'contain' => []
+            'contain' => [
+                'ArticleFeaturedImages' => [
+                    'sort' => [
+                        'created' => 'DESC'
+                    ]
+                ]
+            ]
         ]);
         $article->category = $this->Articles->getCategoryLabel($article->category);
         $this->set('article', $article);
