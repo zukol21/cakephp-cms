@@ -106,7 +106,7 @@ class ArticlesController extends AppController
                     $this->_upload($article->get('id'));
                 }
                 $this->Flash->success(__('The article has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', $article->get('id')]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
