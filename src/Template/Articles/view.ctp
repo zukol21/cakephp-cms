@@ -18,7 +18,13 @@ $this->assign('panel-title', __d('QoboAdminPanel', $article->title));
     </tr>
     <tr>
         <td><?= __('Featured Image') ?></td>
-        <td><?= $this->Image->display($article->article_featured_images[0], 'small'); ?></td>
+        <td>
+        <?=
+            isset($article->article_featured_images[0])
+            ? $this->Image->display($article->article_featured_images[0], 'small')
+            : __d('cms', 'No featured image');
+        ?>
+        </td>
     </tr>
     <tr>
         <td><?= __('Category') ?></td>

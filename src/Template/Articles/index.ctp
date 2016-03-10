@@ -28,7 +28,13 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
             <td><?= h($article->slug) ?></td>
             <td><?= h($article->category) ?></td>
             <td><?= h($article->created_by) ?></td>
-            <td><?= $this->Image->display($article->article_featured_images[0], 'small'); ?></td>
+            <td>
+            <?=
+                isset($article->article_featured_images[0])
+                ? $this->Image->display($article->article_featured_images[0], 'small')
+                : __d('cms', 'No featured image');
+            ?>
+            </td>
             <td class="actions">
                 <?= $this->Html->link('', ['action' => 'view', $article->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
                 <?= $this->Html->link('', ['action' => 'edit', $article->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>
