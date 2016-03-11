@@ -38,6 +38,13 @@ class ArticlesTable extends Table
                 'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
             ]
         ]);
+        $this->hasMany('ContentImages', [
+            'className' => 'Cms.ContentImages',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ContentImages.model' => 'ContentImage'
+            ]
+        ]);
     }
 
     /**

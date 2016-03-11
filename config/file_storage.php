@@ -53,6 +53,35 @@ Configure::write('FileStorage', [
                     'height' => 129
                 ]
             ]
+        ],
+        'ContentImage' => [
+            'large' => [
+                'thumbnail' => [
+                    'mode' => 'inbound',
+                    //Ratio 16:9
+                    //12 Columns based on Bootstrap 3
+                    'width' => 1170,
+                    'height' => 658
+                ]
+            ],
+            'medium' => [
+                'thumbnail' => [
+                    'mode' => 'inbound',
+                    //Ratio 16:9
+                    //8 Columns based on Bootstrap 3
+                    'width' => 750,
+                    'height' => 422
+                ]
+            ],
+            'small' => [
+                'thumbnail' => [
+                    'mode' => 'inbound',
+                    //Ratio 16:9
+                    //4 Columns based on Bootstrap 3
+                    'width' => 230,
+                    'height' => 129
+                ]
+            ]
         ]
     ]
 ]);
