@@ -15,9 +15,14 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         'options' => $categories,
     ]);
     echo $this->Form->input('publish_date');
-    echo $this->Form->file('file');
-    echo $this->Form->error('file');
     ?>
+    <div class="form-group">
+        <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
+        <?php
+        echo $this->Form->file('file');
+        echo $this->Form->error('file');
+        ?>
+    </div>
 </fieldset>
 <?= $this->Form->button(__("Add"), ['class' => 'btn-primary']); ?>
 <?= $this->Form->end() ?>

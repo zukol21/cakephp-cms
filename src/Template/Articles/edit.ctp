@@ -16,12 +16,10 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         'options' => $categories,
         'value' => $article->category,
     ]);
-    echo $this->Form->input('created_by');
-    echo $this->Form->input('modified_by');
     echo $this->Form->input('publish_date');
     ?>
     <div class="form-group">
-        <label class="control-label" for="featured-image">Featured Image</label>
+        <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
         <?php
         echo $this->Form->file('file');
         echo $this->Form->error('file');
