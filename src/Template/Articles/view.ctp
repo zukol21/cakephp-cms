@@ -10,11 +10,11 @@ $this->assign('panel-title', __d('QoboAdminPanel', $article->title));
     </tr>
     <tr>
         <td><?= __('Excerpt') ?></td>
-        <td><?= $this->Text->autoParagraph(h($article->excerpt)); ?></td>
+        <td><?= $this->Text->autoParagraph($article->excerpt); ?></td>
     </tr>
     <tr>
         <td><?= __('Content') ?></td>
-        <td><?= $this->Text->autoParagraph(h($article->content)); ?></td>
+        <td><?= $this->Text->autoParagraph($article->content); ?></td>
     </tr>
     <tr>
         <td><?= __('Featured Image') ?></td>
