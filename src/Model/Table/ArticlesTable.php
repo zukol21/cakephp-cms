@@ -31,6 +31,13 @@ class ArticlesTable extends Table
         $this->setCategories();
 
         $this->addBehavior('Timestamp');
+        $this->hasMany('ArticleFeaturedImages', [
+            'className' => 'Cms.ArticleFeaturedImages',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
+            ]
+        ]);
     }
 
     /**
@@ -61,10 +68,6 @@ class ArticlesTable extends Table
         $validator
             ->requirePresence('content', 'create')
             ->notEmpty('content');
-
-        $validator
-            ->requirePresence('featured_img', 'create')
-            ->notEmpty('featured_img');
 
         $validator
             ->requirePresence('category', 'create')
@@ -133,5 +136,25 @@ class ArticlesTable extends Table
             'ads-promos' => __d('primetel', 'Advertising & Promotions'),
             'telecom' => __d('primetel', 'TELECOM News'),
         ];
+    }
+
+    /**
+     * Reusable Query that return articles with the latest associated image.
+     *
+     * @param  Query  $query   To proceess it
+     * @param  array  $options Extra options can be passed.
+     * @return Query  $query   Return the query object which can be chained as usual.
+     */
+    public function findWithLatestImage(Query $query, array $options)
+    {
+        $query = $query
+            ->find('all')
+            ->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
+        if (isset($options['id'])) {
+            $query = $query
+                ->where(['id' => $options['id']])
+                ->first();
+        }
+        return $query;
     }
 }

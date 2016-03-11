@@ -15,10 +15,9 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         <tr>
             <th><?= $this->Paginator->sort('title'); ?></th>
             <th><?= $this->Paginator->sort('slug'); ?></th>
-            <th><?= $this->Paginator->sort('featured_img'); ?></th>
             <th><?= $this->Paginator->sort('category'); ?></th>
-            <th><?= $this->Paginator->sort('created_by'); ?></th>
-            <th><?= $this->Paginator->sort('modified_by'); ?></th>
+            <th><?= $this->Paginator->sort('Author'); ?></th>
+            <th><?= __d('cms', 'Featured Image'); ?></th>
             <th class="actions"><?= __('Actions'); ?></th>
         </tr>
     </thead>
@@ -27,10 +26,15 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         <tr>
             <td><?= h($article->title) ?></td>
             <td><?= h($article->slug) ?></td>
-            <td><?= h($article->featured_img) ?></td>
             <td><?= h($article->category) ?></td>
             <td><?= h($article->created_by) ?></td>
-            <td><?= h($article->modified_by) ?></td>
+            <td>
+            <?=
+                isset($article->article_featured_images[0])
+                ? $this->Image->display($article->article_featured_images[0], 'small')
+                : __d('cms', 'No featured image');
+            ?>
+            </td>
             <td class="actions">
                 <?= $this->Html->link('', ['action' => 'view', $article->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
                 <?= $this->Html->link('', ['action' => 'edit', $article->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>

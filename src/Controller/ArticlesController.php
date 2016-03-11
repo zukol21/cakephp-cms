@@ -18,9 +18,14 @@ class ArticlesController extends AppController
      */
     public function index()
     {
-        $articles = $this->paginate($this->Articles);
+        $query = $this->Articles->find('withLatestImage');
+        $articles = $this->paginate($query);
         foreach ($articles as $article) {
             $article->category = $this->Articles->getCategoryLabel($article->category);
+        }
+        if ($articles->isEmpty()) {
+            $this->Flash->set(__('No articles were found. Please add one.'));
+            return $this->redirect(['action' => 'add']);
         }
         $this->set(compact('articles'));
         $this->set('_serialize', ['articles']);
@@ -35,9 +40,7 @@ class ArticlesController extends AppController
      */
     public function view($id = null)
     {
-        $article = $this->Articles->get($id, [
-            'contain' => []
-        ]);
+        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
         $article->category = $this->Articles->getCategoryLabel($article->category);
         $this->set('article', $article);
         $this->set('_serialize', ['article']);
@@ -60,6 +63,10 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
+                //Upload the featured image when there is one.
+                if (!$this->request->data['file']['error']) {
+                    $this->_upload($article->get('id'));
+                }
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
@@ -81,14 +88,16 @@ class ArticlesController extends AppController
      */
     public function edit($id = null)
     {
-        $article = $this->Articles->get($id, [
-            'contain' => []
-        ]);
+        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
+                //Upload the featured image when there is one.
+                if (!$this->request->data['file']['error']) {
+                    $this->_upload($article->get('id'));
+                }
                 $this->Flash->success(__('The article has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', $article->get('id')]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
@@ -117,5 +126,27 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Uploads and stores the related file.
+     *
+     * @param  int|null $articleId id of the relate slide
+     * @return boolean           flag
+     */
+    protected function _upload($articleId = null)
+    {
+        $entity = $this->Articles->ArticleFeaturedImages->newEntity();
+        $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
+            $entity,
+            $this->request->data
+        );
+
+        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
+            $this->Flash->set(__('Upload successful'));
+            return true;
+        }
+
+        return false;
     }
 }
