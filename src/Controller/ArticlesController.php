@@ -40,7 +40,7 @@ class ArticlesController extends AppController
      */
     public function view($id = null)
     {
-        $article = $this->Articles->find('withLatestImage')->first();
+        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
         $article->category = $this->Articles->getCategoryLabel($article->category);
         $this->set('article', $article);
         $this->set('_serialize', ['article']);
@@ -88,7 +88,7 @@ class ArticlesController extends AppController
      */
     public function edit($id = null)
     {
-        $article = $this->Articles->find('withLatestImage')->first();
+        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {

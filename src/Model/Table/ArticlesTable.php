@@ -147,6 +147,14 @@ class ArticlesTable extends Table
      */
     public function findWithLatestImage(Query $query, array $options)
     {
-        return $query->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
+        $query = $query
+            ->find('all')
+            ->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
+        if (isset($options['id'])) {
+            $query = $query
+                ->where(['id' => $options['id']])
+                ->first();
+        }
+        return $query;
     }
 }
