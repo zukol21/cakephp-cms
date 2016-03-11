@@ -18,15 +18,7 @@ class ArticlesController extends AppController
      */
     public function index()
     {
-        $query = $this->Articles
-            ->find('all')
-            ->contain([
-                'ArticleFeaturedImages' => [
-                    'sort' => [
-                        'created' => 'DESC'
-                    ]
-                ]
-            ]);
+        $query = $this->Articles->find('withLatestImage');
         $articles = $this->paginate($query);
         foreach ($articles as $article) {
             $article->category = $this->Articles->getCategoryLabel($article->category);
@@ -48,15 +40,7 @@ class ArticlesController extends AppController
      */
     public function view($id = null)
     {
-        $article = $this->Articles->get($id, [
-            'contain' => [
-                'ArticleFeaturedImages' => [
-                    'sort' => [
-                        'created' => 'DESC'
-                    ]
-                ]
-            ]
-        ]);
+        $article = $this->Articles->find('withLatestImage')->first();
         $article->category = $this->Articles->getCategoryLabel($article->category);
         $this->set('article', $article);
         $this->set('_serialize', ['article']);
@@ -104,15 +88,7 @@ class ArticlesController extends AppController
      */
     public function edit($id = null)
     {
-        $article = $this->Articles->get($id, [
-            'contain' => [
-                'ArticleFeaturedImages' => [
-                    'sort' => [
-                        'created' => 'DESC'
-                    ]
-                ]
-            ]
-        ]);
+        $article = $this->Articles->find('withLatestImage')->first();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {

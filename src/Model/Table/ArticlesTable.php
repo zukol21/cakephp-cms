@@ -137,4 +137,16 @@ class ArticlesTable extends Table
             'telecom' => __d('primetel', 'TELECOM News'),
         ];
     }
+
+    /**
+     * Reusable Query that return articles with the latest associated image.
+     *
+     * @param  Query  $query   To proceess it
+     * @param  array  $options Extra options can be passed.
+     * @return Query  $query   Return the query object which can be chained as usual.
+     */
+    public function findWithLatestImage(Query $query, array $options)
+    {
+        return $query->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
+    }
 }
