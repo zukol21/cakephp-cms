@@ -64,7 +64,6 @@ class ArticlesTable extends Table
             ->notEmpty('title');
 
         $validator
-            ->requirePresence('slug', 'create')
             ->notEmpty('slug')
             ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
