@@ -1,6 +1,6 @@
 <?php
 // I am useless without an id.
-if (!isset($id) && !empty($id)) {
+if (!isset($id) && empty($id)) {
     return false;
 }
 echo $this->Html->script('//cdn.ckeditor.com/4.5.7/standard-all/ckeditor.js', ['block' => 'scriptBottom']);
