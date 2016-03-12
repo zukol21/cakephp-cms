@@ -14,7 +14,7 @@ class ArticlesController extends AppController
     /**
      * Index method
      *
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function index()
     {
@@ -148,5 +148,35 @@ class ArticlesController extends AppController
         }
 
         return false;
+    }
+
+    /**
+     * Uploads the files from the CKeditor.
+     *
+     * @link http://docs.ckeditor.com/#!/guide/dev_file_upload
+     * @param  int|null $articleId id of the relate slide
+     * @return void
+     */
+    public function uploadFromEditor($articleId = null)
+    {
+        $result = [];
+        $this->request->is(['ajax']);
+        if (!$this->request->data['upload']['error']) {
+            $file = ['file' => $this->request->data['upload']];
+            $entity = $this->Articles->ContentImages->newEntity();
+            $entity = $this->Articles->ContentImages->patchEntity(
+                $entity,
+                $file
+            );
+            if ($this->Articles->ContentImages->uploadImage($articleId, $entity)) {
+                $result['uploaded'] = 1;
+                $result['url'] = $entity->path;
+            }
+        } else {
+            $result['uploaded'] = 0;
+            $result['error']['message'] = __d('cms', 'Failed to upload.');
+        }
+        $this->set('result', $result);
+        $this->set('_serialize', 'result');
     }
 }
