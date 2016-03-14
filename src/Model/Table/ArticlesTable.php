@@ -171,5 +171,21 @@ class ArticlesTable extends Table
     public function beforeRules(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         $slug = Inflector::slug(strtolower($entity->title));
+        $notfound = false;
+        $i = 0;
+        do {
+            if ($this->exists(['slug' => $slug])) {
+                // First iteration.
+                if (!$i) {
+                    $slug .= '-';
+                }
+                $i++;
+                $slug = substr($slug, 0, strrpos($slug, '-')) . '-' . $i;
+            } else {
+                $notfound = true;
+            }
+        } while (!$notfound);
+
+        $entity->slug = $slug;
     }
 }
