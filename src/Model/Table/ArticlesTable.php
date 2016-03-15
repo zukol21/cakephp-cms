@@ -1,9 +1,13 @@
 <?php
 namespace Cms\Model\Table;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Entity\Article;
 
@@ -64,7 +68,6 @@ class ArticlesTable extends Table
             ->notEmpty('title');
 
         $validator
-            ->requirePresence('slug', 'create')
             ->notEmpty('slug')
             ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
@@ -163,5 +166,26 @@ class ArticlesTable extends Table
                 ->first();
         }
         return $query;
+    }
+
+    public function beforeRules(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $slug = Inflector::slug(strtolower($entity->title));
+        $notfound = false;
+        $i = 0;
+        do {
+            if ($this->exists(['slug' => $slug])) {
+                // First iteration.
+                if (!$i) {
+                    $slug .= '-';
+                }
+                $i++;
+                $slug = substr($slug, 0, strrpos($slug, '-')) . '-' . $i;
+            } else {
+                $notfound = true;
+            }
+        } while (!$notfound);
+
+        $entity->slug = $slug;
     }
 }

@@ -10,7 +10,6 @@ list($idExcerpt, $idContent) = $ckeditorIds;
     <legend><?= __('Add {0}', ['Article']) ?></legend>
     <?php
     echo $this->Form->input('title');
-    echo $this->Form->input('slug');
     echo $this->Form->input('excerpt', ['type' => 'textarea', 'id' => $idExcerpt]);
     echo $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]);
     echo $this->Form->input('category',[
