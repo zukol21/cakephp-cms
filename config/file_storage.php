@@ -49,8 +49,8 @@ if (!Configure::check('FileStorage.imageSizes.ArticleFeaturedImage')) {
                 'mode' => 'inbound',
                 //Ratio 16:9
                 //4 Columns based on Bootstrap 3
-                'width' => 262.5,
-                'height' => 148
+                'width' => 260,
+                'height' => 146
             ]
         ]
     ]);
