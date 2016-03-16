@@ -22,69 +22,39 @@ $listener = new BaseListener([
 ]);
 
 EventManager::instance()->on($listener);
-Configure::write('FileStorage', [
-// Configure image versions on a per model base
-    'imageSizes' => [
-        'ArticleFeaturedImage' => [
-            'large' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //12 Columns based on Bootstrap 3
-                    'width' => 1170,
-                    'height' => 658
-                ]
-            ],
-            'medium' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //8 Columns based on Bootstrap 3
-                    'width' => 750,
-                    'height' => 422
-                ]
-            ],
-            'small' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //4 Columns based on Bootstrap 3
-                    'width' => 230,
-                    'height' => 129
-                ]
+
+// Allow the app or other plugin to override this config.
+if (!Configure::check('FileStorage.imageSizes.ArticleFeaturedImage')) {
+    Configure::write('FileStorage.imageSizes.ArticleFeaturedImage', [
+        'large' => [
+            'thumbnail' => [
+                'mode' => 'inbound',
+                //Ratio 16:9
+                //12 Columns based on Bootstrap 3
+                'width' => 1170,
+                'height' => 658
             ]
         ],
-        'ContentImage' => [
-            'large' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //12 Columns based on Bootstrap 3
-                    'width' => 1170,
-                    'height' => 658
-                ]
-            ],
-            'medium' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //8 Columns based on Bootstrap 3
-                    'width' => 750,
-                    'height' => 422
-                ]
-            ],
-            'small' => [
-                'thumbnail' => [
-                    'mode' => 'inbound',
-                    //Ratio 16:9
-                    //4 Columns based on Bootstrap 3
-                    'width' => 230,
-                    'height' => 129
-                ]
+        'medium' => [
+            'thumbnail' => [
+                'mode' => 'inbound',
+                //Ratio 16:9
+                //8 Columns based on Bootstrap 3
+                'width' => 750,
+                'height' => 422
+            ]
+        ],
+        'small' => [
+            'thumbnail' => [
+                'mode' => 'inbound',
+                //Ratio 16:9
+                //4 Columns based on Bootstrap 3
+                'width' => 230,
+                'height' => 129
             ]
         ]
-    ]
-]);
+    ]);
+}
 
 // This is very important! The hashes are needed to calculate the image versions!
 StorageUtils::generateHashes();
