@@ -135,15 +135,18 @@ class ArticlesTable extends Table
 
     /**
      * Mutator method of categories property
-     *
+     * @todo Removed harcoded categories and create new model for categories
      * @return void
      */
     public function setCategories()
     {
         $this->categories = [
-            'day-msg' => __d('primetel', 'Message of the day'),
-            'calendar' => __d('primetel', 'Calendar'),
             'ads-promos' => __d('primetel', 'Advertising & Promotions'),
+            'calendar' => __d('primetel', 'Calendar'),
+            'day-msg' => __d('primetel', 'Message of the day'),
+            'fun-corner' => __d('primetel', 'The fun corner'),
+            'marketing-ideas' => __d('primetel', 'Marketing ideas'),
+            'polls' => __d('primetel', 'Polls'),
             'telecom' => __d('primetel', 'TELECOM News'),
         ];
     }
