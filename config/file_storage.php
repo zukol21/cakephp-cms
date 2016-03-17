@@ -25,12 +25,12 @@ EventManager::instance()->on($listener);
 
 // Allow the app or other plugin to override this config.
 if (!Configure::check('FileStorage.imageSizes.ArticleFeaturedImage')) {
+    //Image dimension are based on Bootstrap columns using 16:9 ratio.
     Configure::write('FileStorage.imageSizes.ArticleFeaturedImage', [
         'large' => [
             'thumbnail' => [
                 'mode' => 'inbound',
-                //Ratio 16:9
-                //12 Columns based on Bootstrap 3
+                //col-12
                 'width' => 1170,
                 'height' => 658
             ]
@@ -38,8 +38,7 @@ if (!Configure::check('FileStorage.imageSizes.ArticleFeaturedImage')) {
         'medium' => [
             'thumbnail' => [
                 'mode' => 'inbound',
-                //Ratio 16:9
-                //8 Columns based on Bootstrap 3
+                //col-8
                 'width' => 750,
                 'height' => 422
             ]
@@ -47,10 +46,17 @@ if (!Configure::check('FileStorage.imageSizes.ArticleFeaturedImage')) {
         'small' => [
             'thumbnail' => [
                 'mode' => 'inbound',
-                //Ratio 16:9
-                //4 Columns based on Bootstrap 3
+                //col-4
                 'width' => 260,
                 'height' => 146
+            ]
+        ],
+        'extra-small' => [
+            'thumbnail' => [
+                'mode' => 'inbound',
+                //col-2
+                'width' => 165,
+                'height' => 93
             ]
         ]
     ]);
