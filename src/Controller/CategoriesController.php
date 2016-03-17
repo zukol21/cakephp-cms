@@ -7,7 +7,8 @@ use Cms\Controller\AppController;
  * @todo
  * 1. Missing backend Actions
  * 2. Missing Model
- * 3. Application MUST create the View files for the frontend.
+ * 3. Application MUST create the View files for the frontend
+ * @link http://book.cakephp.org/3.0/en/plugins.html#overriding-plugin-templates-from-inside-your-application
  */
 class CategoriesController extends AppController
 {
