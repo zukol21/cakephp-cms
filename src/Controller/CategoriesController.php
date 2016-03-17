@@ -38,7 +38,7 @@ class CategoriesController extends AppController
             $this->redirect('/');
         }
         $categoryTitle = $categories[$category];
-        $latest = $articles->first();
-        $this->set(compact('articles', 'latest', 'categoryTitle'));
+
+        $this->set(compact('articles', 'categoryTitle'));
     }
 }
