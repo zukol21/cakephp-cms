@@ -7,6 +7,7 @@ use Cms\Controller\AppController;
  * @todo
  * 1. Missing backend Actions
  * 2. Missing Model
+ * 3. Application MUST create the View files for the frontend.
  */
 class CategoriesController extends AppController
 {
