@@ -141,18 +141,24 @@ class ArticlesTable extends Table
     public function setCategories()
     {
         $this->categories = [
+            'achievements' => __d('primetel', 'Achievements'),
             'ads-promos' => __d('primetel', 'Advertising & Promotions'),
             'calendar' => __d('primetel', 'Calendar'),
+            'company-information' => __d('primetel', 'Company information'),
             'day-msg' => __d('primetel', 'Message of the day'),
             'events' => __d('primetel', 'Events'),
             'fun-corner' => __d('primetel', 'The fun corner'),
+            'high-level' => __d('primetel', 'High-level'),
             'hirings' => __d('primetel', 'Hirings'),
             'internal-transfers' => __d('primetel', 'Internal transfers'),
             'marketing-ideas' => __d('primetel', 'Marketing ideas'),
             'offers' => __d('primetel', 'Offers for colleagues'),
+            'partnerships' => __d('primetel', 'Partnerships'),
             'polls' => __d('primetel', 'Polls'),
+            'press-releases' => __d('primetel', 'Press releases'),
+            'product-updates' => __d('primetel', 'Product updates'),
             'promotions' => __d('primetel', 'Promotions'),
-            'telecom' => __d('primetel', 'TELECOM News'),
+            'telecom' => __d('primetel', 'Telecom news'),
         ];
     }
 
