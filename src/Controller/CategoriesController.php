@@ -2,43 +2,109 @@
 namespace Cms\Controller;
 
 use Cms\Controller\AppController;
+
 /**
- * Categories Controller for handling the categories
- * @todo
- * 1. Missing backend Actions
- * 2. Missing Model
- * 3. Application MUST create the View files for the frontend
- * @link http://book.cakephp.org/3.0/en/plugins.html#overriding-plugin-templates-from-inside-your-application
+ * Categories Controller
+ *
+ * @property \Cms\Model\Table\CategoriesTable $Categories
  */
 class CategoriesController extends AppController
 {
-    /**
-     * Default method
-     *
-     * @todo Get the category data from the CategoriesModel.
-     * @param  string $category Category's slug
-     * @return void
-     */
-    public function display($category = null)
-    {
-        if (is_null($category)) {
-            $this->redirect('/');
-        }
-        $this->loadModel('Cms.Articles');
-        $categories = $this->Articles->getCategories();
-        if (!in_array($category, array_keys($categories))) {
-            $this->redirect('/');
-        }
-        $articles = $this->Articles
-            ->find('all')
-            ->where(['category' => $category])
-            ->order(['created' => 'DESC'])
-            ->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
-        if ($articles->isEmpty()) {
-            $this->redirect('/');
-        }
-        $categoryTitle = $categories[$category];
 
-        $this->set(compact('articles', 'categoryTitle'));
+    /**
+     * Index method
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function index()
+    {
+        $categories = $this->paginate($this->Categories);
+
+        $this->set(compact('categories'));
+        $this->set('_serialize', ['categories']);
+    }
+
+    /**
+     * View method
+     *
+     * @param string|null $id Category id.
+     * @return \Cake\Network\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $category = $this->Categories->get($id, [
+            'contain' => ['Articles']
+        ]);
+
+        $this->set('category', $category);
+        $this->set('_serialize', ['category']);
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $category = $this->Categories->newEntity();
+        if ($this->request->is('post')) {
+            $category = $this->Categories->patchEntity($category, $this->request->data);
+            if ($this->Categories->save($category)) {
+                $this->Flash->success(__('The category has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The category could not be saved. Please, try again.'));
+            }
+        }
+        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
+        $this->set(compact('category', 'articles'));
+        $this->set('_serialize', ['category']);
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Category id.
+     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $category = $this->Categories->get($id, [
+            'contain' => ['Articles']
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $category = $this->Categories->patchEntity($category, $this->request->data);
+            if ($this->Categories->save($category)) {
+                $this->Flash->success(__('The category has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The category could not be saved. Please, try again.'));
+            }
+        }
+        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
+        $this->set(compact('category', 'articles'));
+        $this->set('_serialize', ['category']);
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Category id.
+     * @return \Cake\Network\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $category = $this->Categories->get($id);
+        if ($this->Categories->delete($category)) {
+            $this->Flash->success(__('The category has been deleted.'));
+        } else {
+            $this->Flash->error(__('The category could not be deleted. Please, try again.'));
+        }
+        return $this->redirect(['action' => 'index']);
     }
 }
