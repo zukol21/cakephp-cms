@@ -49,6 +49,12 @@ class ArticlesTable extends Table
                 'ContentImages.model' => 'ContentImage'
             ]
         ]);
+        $this->belongsToMany('Categories', [
+            'foreignKey' => 'article_id',
+            'targetForeignKey' => 'category_id',
+            'joinTable' => 'articles_categories',
+            'className' => 'Cms.Categories'
+        ]);
     }
 
     /**
@@ -80,8 +86,8 @@ class ArticlesTable extends Table
             ->notEmpty('content');
 
         $validator
-            ->requirePresence('category', 'create')
-            ->notEmpty('category');
+            ->requirePresence('categories', 'create')
+            ->notEmpty('categories');
 
         $validator
             ->date('publish_date')
@@ -173,7 +179,10 @@ class ArticlesTable extends Table
     {
         $query = $query
             ->find('all')
-            ->contain(['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]]);
+            ->contain([
+                'Categories',
+                'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]
+            ]);
         if (isset($options['id'])) {
             $query = $query
                 ->where(['id' => $options['id']])
