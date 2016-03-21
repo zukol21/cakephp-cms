@@ -27,8 +27,8 @@ $this->assign('panel-title', __d('QoboAdminPanel', $article->title));
         </td>
     </tr>
     <tr>
-        <td><?= __('Category') ?></td>
-        <td><?= h($article->category) ?></td>
+        <td><?= __('Categories') ?></td>
+        <td><?= $this->Text->toList($categories) ?></td>
     </tr>
     <tr>
         <td><?= __('Created By') ?></td>

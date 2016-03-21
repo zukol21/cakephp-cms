@@ -15,18 +15,25 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
         <tr>
             <th><?= $this->Paginator->sort('title'); ?></th>
             <th><?= $this->Paginator->sort('slug'); ?></th>
-            <th><?= $this->Paginator->sort('category'); ?></th>
+            <th><?= $this->Paginator->sort('categories'); ?></th>
             <th><?= $this->Paginator->sort('Author'); ?></th>
             <th><?= __d('cms', 'Featured Image'); ?></th>
             <th class="actions"><?= __('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($articles as $article): ?>
+        <?php foreach ($articles as $article) : ?>
         <tr>
             <td><?= h($article->title) ?></td>
             <td><?= h($article->slug) ?></td>
-            <td><?= h($article->category) ?></td>
+            <?php
+            //Printing out categories
+            $categories = [];
+            foreach ($article->categories as $category) {
+                $categories[] = $category->name;
+            }
+            ?>
+            <td><?= $this->Text->toList($categories); ?></td>
             <td><?= h($article->created_by) ?></td>
             <td>
             <?=

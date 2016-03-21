@@ -20,9 +20,6 @@ class ArticlesController extends AppController
     {
         $query = $this->Articles->find('withLatestImage');
         $articles = $this->paginate($query);
-        foreach ($articles as $article) {
-            $article->category = $this->Articles->getCategoryLabel($article->category);
-        }
         if ($articles->isEmpty()) {
             $this->Flash->set(__('No articles were found. Please add one.'));
             return $this->redirect(['action' => 'add']);
@@ -41,8 +38,11 @@ class ArticlesController extends AppController
     public function view($id = null)
     {
         $article = $this->Articles->find('withLatestImage', ['id' => $id]);
-        $article->category = $this->Articles->getCategoryLabel($article->category);
-        $this->set('article', $article);
+        $categories = [];
+        foreach ($article->categories as $category) {
+            $categories[] = $category->name;
+        }
+        $this->set(compact('article', 'categories'));
         $this->set('_serialize', ['article']);
     }
 
@@ -74,7 +74,7 @@ class ArticlesController extends AppController
         }
         $this->set([
             'article' => $article,
-            'categories' => $this->Articles->getCategories(),
+            'categories' => $this->Articles->Categories->find('list'),
         ]);
         $this->set('_serialize', ['article']);
     }
@@ -104,7 +104,7 @@ class ArticlesController extends AppController
         }
         $this->set([
             'article' => $article,
-            'categories' => $this->Articles->getCategories(),
+            'categories' => $this->Articles->Categories->find('list'),
         ]);
         $this->set('_serialize', ['article']);
     }
