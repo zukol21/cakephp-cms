@@ -17,8 +17,6 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
-    public $categories = [];
-
     /**
      * Initialize method
      *
@@ -32,7 +30,6 @@ class ArticlesTable extends Table
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');
-        $this->setCategories();
 
         $this->addBehavior('Timestamp');
         $this->hasMany('ArticleFeaturedImages', [
@@ -108,64 +105,6 @@ class ArticlesTable extends Table
     {
         $rules->add($rules->isUnique(['slug']));
         return $rules;
-    }
-
-    /**
-     * Returns the label of the category based on the provided valid key.
-     *
-     * @param  string $key Valid key of the categories property
-     * @return string
-     */
-    public function getCategoryLabel($key = null)
-    {
-        if (empty($this->categories) && is_array($categories)) {
-            throw new \RuntimeException('Categories property is empty or not array.');
-        }
-
-        if (!isset($this->categories[$key])) {
-            return false;
-        }
-
-        return $this->categories[$key];
-    }
-
-    /**
-     * Accessor method of categories property
-     *
-     * @return array
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * Mutator method of categories property
-     * @todo Removed harcoded categories and create new model for categories
-     * @return void
-     */
-    public function setCategories()
-    {
-        $this->categories = [
-            'achievements' => __d('primetel', 'Achievements'),
-            'ads-promos' => __d('primetel', 'Advertising & Promotions'),
-            'calendar' => __d('primetel', 'Calendar'),
-            'company-information' => __d('primetel', 'Company information'),
-            'day-msg' => __d('primetel', 'Message of the day'),
-            'events' => __d('primetel', 'Events'),
-            'fun-corner' => __d('primetel', 'The fun corner'),
-            'high-level' => __d('primetel', 'High-level'),
-            'hirings' => __d('primetel', 'Hirings'),
-            'internal-transfers' => __d('primetel', 'Internal transfers'),
-            'marketing-ideas' => __d('primetel', 'Marketing ideas'),
-            'offers' => __d('primetel', 'Offers for colleagues'),
-            'partnerships' => __d('primetel', 'Partnerships'),
-            'polls' => __d('primetel', 'Polls'),
-            'press-releases' => __d('primetel', 'Press releases'),
-            'product-updates' => __d('primetel', 'Product updates'),
-            'promotions' => __d('primetel', 'Promotions'),
-            'telecom' => __d('primetel', 'Telecom news'),
-        ];
     }
 
     /**
