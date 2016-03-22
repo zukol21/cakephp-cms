@@ -87,7 +87,7 @@ class ArticlesTable extends Table
             ->notEmpty('categories');
 
         $validator
-            ->date('publish_date')
+            ->dateTime('publish_date')
             ->requirePresence('publish_date', 'create')
             ->notEmpty('publish_date');
 
