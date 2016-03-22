@@ -107,4 +107,39 @@ class CategoriesController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    /**
+     * Display method is usually used to populater category templates.
+     *
+     * @param  string $category Category's slug
+     * @return void
+     */
+    public function display($category = null)
+    {
+        $this->loadModel('Cms.Articles');
+        if (is_null($category)) {
+            $this->Flash->error(__d('cms', 'Please provide a category slug.'));
+            $this->redirect('/');
+        }
+        if (!$this->Articles->Categories->exists(['slug' => $category])) {
+            $this->Flash->error(__d('cms', 'The category does not exist.'));
+            $this->redirect('/');
+        }
+        $articles = $this->Articles
+            ->find('all')
+            ->contain([
+                'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]
+            ])
+            ->matching(
+                'Categories',
+                function ($q) use ($category) {
+                    return $q->where(['Categories.slug' => $category]);
+                }
+            );
+        $category = $this->Articles->Categories
+            ->find('all')
+            ->where(['slug' => $category])
+            ->first();
+        $this->set(compact('articles', 'category'));
+    }
 }
