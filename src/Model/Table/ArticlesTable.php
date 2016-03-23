@@ -130,6 +130,52 @@ class ArticlesTable extends Table
         return $query;
     }
 
+    /**
+     * Reusable query to find article per given category.
+     * Also, related featured images can be provided by sending the corresponding option.
+     *
+     * By default, `$options` will recognize the following keys:
+     *
+     * - category
+     * - featuredImage
+     *    - Could be either bool or array
+     *
+     * @param  Query  $query   Raw query object
+     * @param  array  $options Set of options
+     * @return Query  $query   Manipulated query object
+     */
+    public function findByCategory(Query $query, array $options)
+    {
+        $associated = [];
+
+        if (empty($options['category'])) {
+            return false;
+        }
+
+        if (!empty($options['featuredImage'])) {
+            if ($options['featuredImage'] === true) {
+                //Default options
+                $defaultOptions = ['sort' => ['created' => 'DESC']];
+                $associated = ['ArticleFeaturedImages' => $defaultOptions];
+            }
+
+            if (is_array($options['featuredImage'])) {
+                //Given options
+                $associated = ['ArticleFeaturedImages' => $options['featuredImage']];
+            }
+        }
+
+        $query->find('all');
+        $query->order(['Articles.created' => 'desc']);
+        $query->contain($associated);
+        $query->matching('Categories', function ($q) use ($options) {
+            return $q->where(['Categories.slug' => $options['category']]);
+        });
+
+        return $query;
+    }
+
+
     public function beforeRules(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         $slug = Inflector::slug(strtolower($entity->title));
