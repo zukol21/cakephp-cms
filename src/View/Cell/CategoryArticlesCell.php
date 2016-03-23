@@ -34,7 +34,7 @@ class CategoryArticlesCell extends Cell
         $article = $this->Articles->find('ByCategory', ['category' => $category, 'featuredImage' => true])->first();
         if ($article) {
             $article->excerpt = strip_tags($article->excerpt);
-            $article->excerpt = Text::truncate($article->excerpt, $excerptLength, ['ellipsis' => true]);
+            $article->excerpt = Text::truncate($article->excerpt, $excerptLength, ['ellipsis' => '...']);
         }
         $this->set(compact('category', 'title', 'article'));
     }
