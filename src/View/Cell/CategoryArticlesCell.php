@@ -9,7 +9,7 @@ use Cake\Utility\Text;
  */
 class CategoryArticlesCell extends Cell
 {
-    const EXCERPT_LENGTH = 200;
+    const EXCERPT_LENGTH = 150;
 
     /**
      * List of valid options that can be passed into this
@@ -18,6 +18,31 @@ class CategoryArticlesCell extends Cell
      * @var array
      */
     protected $_validCellOptions = [];
+
+    /**
+     * Default display method.
+     *
+     * @todo : At the moment, default view file is empty and SHOULD be extended by the application.
+     * We need to create a generic view to demonstrate the functionallity of the action.
+     * @param  string $category Category's name
+     * @return void
+     */
+    public function display($category = null)
+    {
+        $this->loadModel('Cms.Articles');
+        $articles = $this->Articles->find('ByCategory', ['category' => $category, 'featuredImage' => true]);
+
+        if (!$articles->isEmpty()) {
+            foreach ($articles as $article) {
+                $article->excerpt = strip_tags($article->excerpt);
+                $article->excerpt = Text::truncate($article->excerpt, self::EXCERPT_LENGTH, ['ellipsis' => '...']);
+            }
+        } else {
+            $articles = false;
+        }
+
+        $this->set(compact('articles'));
+    }
 
     /**
      * Single method for retrieving single article by category.
