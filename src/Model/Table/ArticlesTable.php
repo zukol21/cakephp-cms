@@ -175,6 +175,31 @@ class ArticlesTable extends Table
         return $query;
     }
 
+    /**
+     * Reusable query to find related articles.
+     *
+     * By default, `$options` will recognize the following keys:
+     *
+     * - categories
+     * An array of categories slugs.
+     *
+     * @param  Query  $query   Raw query object
+     * @param  array  $options Set of options
+     * @return Query  $query   Manipulated query object
+     */
+    public function findRelated(Query $query, array $options)
+    {
+        if (!is_array($options['categories'])) {
+            return $query;
+        }
+
+        $categories = $options['categories'];
+        return $query
+                ->find('all')
+                ->matching('Categories', function ($q) use ($categories) {
+                    return $q->where(['Categories.slug IN' => $categories]);
+                });
+    }
 
     public function beforeRules(Event $event, EntityInterface $entity, ArrayObject $options)
     {
