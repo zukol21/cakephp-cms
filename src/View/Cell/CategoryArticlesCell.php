@@ -1,8 +1,8 @@
 <?php
 namespace Cms\View\Cell;
 
-use Cake\View\Cell;
 use Cake\Utility\Text;
+use Cake\View\Cell;
 
 /**
  * CategoryArticles cell
