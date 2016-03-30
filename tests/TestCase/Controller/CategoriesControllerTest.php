@@ -16,9 +16,7 @@ class CategoriesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.categories',
-        'plugin.cms.articles',
-        'plugin.cms.articles_categories'
+        'plugin.cms.categories'
     ];
 
     /**
