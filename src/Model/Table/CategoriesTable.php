@@ -71,16 +71,6 @@ class CategoriesTable extends Table
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
-        $validator
-            ->integer('lft')
-            ->requirePresence('lft', 'create')
-            ->notEmpty('lft');
-
-        $validator
-            ->integer('rght')
-            ->requirePresence('rght', 'create')
-            ->notEmpty('rght');
-
         return $validator;
     }
 

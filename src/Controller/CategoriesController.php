@@ -62,8 +62,7 @@ class CategoriesController extends AppController
             }
         }
         $parentCategories = $this->Categories->ParentCategories->find('list', ['limit' => 200]);
-        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'parentCategories', 'articles'));
+        $this->set(compact('category', 'parentCategories'));
         $this->set('_serialize', ['category']);
     }
 
@@ -89,8 +88,7 @@ class CategoriesController extends AppController
             }
         }
         $parentCategories = $this->Categories->ParentCategories->find('list', ['limit' => 200]);
-        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'parentCategories', 'articles'));
+        $this->set(compact('category', 'parentCategories'));
         $this->set('_serialize', ['category']);
     }
 
