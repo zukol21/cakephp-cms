@@ -146,8 +146,7 @@ class ArticlesTable extends Table
      */
     public function findByCategory(Query $query, array $options)
     {
-        $associated = [];
-
+        $associated = ['Categories'];
         if (empty($options['category'])) {
             return false;
         }
@@ -156,12 +155,12 @@ class ArticlesTable extends Table
             if ($options['featuredImage'] === true) {
                 //Default options
                 $defaultOptions = ['sort' => ['created' => 'DESC']];
-                $associated = ['ArticleFeaturedImages' => $defaultOptions];
+                $associated += ['ArticleFeaturedImages' => $defaultOptions];
             }
 
             if (is_array($options['featuredImage'])) {
                 //Given options
-                $associated = ['ArticleFeaturedImages' => $options['featuredImage']];
+                $associated += ['ArticleFeaturedImages' => $options['featuredImage']];
             }
         }
 
