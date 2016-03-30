@@ -18,6 +18,9 @@ class CategoriesController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'contain' => ['ParentCategories']
+        ];
         $categories = $this->paginate($this->Categories);
 
         $this->set(compact('categories'));
@@ -34,7 +37,7 @@ class CategoriesController extends AppController
     public function view($id = null)
     {
         $category = $this->Categories->get($id, [
-            'contain' => ['Articles']
+            'contain' => ['ParentCategories', 'Articles', 'ChildCategories']
         ]);
 
         $this->set('category', $category);
@@ -58,8 +61,8 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'articles'));
+        $parentCategories = $this->Categories->ParentCategories->find('list', ['limit' => 200]);
+        $this->set(compact('category', 'parentCategories'));
         $this->set('_serialize', ['category']);
     }
 
@@ -84,8 +87,8 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $articles = $this->Categories->Articles->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'articles'));
+        $parentCategories = $this->Categories->ParentCategories->find('list', ['limit' => 200]);
+        $this->set(compact('category', 'parentCategories'));
         $this->set('_serialize', ['category']);
     }
 

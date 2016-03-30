@@ -10,6 +10,8 @@ use Cms\Model\Entity\Category;
 /**
  * Categories Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $ParentCategories
+ * @property \Cake\ORM\Association\HasMany $ChildCategories
  * @property \Cake\ORM\Association\BelongsToMany $Articles
  */
 class CategoriesTable extends Table
@@ -30,7 +32,16 @@ class CategoriesTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Tree');
 
+        $this->belongsTo('ParentCategories', [
+            'className' => 'Cms.Categories',
+            'foreignKey' => 'parent_id'
+        ]);
+        $this->hasMany('ChildCategories', [
+            'className' => 'Cms.Categories',
+            'foreignKey' => 'parent_id'
+        ]);
         $this->belongsToMany('Articles', [
             'foreignKey' => 'category_id',
             'targetForeignKey' => 'article_id',
@@ -73,6 +84,7 @@ class CategoriesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['slug']));
+        $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
         return $rules;
     }
 }
