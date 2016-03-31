@@ -6,10 +6,6 @@
     </div>
     <table class="table table-striped" cellpadding="0" cellspacing="0">
         <tr>
-            <td><?= __('Id') ?></td>
-            <td><?= h($category->id) ?></td>
-        </tr>
-        <tr>
             <td><?= __('Slug') ?></td>
             <td><?= h($category->slug) ?></td>
         </tr>
@@ -20,14 +16,6 @@
         <tr>
             <td><?= __('Parent Category') ?></td>
             <td><?= $category->has('parent_category') ? $this->Html->link($category->parent_category->name, ['controller' => 'Categories', 'action' => 'view', $category->parent_category->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <td><?= __('Lft') ?></td>
-            <td><?= $this->Number->format($category->lft) ?></td>
-        </tr>
-        <tr>
-            <td><?= __('Rght') ?></td>
-            <td><?= $this->Number->format($category->rght) ?></td>
         </tr>
         <tr>
             <td><?= __('Created') ?></td>
@@ -49,28 +37,16 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th><?= __('Id') ?></th>
                 <th><?= __('Slug') ?></th>
                 <th><?= __('Name') ?></th>
-                <th><?= __('Parent Id') ?></th>
-                <th><?= __('Lft') ?></th>
-                <th><?= __('Rght') ?></th>
-                <th><?= __('Created') ?></th>
-                <th><?= __('Modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($category->child_categories as $childCategories): ?>
                 <tr>
-                    <td><?= h($childCategories->id) ?></td>
                     <td><?= h($childCategories->slug) ?></td>
                     <td><?= h($childCategories->name) ?></td>
-                    <td><?= h($childCategories->parent_id) ?></td>
-                    <td><?= h($childCategories->lft) ?></td>
-                    <td><?= h($childCategories->rght) ?></td>
-                    <td><?= h($childCategories->created) ?></td>
-                    <td><?= h($childCategories->modified) ?></td>
                     <td class="actions">
                         <?= $this->Html->link('', ['controller' => 'Categories', 'action' => 'view', $childCategories->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
                         <?= $this->Html->link('', ['controller' => 'Categories', 'action' => 'edit', $childCategories->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>

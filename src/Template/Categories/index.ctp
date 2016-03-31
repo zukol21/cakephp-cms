@@ -7,28 +7,14 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 <table class="table table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th><?= $this->Paginator->sort('id'); ?></th>
-            <th><?= $this->Paginator->sort('slug'); ?></th>
-            <th><?= $this->Paginator->sort('name'); ?></th>
-            <th><?= $this->Paginator->sort('parent_id'); ?></th>
-            <th><?= $this->Paginator->sort('lft'); ?></th>
-            <th><?= $this->Paginator->sort('rght'); ?></th>
-            <th><?= $this->Paginator->sort('created'); ?></th>
+            <th><?= __('Node'); ?></th>
             <th class="actions"><?= __('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($categories as $category): ?>
         <tr>
-            <td><?= h($category->id) ?></td>
-            <td><?= h($category->slug) ?></td>
-            <td><?= h($category->name) ?></td>
-            <td>
-                <?= $category->has('parent_category') ? $this->Html->link($category->parent_category->name, ['controller' => 'Categories', 'action' => 'view', $category->parent_category->id]) : '' ?>
-            </td>
-            <td><?= $this->Number->format($category->lft) ?></td>
-            <td><?= $this->Number->format($category->rght) ?></td>
-            <td><?= h($category->created) ?></td>
+            <td><?= $category->node ?></td>
             <td class="actions">
                 <?= $this->Html->link('', ['action' => 'view', $category->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
                 <?= $this->Html->link('', ['action' => 'edit', $category->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>
@@ -38,11 +24,3 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
         <?php endforeach; ?>
     </tbody>
 </table>
-<div class="paginator">
-    <ul class="pagination">
-        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-        <?= $this->Paginator->numbers(['before' => '', 'after' => '']) ?>
-        <?= $this->Paginator->next(__('next') . ' >') ?>
-    </ul>
-    <p><?= $this->Paginator->counter() ?></p>
-</div>
