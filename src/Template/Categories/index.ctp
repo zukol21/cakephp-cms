@@ -7,8 +7,6 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 <table class="table table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
-            <th><?= __('Name'); ?></th>
-            <th><?= __('Slug'); ?></th>
             <th><?= __('Node'); ?></th>
             <th class="actions"><?= __('Actions'); ?></th>
         </tr>
@@ -16,8 +14,6 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
     <tbody>
         <?php foreach ($categories as $category): ?>
         <tr>
-            <td><?= h($category->name) ?></td>
-            <td><?= h($category->slug) ?></td>
             <td><?= $category->node ?></td>
             <td class="actions">
                 <?= $this->Html->link('', ['action' => 'view', $category->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
