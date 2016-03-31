@@ -11,6 +11,8 @@ use Cms\Controller\AppController;
 class CategoriesController extends AppController
 {
 
+    const TREE_SPACER = '&nbsp;&nbsp;&nbsp;&nbsp;';
+
     /**
      * Index method
      *
@@ -19,7 +21,7 @@ class CategoriesController extends AppController
     public function index()
     {
         $tree = $this->Categories
-            ->find('treeList', ['spacer' => '&nbsp;&nbsp;&nbsp;&nbsp;'])
+            ->find('treeList', ['spacer' => self::TREE_SPACER])
             ->toArray();
         $categories = $this->Categories
             ->find('all')
@@ -68,7 +70,7 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $list = $this->Categories->find('treeList');
+        $list = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
         $this->set(compact('category', 'list'));
         $this->set('_serialize', ['category']);
     }
@@ -94,8 +96,8 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $parentCategories = $this->Categories->ParentCategories->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'parentCategories'));
+        $list = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
+        $this->set(compact('category', 'list'));
         $this->set('_serialize', ['category']);
     }
 
