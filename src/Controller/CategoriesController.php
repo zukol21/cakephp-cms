@@ -14,15 +14,22 @@ class CategoriesController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['ParentCategories']
-        ];
-        $categories = $this->paginate($this->Categories);
-
+        $tree = $this->Categories
+            ->find('treeList', ['spacer' => '&nbsp;&nbsp;&nbsp;&nbsp;'])
+            ->toArray();
+        $categories = $this->Categories
+            ->find('all')
+            ->order(['lft' => 'ASC']);
+        //Create node property in the entity object
+        foreach ($categories as $category) {
+            if (in_array($category->id, array_keys($tree))) {
+                $category->node = $tree[$category->id];
+            }
+        }
         $this->set(compact('categories'));
         $this->set('_serialize', ['categories']);
     }
