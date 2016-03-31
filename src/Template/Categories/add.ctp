@@ -8,7 +8,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Add new'));
     <?php
     echo $this->Form->input('name');
     echo $this->Form->input('slug');
-    echo $this->Form->input('parent_id', ['options' => $parentCategories]);
+    echo $this->Form->input('parent_id', ['options' => $list]);
     ?>
 </fieldset>
 <?= $this->Form->button(__("Add")); ?>
