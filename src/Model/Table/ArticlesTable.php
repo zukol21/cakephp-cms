@@ -148,7 +148,7 @@ class ArticlesTable extends Table
     {
         $associated = ['Categories'];
         if (empty($options['category'])) {
-            return false;
+            return $query;
         }
 
         if (!empty($options['featuredImage'])) {
