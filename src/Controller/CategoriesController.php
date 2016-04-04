@@ -150,17 +150,16 @@ class CategoriesController extends AppController
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
-    public function moveNode($id = null, $action = '', $number = 1)
+    public function moveNode($id = null, $action = '')
     {
         $moveActions = ['up', 'down'];
         if (!in_array($action, $moveActions)) {
             $this->Flash->error(__('Unknown move action.'));
             return $this->redirect(['action' => 'index']);
         }
-        $number = is_numeric($number) ? $number : true;
         $node = $this->Categories->get($id);
         $moveFunction = 'move' . $action;
-        if ($this->Categories->{$moveFunction}($node, $number)) {
+        if ($this->Categories->{$moveFunction}($node)) {
             $this->Flash->success(__('{0} has been moved {1} successfully.', $node->name, $action));
         } else {
             $this->Flash->error(__('Fail to move $action.'));
