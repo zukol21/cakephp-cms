@@ -140,4 +140,38 @@ class CategoriesController extends AppController
         $articles = $this->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
         $this->set(compact('articles', 'category', 'children'));
     }
+
+    /**
+     * Move up the node.
+     *
+     * @param  string $id category id
+     * @throws InvalidPrimaryKeyException When provided id is invalid.
+     * @return void
+     */
+    public function moveUp($id = null)
+    {
+        $node = $this->Categories->get($id);
+        if ($this->Categories->moveUp($node)) {
+            $this->Flash->success(__('{0} has been moved up successfully.', $node->name));
+            return $this->redirect(['action' => 'index']);
+        }
+        $this->Flash->error(__('Fail to move up.'));
+    }
+
+    /**
+     * Move down the node.
+     *
+     * @param  string $id category id
+     * @throws InvalidPrimaryKeyException When provided id is invalid.
+     * @return void
+     */
+    public function moveDown($id = null)
+    {
+        $node = $this->Categories->get($id);
+        if ($this->Categories->moveDown($node)) {
+            $this->Flash->success(__('{0} has been moved down successfully.', $node->name));
+            return $this->redirect(['action' => 'index']);
+        }
+        $this->Flash->error(__('Fail to move down.'));
+    }
 }
