@@ -142,40 +142,28 @@ class CategoriesController extends AppController
     }
 
     /**
-     * Move up the node.
+     * Move the node.
      *
      * @param  string $id category id
+     * @param  string move action
+     * @param  int|bool $number How many places to move the node or true to move to last position
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
-    public function moveUp($id = null, $number = 1)
+    public function move($id = null, $action = '', $number = 1)
     {
-        $number = is_numeric($number) ? $number : true;
-        $node = $this->Categories->get($id);
-        if ($this->Categories->moveUp($node, $number)) {
-            $this->Flash->success(__('{0} has been moved up successfully.', $node->name));
-        } else {
-            $this->Flash->error(__('Fail to move up.'));
+        $moveActions = ['up', 'down'];
+        if (!in_array($action, $moveActions)) {
+            $this->Flash->error(__('Unknown move action.'));
+            return $this->redirect(['action' => 'index']);
         }
-        return $this->redirect(['action' => 'index']);
-    }
-
-    /**
-     * Move down the node.
-     *
-     * @param  string $id category id
-     * @param int|bool $number How many places to move the node or true to move to last position
-     * @throws InvalidPrimaryKeyException When provided id is invalid.
-     * @return void
-     */
-    public function moveDown($id = null, $number = 1)
-    {
         $number = is_numeric($number) ? $number : true;
         $node = $this->Categories->get($id);
-        if ($this->Categories->moveDown($node, $number)) {
-            $this->Flash->success(__('{0} has been moved down successfully.', $node->name));
+        $moveFunction = 'move' . $action;
+        if ($this->Categories->{$moveFunction}($node, $number)) {
+            $this->Flash->success(__('{0} has been moved {1} successfully.', $node->name, $action));
         } else {
-            $this->Flash->error(__('Fail to move down.'));
+            $this->Flash->error(__('Fail to move $action.'));
         }
         return $this->redirect(['action' => 'index']);
     }
