@@ -136,8 +136,8 @@ class CategoriesController extends AppController
             $this->Flash->error(__d('cms', 'The category does not exist.'));
             return $this->redirect('/');
         }
-        $childs = $this->Categories->find('children', ['for' => $category->id]);
+        $children = $this->Categories->find('children', ['for' => $category->id]);
         $articles = $this->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
-        $this->set(compact('articles', 'category', 'childs'));
+        $this->set(compact('articles', 'category', 'children'));
     }
 }
