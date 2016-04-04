@@ -74,7 +74,7 @@ class ArticlesController extends AppController
         }
         $this->set([
             'article' => $article,
-            'categories' => $this->Articles->Categories->find('list'),
+            'categories' => $this->Articles->Categories->find('treeList', ['spacer' => self::TREE_SPACER]),
         ]);
         $this->set('_serialize', ['article']);
     }
@@ -104,7 +104,7 @@ class ArticlesController extends AppController
         }
         $this->set([
             'article' => $article,
-            'categories' => $this->Articles->Categories->find('list'),
+            'categories' => $this->Articles->Categories->find('treeList', ['spacer' => self::TREE_SPACER]),
         ]);
         $this->set('_serialize', ['article']);
     }

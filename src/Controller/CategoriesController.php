@@ -10,9 +10,6 @@ use Cms\Controller\AppController;
  */
 class CategoriesController extends AppController
 {
-
-    const TREE_SPACER = '&nbsp;&nbsp;&nbsp;&nbsp;';
-
     /**
      * Index method
      *
@@ -131,27 +128,16 @@ class CategoriesController extends AppController
         $this->loadModel('Cms.Articles');
         if (is_null($category)) {
             $this->Flash->error(__d('cms', 'Please provide a category slug.'));
-            $this->redirect('/');
+            return $this->redirect('/');
         }
-        if (!$this->Articles->Categories->exists(['slug' => $category])) {
+
+        $category = $this->Categories->findBySlug($category)->first();
+        if (!$category) {
             $this->Flash->error(__d('cms', 'The category does not exist.'));
-            $this->redirect('/');
+            return $this->redirect('/');
         }
-        $articles = $this->Articles
-            ->find('all')
-            ->contain([
-                'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]
-            ])
-            ->matching(
-                'Categories',
-                function ($q) use ($category) {
-                    return $q->where(['Categories.slug' => $category]);
-                }
-            );
-        $category = $this->Articles->Categories
-            ->find('all')
-            ->where(['slug' => $category])
-            ->first();
-        $this->set(compact('articles', 'category'));
+        $childs = $this->Categories->find('children', ['for' => $category->id]);
+        $articles = $this->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
+        $this->set(compact('articles', 'category', 'childs'));
     }
 }
