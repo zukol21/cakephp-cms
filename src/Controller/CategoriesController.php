@@ -148,30 +148,35 @@ class CategoriesController extends AppController
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
-    public function moveUp($id = null)
+    public function moveUp($id = null, $number = 1)
     {
+        $number = is_numeric($number) ? $number : true;
         $node = $this->Categories->get($id);
-        if ($this->Categories->moveUp($node)) {
+        if ($this->Categories->moveUp($node, $number)) {
             $this->Flash->success(__('{0} has been moved up successfully.', $node->name));
-            return $this->redirect(['action' => 'index']);
+        } else {
+            $this->Flash->error(__('Fail to move up.'));
         }
-        $this->Flash->error(__('Fail to move up.'));
+        return $this->redirect(['action' => 'index']);
     }
 
     /**
      * Move down the node.
      *
      * @param  string $id category id
+     * @param int|bool $number How many places to move the node or true to move to last position
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
-    public function moveDown($id = null)
+    public function moveDown($id = null, $number = 1)
     {
+        $number = is_numeric($number) ? $number : true;
         $node = $this->Categories->get($id);
-        if ($this->Categories->moveDown($node)) {
+        if ($this->Categories->moveDown($node, $number)) {
             $this->Flash->success(__('{0} has been moved down successfully.', $node->name));
-            return $this->redirect(['action' => 'index']);
+        } else {
+            $this->Flash->error(__('Fail to move down.'));
         }
-        $this->Flash->error(__('Fail to move down.'));
+        return $this->redirect(['action' => 'index']);
     }
 }
