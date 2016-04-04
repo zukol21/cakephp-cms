@@ -10,9 +10,6 @@ use Cms\Controller\AppController;
  */
 class CategoriesController extends AppController
 {
-
-    const TREE_SPACER = '&nbsp;&nbsp;&nbsp;&nbsp;';
-
     /**
      * Index method
      *
