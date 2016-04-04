@@ -145,8 +145,7 @@ class CategoriesController extends AppController
      * Move the node.
      *
      * @param  string $id category id
-     * @param  string move action
-     * @param  int|bool $number How many places to move the node or true to move to last position
+     * @param  string $action move action
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
