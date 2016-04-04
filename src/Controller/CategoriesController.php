@@ -150,7 +150,7 @@ class CategoriesController extends AppController
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      * @return void
      */
-    public function move($id = null, $action = '', $number = 1)
+    public function moveNode($id = null, $action = '', $number = 1)
     {
         $moveActions = ['up', 'down'];
         if (!in_array($action, $moveActions)) {
