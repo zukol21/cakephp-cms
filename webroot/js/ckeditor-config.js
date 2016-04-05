@@ -14,7 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
         { name: 'links' },
         { name: 'insert' },
-        { name: 'tools' },
+        { name: 'tools',       groups: ['mode'] },
         { name: 'others' },
         '/',
         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
