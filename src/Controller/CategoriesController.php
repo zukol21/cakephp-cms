@@ -129,7 +129,6 @@ class CategoriesController extends AppController
      */
     public function display($category = null)
     {
-        $this->loadModel('Cms.Articles');
         if (is_null($category)) {
             $this->Flash->error(__d('cms', 'Please provide a category slug.'));
             return $this->redirect('/');
@@ -147,7 +146,7 @@ class CategoriesController extends AppController
                 'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
             ]);
         //For category without children
-        $articles = $this->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
+        $articles = $this->Categories->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
         $this->set(compact('articles', 'category', 'children'));
     }
 
