@@ -39,3 +39,7 @@ The [upload plugin](http://ckeditor.com/addon/imagepaste) of CKEditor is used so
 ```php
 Configure::write('Cms.ckeditor.upload.plugin.url', 'path-to-your-js-file');
 ```
+
+## ToDo
+1. Add documentation for Articles, Categories
+2. PHPUnit tests
