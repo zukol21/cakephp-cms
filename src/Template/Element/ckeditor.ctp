@@ -7,9 +7,10 @@ echo $this->Html->script('//cdn.ckeditor.com/4.5.8/full-all/ckeditor.js', ['bloc
 echo $this->Html->script('Cms.ckeditor-upload-plugin', ['block' => 'scriptBottom']);
 echo $this->Html->scriptStart(['block' => 'scriptBottom']); ?>
 <?php
+$url = $this->Url->script('Cms.ckeditor-config');
 echo <<<EOT
     var options = {
-        customConfig: '/cms/js/ckeditor-config.js'
+        customConfig: '{$url}'
     };
     var uploadOptions = uploadOptions || {};
     // Merge with upload plugin options
