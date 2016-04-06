@@ -179,4 +179,43 @@ class ArticlesController extends AppController
         $this->set('result', $result);
         $this->set('_serialize', 'result');
     }
+
+    /**
+     * Display method is usually used to populater category templates.
+     *
+     * @todo Rendering view file SHOULD be placed in the application.
+     * Create a generic view file.
+     * @param  string $articleSlug Article's slug
+     * @return void
+     */
+    public function display($articleSlug = null)
+    {
+        $article = $this->Articles
+            ->findBySlug($articleSlug)
+            ->contain(
+                [
+                    'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
+                    'Categories',
+                ]
+            )
+            ->first();
+        if (!$article) {
+            throw new NotFoundException(__('cms', 'Cannot find the article {0}.', $articleSlug));
+        }
+
+        $categories = [];
+        foreach ($article->categories as $category) {
+            array_push($categories, $category->slug);
+        }
+
+        $relatedArticles = $this->Articles->find('related', ['categories' => $categories]);
+        if (!$relatedArticles->isEmpty()) {
+            //Remove shown one and limit the related articles.
+            $relatedArticles
+                ->where(['Articles.slug <>' => $articleSlug])
+                ->limit(5);
+        }
+
+        $this->set(compact('article', 'relatedArticles'));
+    }
 }
