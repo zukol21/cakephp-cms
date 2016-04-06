@@ -129,10 +129,7 @@ class ArticlesTable extends Table
     {
         $query = $query
             ->find('all')
-            ->contain([
-                'Categories',
-                'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]
-            ]);
+            ->contain($this->getContain());
         if (isset($options['id'])) {
             $query = $query
                 ->where(['id' => $options['id']])
@@ -177,7 +174,7 @@ class ArticlesTable extends Table
 
         $query->find('all');
         $query->order(['Articles.created' => 'desc']);
-        $query->contain($associated);
+        $query->contain($this->getContain());
         $query->matching('Categories', function ($q) use ($options) {
             return $q->where(['Categories.slug' => $options['category']]);
         });
@@ -206,6 +203,7 @@ class ArticlesTable extends Table
         $categories = $options['categories'];
         return $query
                 ->find('all')
+                ->contain($this->getContain())
                 ->matching('Categories', function ($q) use ($categories) {
                     return $q->where(['Categories.slug IN' => $categories]);
                 });
