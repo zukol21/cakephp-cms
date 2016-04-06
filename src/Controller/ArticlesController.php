@@ -190,6 +190,7 @@ class ArticlesController extends AppController
      * @todo Rendering view file SHOULD be placed in the application.
      * Create a generic view file.
      * @param  string $articleSlug Article's slug
+     * @param  int $related Number of related articles
      * @return void
      */
     public function display($articleSlug = null, $related = self::RELATED_LIMIT)
