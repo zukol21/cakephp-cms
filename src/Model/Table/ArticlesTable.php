@@ -25,7 +25,7 @@ class ArticlesTable extends Table
      * @see Query::contain()
      * @var array
      */
-    protected $_associatedTables = [];
+    protected $_contain = [];
 
     /**
      * Initialize method
@@ -40,7 +40,7 @@ class ArticlesTable extends Table
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');
-        $this->setAssociatedTables();
+        $this->setContain();
 
         $this->addBehavior('Timestamp');
         $this->hasMany('ArticleFeaturedImages', [
@@ -237,29 +237,30 @@ class ArticlesTable extends Table
      *
      * @return array
      */
-    public function getAssociatedTables()
+    public function getContain()
     {
-        return $this->_associatedTables;
+        return $this->_contain;
     }
 
     /**
      * Sets the associated tables.
      *
-     * @param array $associations Conditions that will be
+     * @param array $contain Conditions that will be
+     * @param bool $override Override flag
      * passed to contain function of Query builder.
      * @see Query::contain()
      * @return void
      */
-    public function setAssociatedTables($associations = [])
+    public function setContain($contain = [], $override = true)
     {
-        if (empty($associations)) {
-            $associations = [];
-        }
         $default = [
             'Categories' => [],
             'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
         ];
-        $associations += $default;
-        $this->_associatedTables = $associations;
+        if (empty($contain) || $override === true) {
+            $contain += $default;
+        }
+
+        $this->_contain = $contain;
     }
 }
