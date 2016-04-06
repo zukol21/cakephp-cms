@@ -134,7 +134,12 @@ class CategoriesController extends AppController
             return $this->redirect('/');
         }
 
-        $category = $this->Categories->findBySlug($category)->first();
+        $category = $this->Categories
+            ->findBySlug($category)
+            ->contain([
+                'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
+            ])
+            ->first();
         if (!$category) {
             $this->Flash->error(__d('cms', 'The category does not exist.'));
             return $this->redirect('/');
@@ -145,9 +150,7 @@ class CategoriesController extends AppController
             ->contain([
                 'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
             ]);
-        //For category without children
-        $articles = $this->Categories->Articles->find('ByCategory', ['category' => $category->slug, 'featuredImage' => true]);
-        $this->set(compact('articles', 'category', 'children'));
+        $this->set(compact('category', 'children'));
     }
 
     /**
