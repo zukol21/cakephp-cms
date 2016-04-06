@@ -30,7 +30,7 @@ class CategoryArticlesCell extends Cell
     public function display($category = null)
     {
         $this->loadModel('Cms.Articles');
-        $articles = $this->Articles->find('ByCategory', ['category' => $category, 'featuredImage' => true]);
+        $articles = $this->Articles->find('ByCategory', ['category' => $category]);
 
         if (!$articles->isEmpty()) {
             foreach ($articles as $article) {
@@ -57,7 +57,7 @@ class CategoryArticlesCell extends Cell
     {
         $category = null;
         $this->loadModel('Cms.Articles');
-        $article = $this->Articles->find('ByCategory', ['category' => $categorySlug, 'featuredImage' => true])->first();
+        $article = $this->Articles->find('ByCategory', ['category' => $categorySlug])->first();
         if ($article) {
             $article->excerpt = strip_tags($article->excerpt);
             $article->excerpt = Text::truncate($article->excerpt, $excerptLength, ['ellipsis' => '...']);

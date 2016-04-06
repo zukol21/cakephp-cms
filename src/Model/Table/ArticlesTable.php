@@ -145,8 +145,7 @@ class ArticlesTable extends Table
      * By default, `$options` will recognize the following keys:
      *
      * - category
-     * - featuredImage
-     *    - Could be either bool or array
+     *
      *
      * @param  Query  $query   Raw query object
      * @param  array  $options Set of options
@@ -154,22 +153,8 @@ class ArticlesTable extends Table
      */
     public function findByCategory(Query $query, array $options)
     {
-        $associated = ['Categories'];
         if (empty($options['category'])) {
             return $query;
-        }
-
-        if (!empty($options['featuredImage'])) {
-            if ($options['featuredImage'] === true) {
-                //Default options
-                $defaultOptions = ['sort' => ['created' => 'DESC']];
-                $associated += ['ArticleFeaturedImages' => $defaultOptions];
-            }
-
-            if (is_array($options['featuredImage'])) {
-                //Given options
-                $associated += ['ArticleFeaturedImages' => $options['featuredImage']];
-            }
         }
 
         $query->find('all');
