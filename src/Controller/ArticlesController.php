@@ -10,6 +10,10 @@ use Cms\Controller\AppController;
  */
 class ArticlesController extends AppController
 {
+    /**
+     * Number of related articles
+     */
+    const RELATED_LIMIT = 5;
 
     /**
      * Index method
@@ -213,7 +217,7 @@ class ArticlesController extends AppController
             //Remove shown one and limit the related articles.
             $relatedArticles
                 ->where(['Articles.slug <>' => $articleSlug])
-                ->limit(5);
+                ->limit(self::RELATED_LIMIT);
         }
 
         $this->set(compact('article', 'relatedArticles'));
