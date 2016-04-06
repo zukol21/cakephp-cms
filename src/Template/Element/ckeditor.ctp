@@ -5,7 +5,7 @@ use Cake\Core\Configure;
 if (!isset($id) && empty($id)) {
     return false;
 }
-echo $this->Html->script('//cdn.ckeditor.com/4.5.8/full-all/ckeditor.js', ['block' => 'scriptBottom']);
+echo $this->Html->script('https://cdn.ckeditor.com/4.5.8/full-all/ckeditor.js', ['block' => 'scriptBottom']);
 echo $this->Html->script(Configure::read('Cms.ckeditor.upload.plugin.url'), ['block' => 'scriptBottom']);
 echo $this->Html->scriptStart(['block' => 'scriptBottom']); ?>
 <?php
