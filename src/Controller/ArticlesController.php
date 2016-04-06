@@ -196,12 +196,7 @@ class ArticlesController extends AppController
     {
         $article = $this->Articles
             ->findBySlug($articleSlug)
-            ->contain(
-                [
-                    'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
-                    'Categories',
-                ]
-            )
+            ->contain($this->Articles->getContain())
             ->first();
         if (!$article) {
             throw new NotFoundException(__('cms', 'Cannot find the article {0}.', $articleSlug));
