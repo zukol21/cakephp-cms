@@ -192,7 +192,7 @@ class ArticlesController extends AppController
      * @param  string $articleSlug Article's slug
      * @return void
      */
-    public function display($articleSlug = null)
+    public function display($articleSlug = null, $related = self::RELATED_LIMIT)
     {
         $article = $this->Articles
             ->findBySlug($articleSlug)
@@ -212,7 +212,7 @@ class ArticlesController extends AppController
             //Remove shown one and limit the related articles.
             $relatedArticles
                 ->where(['Articles.slug <>' => $articleSlug])
-                ->limit(self::RELATED_LIMIT);
+                ->limit($related);
         }
 
         $this->set(compact('article', 'relatedArticles'));
