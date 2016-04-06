@@ -17,6 +17,16 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+
+    /**
+     * This variable holds the associated table which
+     * are mostly used with this table. It will be used
+     * by the contain function of the Query Builder.
+     * @see Query::contain()
+     * @var array
+     */
+    protected $_associatedTables = [];
+
     /**
      * Initialize method
      *
@@ -30,6 +40,7 @@ class ArticlesTable extends Table
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');
+        $this->setAssociatedTables();
 
         $this->addBehavior('Timestamp');
         $this->hasMany('ArticleFeaturedImages', [
@@ -219,5 +230,36 @@ class ArticlesTable extends Table
         } while (!$notfound);
 
         $entity->slug = $slug;
+    }
+
+    /**
+     * Returns the associated tables.
+     *
+     * @return array
+     */
+    public function getAssociatedTables()
+    {
+        return $this->_associatedTables;
+    }
+
+    /**
+     * Sets the associated tables.
+     *
+     * @param array $associations Conditions that will be
+     * passed to contain function of Query builder.
+     * @see Query::contain()
+     * @return void
+     */
+    public function setAssociatedTables($associations = [])
+    {
+        if (empty($associations)) {
+            $associations = [];
+        }
+        $default = [
+            'Categories' => [],
+            'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
+        ];
+        $associations += $default;
+        $this->_associatedTables = $associations;
     }
 }
