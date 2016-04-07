@@ -3,15 +3,14 @@ use Cake\Core\Configure;
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
 $this->assign('title', __d('QoboAdminPanel', 'Articles'));
 $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
-$ckeditorIds = ['article-excerpt', 'article-content'];
-list($idExcerpt, $idContent) = $ckeditorIds;
+$idContent = 'article-content';
 ?>
 <?= $this->Form->create($article, ['type' => 'file']); ?>
 <fieldset>
     <legend><?= __('Edit {0}', ['Article']) ?></legend>
     <?php
     echo $this->Form->input('title');
-    echo $this->Form->input('excerpt', ['type' => 'textarea', 'id' => $idExcerpt]);
+    echo $this->Form->input('excerpt', ['type' => 'textarea']);
     echo $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]);
     echo $this->Form->input('categories._ids', ['options' => $categories, 'escape' => false]);
     echo $this->Form->input('publish_date');
@@ -51,6 +50,5 @@ list($idExcerpt, $idContent) = $ckeditorIds;
 <?= $this->Form->end() ?>
 <?php
 $url = $this->Url->assetUrl(['action' => 'uploadFromEditor', $article->id, '_ext' => 'json']);
-echo $this->element('Cms.ckeditor', ['id' => $idExcerpt, 'url' => $url]);
 echo $this->element('Cms.ckeditor', ['id' => $idContent, 'url' => $url]);
 ?>
