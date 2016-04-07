@@ -17,6 +17,16 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+
+    /**
+     * This variable holds the associated table which
+     * are mostly used with this table. It will be used
+     * by the contain function of the Query Builder.
+     * @see Query::contain()
+     * @var array
+     */
+    protected $_contain = [];
+
     /**
      * Initialize method
      *
@@ -30,6 +40,7 @@ class ArticlesTable extends Table
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');
+        $this->setContain();
 
         $this->addBehavior('Timestamp');
         $this->hasMany('ArticleFeaturedImages', [
@@ -118,10 +129,7 @@ class ArticlesTable extends Table
     {
         $query = $query
             ->find('all')
-            ->contain([
-                'Categories',
-                'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]
-            ]);
+            ->contain($this->getContain());
         if (isset($options['id'])) {
             $query = $query
                 ->where(['id' => $options['id']])
@@ -137,8 +145,7 @@ class ArticlesTable extends Table
      * By default, `$options` will recognize the following keys:
      *
      * - category
-     * - featuredImage
-     *    - Could be either bool or array
+     *
      *
      * @param  Query  $query   Raw query object
      * @param  array  $options Set of options
@@ -146,27 +153,13 @@ class ArticlesTable extends Table
      */
     public function findByCategory(Query $query, array $options)
     {
-        $associated = ['Categories'];
         if (empty($options['category'])) {
             return $query;
         }
 
-        if (!empty($options['featuredImage'])) {
-            if ($options['featuredImage'] === true) {
-                //Default options
-                $defaultOptions = ['sort' => ['created' => 'DESC']];
-                $associated += ['ArticleFeaturedImages' => $defaultOptions];
-            }
-
-            if (is_array($options['featuredImage'])) {
-                //Given options
-                $associated += ['ArticleFeaturedImages' => $options['featuredImage']];
-            }
-        }
-
         $query->find('all');
         $query->order(['Articles.created' => 'desc']);
-        $query->contain($associated);
+        $query->contain($this->getContain());
         $query->matching('Categories', function ($q) use ($options) {
             return $q->where(['Categories.slug' => $options['category']]);
         });
@@ -195,6 +188,7 @@ class ArticlesTable extends Table
         $categories = $options['categories'];
         return $query
                 ->find('all')
+                ->contain($this->getContain())
                 ->matching('Categories', function ($q) use ($categories) {
                     return $q->where(['Categories.slug IN' => $categories]);
                 });
@@ -219,5 +213,37 @@ class ArticlesTable extends Table
         } while (!$notfound);
 
         $entity->slug = $slug;
+    }
+
+    /**
+     * Returns the associated tables.
+     *
+     * @return array
+     */
+    public function getContain()
+    {
+        return $this->_contain;
+    }
+
+    /**
+     * Sets the associated tables.
+     *
+     * @param array $contain Conditions that will be
+     * @param bool $override Override flag
+     * passed to contain function of Query builder.
+     * @see Query::contain()
+     * @return void
+     */
+    public function setContain($contain = [], $override = true)
+    {
+        $default = [
+            'Categories' => [],
+            'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
+        ];
+        if (empty($contain) || $override === true) {
+            $contain += $default;
+        }
+
+        $this->_contain = $contain;
     }
 }

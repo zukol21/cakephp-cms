@@ -10,6 +10,10 @@ use Cms\Controller\AppController;
  */
 class ArticlesController extends AppController
 {
+    /**
+     * Number of related articles
+     */
+    const RELATED_LIMIT = 5;
 
     /**
      * Index method
@@ -186,18 +190,14 @@ class ArticlesController extends AppController
      * @todo Rendering view file SHOULD be placed in the application.
      * Create a generic view file.
      * @param  string $articleSlug Article's slug
+     * @param  int $related Number of related articles
      * @return void
      */
-    public function display($articleSlug = null)
+    public function display($articleSlug = null, $related = self::RELATED_LIMIT)
     {
         $article = $this->Articles
             ->findBySlug($articleSlug)
-            ->contain(
-                [
-                    'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']],
-                    'Categories',
-                ]
-            )
+            ->contain($this->Articles->getContain())
             ->first();
         if (!$article) {
             throw new NotFoundException(__('cms', 'Cannot find the article {0}.', $articleSlug));
@@ -213,7 +213,7 @@ class ArticlesController extends AppController
             //Remove shown one and limit the related articles.
             $relatedArticles
                 ->where(['Articles.slug <>' => $articleSlug])
-                ->limit(5);
+                ->limit($related);
         }
 
         $this->set(compact('article', 'relatedArticles'));
