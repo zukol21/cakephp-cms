@@ -8,3 +8,4 @@ Router::plugin(
         $routes->fallbacks('DashedRoute');
     }
 );
+Router::connect('/admin', ['plugin' => 'Cms', 'controller' => 'Articles']);
