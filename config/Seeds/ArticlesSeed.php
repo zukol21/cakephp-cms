@@ -24,7 +24,7 @@ class ArticlesSeed extends AbstractSeed
         for ($i = 0; $i < 50; $i++) {
             $uuid = Faker\Provider\Uuid::uuid();
             $title = Faker\Provider\Lorem::sentence(rand(3, 5), true);
-            $slug = Inflector::slug($title);
+            $slug = Inflector::slug(strtolower($title));
             $excerpt = Faker\Provider\Lorem::text(150);
             $content = Faker\Provider\Lorem::paragraphs(rand(3, 5), true);
             $data[] = [
