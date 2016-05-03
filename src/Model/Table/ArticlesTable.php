@@ -63,6 +63,7 @@ class ArticlesTable extends Table
             'joinTable' => 'articles_categories',
             'className' => 'Cms.Categories'
         ]);
+        $this->addBehavior('Muffin/Slug.slug');
     }
 
     /**
