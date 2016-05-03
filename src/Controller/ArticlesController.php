@@ -22,7 +22,9 @@ class ArticlesController extends AppController
      */
     public function index()
     {
-        $query = $this->Articles->find('withLatestImage');
+        $query = $this->Articles
+            ->find('withLatestImage')
+            ->order(['created' => 'DESC']);
         $articles = $this->paginate($query);
         if ($articles->isEmpty()) {
             $this->Flash->set(__('No articles were found. Please add one.'));
