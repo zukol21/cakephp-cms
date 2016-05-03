@@ -13,8 +13,10 @@ $idContent = 'article-content';
     echo $this->Form->input('excerpt', ['type' => 'textarea']);
     echo $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]);
     echo $this->Form->input('categories._ids', ['options' => $categories, 'escape' => false]);
-    echo $this->Form->input('publish_date');
     ?>
+    <?= $this->element('QoboAdminPanel.datepicker', [
+        'options' => ['fieldName' => 'publish_date', 'type' => 'datetimepicker', 'label' => true, 'value' => $article->publish_date]
+    ]); ?>
     <div class="form-group">
         <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
         <?php
