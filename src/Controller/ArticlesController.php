@@ -24,7 +24,7 @@ class ArticlesController extends AppController
     {
         $query = $this->Articles
             ->find('withLatestImage')
-            ->order(['created' => 'DESC']);
+            ->order(['modified' => 'DESC']);
         $articles = $this->paginate($query);
         if ($articles->isEmpty()) {
             $this->Flash->set(__('No articles were found. Please add one.'));
