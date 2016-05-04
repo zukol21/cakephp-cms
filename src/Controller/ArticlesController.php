@@ -198,7 +198,7 @@ class ArticlesController extends AppController
     public function display($articleSlug = null, $related = self::RELATED_LIMIT)
     {
         $article = $this->Articles
-            ->findBySlug($articleSlug)
+            ->find('slugged', ['slug' => $articleSlug])
             ->contain($this->Articles->getContain())
             ->first();
         if (!$article) {

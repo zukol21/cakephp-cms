@@ -63,6 +63,7 @@ class ArticlesTable extends Table
             'joinTable' => 'articles_categories',
             'className' => 'Cms.Categories'
         ]);
+        $this->addBehavior('Muffin/Slug.Slug');
     }
 
     /**
@@ -192,27 +193,6 @@ class ArticlesTable extends Table
                 ->matching('Categories', function ($q) use ($categories) {
                     return $q->where(['Categories.slug IN' => $categories]);
                 });
-    }
-
-    public function beforeRules(Event $event, EntityInterface $entity, ArrayObject $options)
-    {
-        $slug = Inflector::slug(strtolower($entity->title));
-        $notfound = false;
-        $i = 0;
-        do {
-            if ($this->exists(['slug' => $slug])) {
-                // First iteration.
-                if (!$i) {
-                    $slug .= '-';
-                }
-                $i++;
-                $slug = substr($slug, 0, strrpos($slug, '-')) . '-' . $i;
-            } else {
-                $notfound = true;
-            }
-        } while (!$notfound);
-
-        $entity->slug = $slug;
     }
 
     /**
