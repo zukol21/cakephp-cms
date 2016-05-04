@@ -135,7 +135,7 @@ class CategoriesController extends AppController
         }
 
         $category = $this->Categories
-            ->findBySlug($category)
+            ->find('slugged', ['slug' => $category])
             ->contain([
                 'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
             ])
