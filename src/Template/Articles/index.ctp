@@ -1,7 +1,6 @@
 <?php
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('title', __d('QoboAdminPanel', 'Articles'));
-$this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
+$this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 ?>
 <p class="text-right">
     <?php echo $this->Html->link(

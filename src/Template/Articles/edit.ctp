@@ -1,13 +1,11 @@
 <?php
 use Cake\Core\Configure;
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('title', __d('QoboAdminPanel', 'Articles'));
-$this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
+$this->assign('panel-title', __d('QoboAdminPanel', __('Edit {0}', $article->title)));
 $idContent = 'article-content';
 ?>
 <?= $this->Form->create($article, ['type' => 'file']); ?>
 <fieldset>
-    <legend><?= __('Edit {0}', ['Article']) ?></legend>
     <?php
     echo $this->Form->input('title');
     echo $this->Form->input('excerpt', ['type' => 'textarea']);

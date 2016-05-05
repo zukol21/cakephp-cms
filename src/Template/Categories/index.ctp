@@ -1,6 +1,5 @@
 <?php
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('title', __d('QoboAdminPanel', 'Categories'));
 $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 ?>
 <?= $this->element('add-cta'); ?>
