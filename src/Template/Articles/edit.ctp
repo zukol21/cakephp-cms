@@ -10,8 +10,8 @@ $idContent = 'article-content';
     <legend><?= __('Edit {0}', ['Article']) ?></legend>
     <?php
     echo $this->Form->input('title');
-    echo $this->Form->input('excerpt', ['type' => 'textarea']);
     echo $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]);
+    echo $this->Form->input('excerpt', ['type' => 'textarea']);
     echo $this->Form->input('categories._ids', ['options' => $categories, 'escape' => false]);
     ?>
     <?= $this->element('QoboAdminPanel.datepicker', [
