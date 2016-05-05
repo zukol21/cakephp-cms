@@ -1,7 +1,6 @@
 <?php
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('title', __d('QoboAdminPanel', 'Articles'));
-$this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
+$this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 ?>
 <p class="text-right">
     <?php echo $this->Html->link(
@@ -43,7 +42,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Articles information'));
             ?>
             </td>
             <td class="actions">
-                <?= $this->Html->link('', ['action' => 'view', $article->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
+                <?= $this->Html->link('', ['action' => 'display', $article->slug], ['title' => __('Preview'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open', 'target' => '_blank']) ?>
                 <?= $this->Html->link('', ['action' => 'edit', $article->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>
                 <?= $this->Form->postLink('', ['action' => 'delete', $article->id], ['confirm' => __('Are you sure you want to delete # {0}?', $article->id), 'title' => __('Delete'), 'class' => 'btn btn-default glyphicon glyphicon-trash']) ?>
             </td>
