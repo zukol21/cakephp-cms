@@ -19,7 +19,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
                         <?= $this->Form->postLink('', ['action' => 'move_node', $category->id, 'up'], ['title' => __('Move up'), 'class' => 'btn btn-default glyphicon glyphicon-arrow-up']) ?>
                         <?= $this->Form->postLink('', ['action' => 'move_node', $category->id, 'down'], ['title' => __('Move down'), 'class' => 'btn btn-default glyphicon glyphicon-arrow-down']) ?>
                 <?php endif; ?>
-                <?= $this->Html->link('', ['action' => 'view', $category->id], ['title' => __('View'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open']) ?>
+                <?= $this->Html->link('', ['action' => 'display', $category->slug], ['title' => __('Preview'), 'class' => 'btn btn-default glyphicon glyphicon-eye-open', 'target' => '_blank']) ?>
                 <?= $this->Html->link('', ['action' => 'edit', $category->id], ['title' => __('Edit'), 'class' => 'btn btn-default glyphicon glyphicon-pencil']) ?>
                 <?= $this->Form->postLink('', ['action' => 'delete', $category->id], ['confirm' => __('Are you sure you want to delete # {0}?', $category->id), 'title' => __('Delete'), 'class' => 'btn btn-default glyphicon glyphicon-trash']) ?>
             </td>

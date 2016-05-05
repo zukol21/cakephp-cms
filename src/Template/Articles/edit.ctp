@@ -5,6 +5,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', __('Edit {0}', $article->titl
 $idContent = 'article-content';
 ?>
 <?= $this->Form->create($article, ['type' => 'file']); ?>
+<?= $this->element('Cms.preview', ['slug' => $article->slug]); ?>
 <fieldset>
     <?php
     echo $this->Form->input('title');
