@@ -15,7 +15,12 @@ $idContent = 'article-content';
     echo $this->Form->input('categories._ids', ['options' => $categories, 'escape' => false]);
     ?>
     <?= $this->element('QoboAdminPanel.datepicker', [
-        'options' => ['fieldName' => 'publish_date', 'type' => 'datetimepicker', 'label' => true, 'value' => $article->publish_date]
+        'options' => [
+            'fieldName' => 'publish_date',
+            'type' => 'datetimepicker',
+            'label' => true,
+            'value' => $article->publish_date->format('Y/m/d H:i:s')
+        ]
     ]); ?>
     <div class="form-group">
         <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
