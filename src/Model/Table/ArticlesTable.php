@@ -156,7 +156,6 @@ class ArticlesTable extends Table
         }
 
         $query->find('all');
-        $query->order(['Articles.created' => 'desc']);
         $query->contain($this->getContain());
         $query->matching('Categories', function ($q) use ($options) {
             return $q->where(['Categories.slug' => $options['category']]);
