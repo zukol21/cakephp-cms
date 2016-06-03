@@ -48,7 +48,8 @@ class ArticlesTable extends Table
             'foreignKey' => 'foreign_key',
             'conditions' => [
                 'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
-            ]
+            ],
+            'sort' => ['ArticleFeaturedImages.created' => 'DESC']
         ]);
         $this->hasMany('ContentImages', [
             'className' => 'Cms.ContentImages',
