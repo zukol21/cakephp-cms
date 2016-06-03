@@ -48,7 +48,8 @@ class ArticlesTable extends Table
             'foreignKey' => 'foreign_key',
             'conditions' => [
                 'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
-            ]
+            ],
+            'sort' => ['ArticleFeaturedImages.created' => 'DESC']
         ]);
         $this->hasMany('ContentImages', [
             'className' => 'Cms.ContentImages',
@@ -155,7 +156,6 @@ class ArticlesTable extends Table
         }
 
         $query->find('all');
-        $query->order(['Articles.created' => 'desc']);
         $query->contain($this->getContain());
         $query->matching('Categories', function ($q) use ($options) {
             return $q->where(['Categories.slug' => $options['category']]);

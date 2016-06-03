@@ -137,7 +137,7 @@ class CategoriesController extends AppController
         $category = $this->Categories
             ->find('slugged', ['slug' => $category])
             ->contain([
-                'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
+                'Articles' => ['ArticleFeaturedImages'],
             ])
             ->first();
         if (!$category) {
@@ -148,7 +148,7 @@ class CategoriesController extends AppController
         $children = $this->Categories
             ->find('children', ['for' => $category->id])
             ->contain([
-                'Articles' => ['ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]],
+                'Articles' => ['ArticleFeaturedImages'],
             ]);
         $this->set(compact('category', 'children'));
     }
