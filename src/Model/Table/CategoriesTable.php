@@ -46,7 +46,8 @@ class CategoriesTable extends Table
             'foreignKey' => 'category_id',
             'targetForeignKey' => 'article_id',
             'joinTable' => 'articles_categories',
-            'className' => 'Cms.Articles'
+            'className' => 'Cms.Articles',
+            'sort' => ['Articles.created' => 'DESC']
         ]);
         $this->addBehavior('Muffin/Slug.Slug');
     }
