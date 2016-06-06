@@ -1,8 +1,10 @@
 <?php
 namespace Cms\View\Cell;
 
+use Cake\Collection\Collection;
 use Cake\Utility\Text;
 use Cake\View\Cell;
+use DateTime;
 
 /**
  * CategoryArticles cell
@@ -70,5 +72,29 @@ class CategoryArticlesCell extends Cell
             }
         }
         $this->set(compact('category', 'article'));
+    }
+
+    /**
+     * Returns published article as of today's date.
+     *
+     * @param  string $categorySlug Selfexplanatory
+     * @return void|bool False, when there is no article found.
+     */
+    public function publish($categorySlug = null)
+    {
+        $this->loadModel('Cms.Articles');
+        $article = $this->Articles
+            ->find('ByCategory', ['category' => $categorySlug])
+            ->order(['Articles.publish_date' => 'DESC'])
+            ->where(['Articles.publish_date <=' => new DateTime('now')])
+            ->first();
+        if (!$article) {
+            return false;
+        }
+        $collection = new Collection($article->get('categories'));
+        $category = $collection->firstMatch([
+            'slug' => $categorySlug
+        ]);
+        $this->set(compact('article', 'category'));
     }
 }
