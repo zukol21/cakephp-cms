@@ -206,4 +206,23 @@ class ArticlesController extends AppController
 
         $this->set(compact('article', 'relatedArticles'));
     }
+
+    /**
+     * Deletes the association and not the record or the physical file.
+     *
+     * @param  string $id FileStorage Id
+     * @return \Cake\Network\Response Redirecting to the referer.
+     */
+    public function softDeleteFeaturedImage($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $entity = $this->Articles->ArticleFeaturedImages->get($id);
+        $entity = $this->Articles->ArticleFeaturedImages->patchEntity($entity, ['foreign_key' => null]);
+        if ($this->Articles->ArticleFeaturedImages->save($entity)) {
+            $this->Flash->success(__('The featured image has been deleted.'));
+        } else {
+            $this->Flash->error(__('The featured image could not be deleted. Please, try again.'));
+        }
+        return $this->redirect($this->referer());
+    }
 }
