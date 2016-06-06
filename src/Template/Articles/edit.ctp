@@ -24,36 +24,30 @@ $idContent = 'article-content';
     <div class="form-group">
         <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
         <?php
-        echo $this->Form->file('file');
-        echo $this->Form->error('file');
-        ?>
-    </div>
-    <?php if (!empty($article->article_featured_images)) : ?>
-        <div class="form-group">
-            <label class="control-label" for="featured-image">Featured Image preview</label>
-        </div>
+        if (!isset($article->article_featured_images[0])) : ?>
+            <?= $this->Form->file('file'); ?>
+            <?= $this->Form->error('file'); ?>
         <?php
-        $sizes = array_keys(Configure::read('FileStorage.imageSizes.' . $article->article_featured_images[0]->model));
-        ?>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <?php foreach ($sizes as $index => $size) : ?>
-                <li role="presentation" class="<?= (!$index) ? 'active' : ''; ?>"><a href="#<?= $size ?>" aria-controls="<?= $size ?>" role="tab" data-toggle="tab"><?= ucwords($size) ?></a></li>
-            <?php endforeach; ?>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <?php foreach ($sizes as $index => $size) : ?>
-                <div role="tabpanel" class="tab-pane fade in <?= (!$index) ? 'active' : ''; ?>" id="<?= $size ?>">
-                    <?= $this->Image->display($article->article_featured_images[0], $size, ['class' => 'img-responsive']); ?>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-</fieldset>
+        else : ?>
+            <div>
+                <?= $this->Html->link(
+                        __d('cms', 'Preview'),
+                        '#',
+                        ['data-target' => '#featuredImage', 'data-toggle' => 'modal']
+                );
+                ?>
+            </div>
+        <?php
+        endif ?>
+    </div>
 <?= $this->Form->button(__("Save"), ['class' => 'btn-primary']); ?>
 <?= $this->Form->end() ?>
+</fieldset>
+<?php
+if (isset($article->article_featured_images[0])) :
+    echo $this->element('Cms.featured-image-preview', ['featuredImage' => $article->article_featured_images[0]]);
+endif;
+?>
 <?php
 $url = $this->Url->assetUrl(['action' => 'uploadFromEditor', $article->id, '_ext' => 'json']);
 echo $this->element('Cms.ckeditor', ['id' => $idContent, 'url' => $url]);
