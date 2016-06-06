@@ -175,12 +175,12 @@ class ArticlesTable extends Table
      *
      * By default, `$options` will recognize the following keys:
      *
-     * - categories
-     * An array of categories slugs.
+     * - article - just the entity
+     * - limit - number of related articles.
      *
      * @param  Query  $query   Raw query object
      * @param  array  $options Set of options
-     * @return Query  $query   Manipulated query object
+     * @return Query|bool  $query   Manipulated query object - False otherwise.
      */
     public function findRelated(Query $query, array $options)
     {
