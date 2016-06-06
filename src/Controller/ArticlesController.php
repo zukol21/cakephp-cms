@@ -11,11 +11,6 @@ use Cms\Controller\AppController;
 class ArticlesController extends AppController
 {
     /**
-     * Number of related articles
-     */
-    const RELATED_LIMIT = 5;
-
-    /**
      * Index method
      *
      * @return \Cake\Network\Response|null
@@ -192,10 +187,9 @@ class ArticlesController extends AppController
      * @todo Rendering view file SHOULD be placed in the application.
      * Create a generic view file.
      * @param  string $articleSlug Article's slug
-     * @param  int $related Number of related articles
      * @return void
      */
-    public function display($articleSlug = null, $related = self::RELATED_LIMIT)
+    public function display($articleSlug = null)
     {
         $article = $this->Articles
             ->find('slugged', ['slug' => $articleSlug])

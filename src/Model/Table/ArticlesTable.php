@@ -19,6 +19,10 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+    /**
+     * Number of related articles.
+     */
+    const RELATED_LIMIT = 5;
 
     /**
      * This variable holds the associated table which
@@ -182,6 +186,8 @@ class ArticlesTable extends Table
     {
         $query->contain($this->getContain());
         $article = Hash::get($options, 'article');
+        $limit = Hash::get($options, 'limit');
+        $limit = $limit ?: self::RELATED_LIMIT;
         $collection = new Collection($article['categories']);
         $collection = $collection->extract('slug');
         $categories = $collection->toArray();
@@ -197,7 +203,8 @@ class ArticlesTable extends Table
                 ->matching('Categories', function ($q) use ($categories) {
                     return $q
                         ->where(['Categories.slug IN' => $categories]);
-                });
+                })
+                ->limit($limit);
     }
 
     /**
