@@ -186,6 +186,9 @@ class ArticlesTable extends Table
     {
         $query->contain($this->getContain());
         $article = Hash::get($options, 'article');
+        if (!$article) {
+            return false;
+        }
         $limit = Hash::get($options, 'limit');
         $limit = $limit ?: self::RELATED_LIMIT;
         $collection = new Collection($article['categories']);
