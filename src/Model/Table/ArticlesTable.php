@@ -2,11 +2,13 @@
 namespace Cms\Model\Table;
 
 use ArrayObject;
+use Cake\Collection\Collection;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Entity\Article;
@@ -17,6 +19,10 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+    /**
+     * Number of related articles.
+     */
+    const RELATED_LIMIT = 5;
 
     /**
      * This variable holds the associated table which
@@ -169,26 +175,39 @@ class ArticlesTable extends Table
      *
      * By default, `$options` will recognize the following keys:
      *
-     * - categories
-     * An array of categories slugs.
+     * - article - just the entity
+     * - limit - number of related articles.
      *
      * @param  Query  $query   Raw query object
      * @param  array  $options Set of options
-     * @return Query  $query   Manipulated query object
+     * @return Query|bool  $query   Manipulated query object - False otherwise.
      */
     public function findRelated(Query $query, array $options)
     {
-        if (!is_array($options['categories'])) {
-            return $query;
+        $query->contain($this->getContain());
+        $article = Hash::get($options, 'article');
+        if (!$article) {
+            return false;
+        }
+        $limit = Hash::get($options, 'limit');
+        $limit = $limit ?: self::RELATED_LIMIT;
+        $collection = new Collection($article['categories']);
+        $collection = $collection->extract('slug');
+        $categories = $collection->toArray();
+        if (empty($categories)) {
+            return false;
         }
 
-        $categories = $options['categories'];
         return $query
                 ->find('all')
+                ->distinct(['Articles.slug'])
+                ->where(['Articles.slug <>' => $article->get('slug')])
                 ->contain($this->getContain())
                 ->matching('Categories', function ($q) use ($categories) {
-                    return $q->where(['Categories.slug IN' => $categories]);
-                });
+                    return $q
+                        ->where(['Categories.slug IN' => $categories]);
+                })
+                ->limit($limit);
     }
 
     /**
