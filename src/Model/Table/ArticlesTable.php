@@ -2,11 +2,13 @@
 namespace Cms\Model\Table;
 
 use ArrayObject;
+use Cake\Collection\Collection;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Entity\Article;
@@ -178,16 +180,23 @@ class ArticlesTable extends Table
      */
     public function findRelated(Query $query, array $options)
     {
-        if (!is_array($options['categories'])) {
-            return $query;
+        $query->contain($this->getContain());
+        $article = Hash::get($options, 'article');
+        $collection = new Collection($article['categories']);
+        $collection = $collection->extract('slug');
+        $categories = $collection->toArray();
+        if (empty($categories)) {
+            return false;
         }
 
-        $categories = $options['categories'];
         return $query
                 ->find('all')
+                ->distinct(['Articles.slug'])
+                ->where(['Articles.slug <>' => $article->get('slug')])
                 ->contain($this->getContain())
                 ->matching('Categories', function ($q) use ($categories) {
-                    return $q->where(['Categories.slug IN' => $categories]);
+                    return $q
+                        ->where(['Categories.slug IN' => $categories]);
                 });
     }
 

@@ -205,18 +205,10 @@ class ArticlesController extends AppController
             throw new NotFoundException(__('cms', 'Cannot find the article {0}.', $articleSlug));
         }
 
-        $categories = [];
-        foreach ($article->categories as $category) {
-            array_push($categories, $category->slug);
-        }
-
-        $relatedArticles = $this->Articles->find('related', ['categories' => $categories]);
-        if (!$relatedArticles->isEmpty()) {
-            //Remove shown one and limit the related articles.
-            $relatedArticles
-                ->where(['Articles.slug <>' => $articleSlug])
-                ->limit($related);
-        }
+        $relatedArticles = $this->Articles->find(
+            'related',
+            ['article' => $article]
+        );
 
         $this->set(compact('article', 'relatedArticles'));
     }
