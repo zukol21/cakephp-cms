@@ -130,27 +130,6 @@ class ArticlesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    /**
-     * Uploads and stores the related file.
-     *
-     * @param  int|null $articleId id of the relate slide
-     * @return boolean           flag
-     */
-    protected function _upload($articleId = null)
-    {
-        $entity = $this->Articles->ArticleFeaturedImages->newEntity();
-        $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
-            $entity,
-            $this->request->data
-        );
-
-        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
-            $this->Flash->set(__('Upload successful'));
-            return true;
-        }
-
-        return false;
-    }
 
     /**
      * Uploads the files from the CKeditor.
