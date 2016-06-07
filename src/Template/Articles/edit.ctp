@@ -30,6 +30,8 @@ $idContent = 'article-content';
         <?php
         else : ?>
             <div>
+                <?= $this->Form->file('file', ['class' => 'hidden']); ?>
+                <?= $this->Form->error('file', ['class' => 'hidden']); ?>
                 <?= $this->Html->link(
                         __d('cms', 'Preview'),
                         '#',
