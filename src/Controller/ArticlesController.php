@@ -68,7 +68,9 @@ class ArticlesController extends AppController
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
                 //Upload the featured image when there is one.
-                $this->_handleUpload($this->request->data['file'], $article);
+                if ($this->_isValidUpload($this->request->data['file'])) {
+                    $this->_upload($article->get('id'));
+                }
 
                 return $this->redirect(['action' => 'index']);
             } else {
@@ -96,7 +98,9 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
                 //Upload the featured image when there is one.
-                $this->_handleUpload($this->request->data['file'], $article);
+                if ($this->_isValidUpload($this->request->data['file'])) {
+                    $this->_upload($article->get('id'));
+                }
 
                 $this->Flash->success(__('The article has been saved.'));
                 return $this->redirect(['action' => 'edit', $article->get('id')]);

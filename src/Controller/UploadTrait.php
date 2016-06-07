@@ -12,7 +12,7 @@ trait UploadTrait
      * @param  object $entity [description]
      * @return void|bool
      */
-    protected function _handleUpload($fileUpload = [], $entity)
+    protected function _isValidUpload($fileUpload = [], $entity)
     {
         if (empty($fileUpload)) {
             return false;
@@ -23,7 +23,7 @@ trait UploadTrait
             return false;
         }
 
-        $this->_upload($entity->get('id'));
+        return true;
     }
 
 
