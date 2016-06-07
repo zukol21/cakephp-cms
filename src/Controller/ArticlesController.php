@@ -2,6 +2,7 @@
 namespace Cms\Controller;
 
 use Cms\Controller\AppController;
+use Cms\Controller\UploadTrait;
 
 /**
  * Articles Controller
@@ -10,6 +11,8 @@ use Cms\Controller\AppController;
  */
 class ArticlesController extends AppController
 {
+    use UploadTrait;
+
     /**
      * Index method
      *
@@ -65,9 +68,8 @@ class ArticlesController extends AppController
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
                 //Upload the featured image when there is one.
-                if (!$this->request->data['file']['error']) {
-                    $this->_upload($article->get('id'));
-                }
+                $this->_handleUpload($this->request->data['file'], $article);
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
@@ -94,9 +96,8 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
                 //Upload the featured image when there is one.
-                if (!$this->request->data['file']['error']) {
-                    $this->_upload($article->get('id'));
-                }
+                $this->_handleUpload($this->request->data['file'], $article);
+
                 $this->Flash->success(__('The article has been saved.'));
                 return $this->redirect(['action' => 'edit', $article->get('id')]);
             } else {
