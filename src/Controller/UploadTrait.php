@@ -13,6 +13,11 @@ trait UploadTrait
      */
     protected function _isValidUpload($data = [])
     {
+        $fileUpload = [];
+        if (isset($data['file']) && is_array($data['file'])) {
+            $fileUpload = $data['file'];
+        }
+
         if (empty($fileUpload)) {
             return false;
         }

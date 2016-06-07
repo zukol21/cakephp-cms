@@ -98,7 +98,7 @@ class ArticlesController extends AppController
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
                 //Upload the featured image when there is one.
-                if ($this->_isValidUpload($this->request->data['file'])) {
+                if ($this->_isValidUpload($this->request->data)) {
                     $this->_upload($article->get('id'));
                 }
 
