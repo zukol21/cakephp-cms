@@ -1,0 +1,90 @@
+<?php
+
+namespace Cms\Controller;
+
+trait UploadTrait
+{
+
+    /**
+     * Upload handler
+     *
+     * @param  array  $fileUpload   [description]
+     * @param  object $entity [description]
+     * @return void|bool
+     */
+    protected function _handleUpload($fileUpload = [], $entity)
+    {
+        if (empty($fileUpload)) {
+            return false;
+        }
+
+        if ($fileUpload['error']) {
+            $this->Flash->error($this->_codeToMessage($fileUpload['error']));
+            return false;
+        }
+
+        $this->_upload($entity->get('id'));
+    }
+
+
+    /**
+     * Converts code to message.
+     *
+     * @see http://php.net/manual/en/features.file-upload.errors.php
+     * @param  string $code code value
+     * @return string Message of the code.
+     */
+    protected function _codeToMessage($code)
+    {
+        switch ($code) {
+            case UPLOAD_ERR_INI_SIZE:
+                $message = __d('cms', 'The uploaded file exceeds the upload_max_filesize directive in php.ini');
+                break;
+            case UPLOAD_ERR_FORM_SIZE:
+                $message = __d('cms', 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                $message = __d('cms', 'The uploaded file was only partially uploaded');
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                $message = __d('cms', 'No file was uploaded');
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $message = __d('cms', 'Missing a temporary folder');
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                $message = __d('cms', 'Failed to write file to disk');
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                $message = __d('cms', 'File upload stopped by extension');
+                break;
+
+            default:
+                $message = __d('cms', 'Unknown upload error');
+                break;
+        }
+        return $message;
+    }
+
+    /**
+     * Uploads and stores the related file.
+     *
+     * @param  int|null $articleId id of the relate slide
+     * @return boolean           flag
+     */
+    protected function _upload($articleId = null)
+    {
+        $entity = $this->Articles->ArticleFeaturedImages->newEntity();
+        $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
+            $entity,
+            $this->request->data
+        );
+
+        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
+            $this->Flash->set(__('Upload successful'));
+            return true;
+        }
+
+        return false;
+    }
+}
