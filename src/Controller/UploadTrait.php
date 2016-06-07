@@ -65,26 +65,4 @@ trait UploadTrait
         }
         return $message;
     }
-
-    /**
-     * Uploads and stores the related file.
-     *
-     * @param  int|null $articleId id of the relate slide
-     * @return boolean           flag
-     */
-    protected function _upload($articleId = null)
-    {
-        $entity = $this->Articles->ArticleFeaturedImages->newEntity();
-        $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
-            $entity,
-            $this->request->data
-        );
-
-        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
-            $this->Flash->set(__d('cms', 'Upload successful'));
-            return true;
-        }
-
-        return false;
-    }
 }
