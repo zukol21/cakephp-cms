@@ -81,7 +81,7 @@ trait UploadTrait
         );
 
         if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
-            $this->Flash->set(__('Upload successful'));
+            $this->Flash->set(__d('cms', 'Upload successful'));
             return true;
         }
 
