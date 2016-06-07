@@ -8,11 +8,10 @@ trait UploadTrait
     /**
      * Upload handler
      *
-     * @param  array  $fileUpload   [description]
-     * @param  object $entity [description]
+     * @param  array  $data   Request data
      * @return void|bool
      */
-    protected function _isValidUpload($fileUpload = [], $entity)
+    protected function _isValidUpload($data = [])
     {
         if (empty($fileUpload)) {
             return false;
