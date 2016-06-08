@@ -30,8 +30,8 @@ class ArticlesController extends AppController
             $articles = $articles->find(
                 'search',
                 [
-                    'fieldNames' => ['title', 'slug'],
-                    'term' => $search
+                    'fieldNames' => $this->Articles->searchableFields(),
+                    'term' => $search,
                 ]
             );
             if ($articles->isEmpty()) {

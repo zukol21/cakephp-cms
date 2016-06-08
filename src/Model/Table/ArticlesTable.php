@@ -288,4 +288,14 @@ class ArticlesTable extends Table
 
         $this->_contain = $contain;
     }
+
+    /**
+     * Return searchable fields.
+     *
+     * @return array Searchable fields
+     */
+    public function searchableFields()
+    {
+        return ['title', 'slug', 'excerpt', 'content'];
+    }
 }
