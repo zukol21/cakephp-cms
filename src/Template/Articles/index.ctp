@@ -2,13 +2,19 @@
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
 $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
 ?>
-<p class="text-right">
-    <?php echo $this->Html->link(
-        __('Add New'),
-        ['plugin' => $this->request->plugin, 'controller' => $this->request->controller, 'action' => 'add'],
-        ['class' => 'btn btn-primary']
-    ); ?>
-</p>
+<div class="pull-right">
+    <p class="text-right">
+        <?php echo $this->Html->link(
+            __('Add New'),
+            ['plugin' => $this->request->plugin, 'controller' => $this->request->controller, 'action' => 'add'],
+            ['class' => 'btn btn-primary']
+        ); ?>
+    </p>
+    <?= $this->Form->create(null, ['type' => 'get', 'class' => 'form-inline articles-search']); ?>
+    <?= $this->Form->input('s', ['label' => false]); ?>
+    <?= $this->Form->button(__d('cms', 'Search'), ['class' => 'btn-info']); ?>
+    <?= $this->Form->end(); ?>
+</div>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
     <thead>
         <tr>
@@ -58,3 +64,5 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
     </ul>
     <p><?= $this->Paginator->counter() ?></p>
 </div>
+
+<?= $this->Html->css('Cms.articles'); ?>
