@@ -211,6 +211,53 @@ class ArticlesTable extends Table
     }
 
     /**
+     * Search function which search the given fields.
+     * Options:
+     * - term, the search term - required
+     * - fields, It is the schema fields could be a string or array - required
+     *
+     * @param  Query  $query   [description]
+     * @param  array  $options [description]
+     * @return [type]          [description]
+     */
+    public function findSearch(Query $query, array $options)
+    {
+        $fields = Hash::get($options, 'fieldNames');
+        $term = Hash::get($options, 'term');
+
+        if (is_null($term) || is_null($fields)) {
+            return $query;
+        }
+
+        //Loads other fields and related tables.
+        $query = $this->find('withLatestImage');
+
+        if (is_string($fields)) {
+            $field = $fields;
+            $query = $query->where(function ($exp, $q) use ($field, $term) {
+                return $exp->like($field, '%' . $term . '%');
+            });
+        }
+
+        if (is_array($fields)) {
+            foreach ($fields as $index => $field) {
+                // First iteration we need to call where() and then for the rest fields
+                // the orWhere()
+                if (!$index) {
+                    $function = 'where';
+                } else {
+                    $function = 'orWhere';
+                }
+                $query = $query->{$function}(function ($exp, $q) use ($field, $term) {
+                    return $exp->like($field, '%' . $term . '%');
+                });
+            }
+        }
+
+        return $query;
+    }
+
+    /**
      * Returns the associated tables.
      *
      * @return array
