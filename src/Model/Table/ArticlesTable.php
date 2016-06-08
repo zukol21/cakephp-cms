@@ -216,9 +216,9 @@ class ArticlesTable extends Table
      * - term, the search term - required
      * - fields, It is the schema fields could be a string or array - required
      *
-     * @param  Query  $query   [description]
-     * @param  array  $options [description]
-     * @return [type]          [description]
+     * @param  Query  $query   Raw Query
+     * @param  array  $options functions's options
+     * @return Query           Raw|Manipulated Query
      */
     public function findSearch(Query $query, array $options)
     {
