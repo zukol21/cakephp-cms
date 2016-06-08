@@ -20,14 +20,29 @@ class ArticlesController extends AppController
      */
     public function index()
     {
-        $query = $this->Articles
+        $search = $this->request->query('s');
+        $articles = $this->Articles
             ->find('withLatestImage')
             ->order(['modified' => 'DESC']);
-        $articles = $this->paginate($query);
-        if ($articles->isEmpty()) {
-            $this->Flash->set(__('No articles were found. Please add one.'));
-            return $this->redirect(['action' => 'add']);
+        if (is_null($search)) {
+            if ($articles->isEmpty()) {
+                $this->Flash->set(__('No articles were found. Please add one.'));
+                return $this->redirect(['action' => 'add']);
+            }
+        } else {
+            $articles = $articles->find(
+                'search',
+                [
+                    'fieldNames' => $this->Articles->searchableFields(),
+                    'term' => $search,
+                ]
+            );
+            if ($articles->isEmpty()) {
+                $this->Flash->set(__d('cms', 'No articles found for the search term: {0}', $search));
+            }
         }
+
+        $articles = $this->paginate($articles);
         $this->set(compact('articles'));
         $this->set('_serialize', ['articles']);
     }
