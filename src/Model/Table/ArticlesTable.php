@@ -207,6 +207,7 @@ class ArticlesTable extends Table
                     return $q
                         ->where(['Categories.slug IN' => $categories]);
                 })
+                ->order(['Articles.publish_date' => 'DESC'])
                 ->limit($limit);
     }
 
