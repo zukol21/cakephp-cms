@@ -64,12 +64,10 @@ class CategoryArticlesCell extends Cell
             $article->excerpt = strip_tags($article->excerpt);
             $article->excerpt = Text::truncate($article->excerpt, $excerptLength, ['ellipsis' => '...']);
             //Get the category entity.
-            foreach ($article->categories as $key => $cat) {
-                if ($categorySlug === $cat->slug) {
-                    $category = $article->categories[$key];
-                    break;
-                }
-            }
+            $collection = new Collection($article->get('categories'));
+            $category = $collection->firstMatch([
+                'slug' => $categorySlug
+            ]);
         }
         $this->set(compact('category', 'article'));
     }
