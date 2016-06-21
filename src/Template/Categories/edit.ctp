@@ -9,6 +9,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Edit ' . $category->name));
     <?php
     echo $this->Form->input('name');
     echo $this->Form->input('parent_id', ['options' => $list, 'escape' => false]);
+    echo $this->Form->input('hide_title');
     ?>
 </fieldset>
 <?= $this->Form->button(__("Save")); ?>
