@@ -59,7 +59,11 @@ class CategoryArticlesCell extends Cell
     {
         $category = null;
         $this->loadModel('Cms.Articles');
-        $article = $this->Articles->find('ByCategory', ['category' => $categorySlug])->first();
+        $article = $this->Articles
+            ->find('ByCategory', ['category' => $categorySlug])
+            ->order(['Articles.publish_date' => 'DESC'])
+            ->where(['Articles.publish_date <=' => new DateTime('now')])
+            ->first();
         if ($article) {
             $article->excerpt = strip_tags($article->excerpt);
             $article->excerpt = Text::truncate($article->excerpt, $excerptLength, ['ellipsis' => '...']);
