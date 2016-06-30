@@ -3,6 +3,7 @@ namespace Cms\Model\Table;
 
 use ArrayObject;
 use Cake\Collection\Collection;
+use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
@@ -19,10 +20,12 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+
     /**
-     * Number of related articles.
+     * Related articles limit
+     * @var int
      */
-    const RELATED_LIMIT = 5;
+    public $related;
 
     /**
      * This variable holds the associated table which
@@ -71,6 +74,7 @@ class ArticlesTable extends Table
             'className' => 'Cms.Categories'
         ]);
         $this->addBehavior('Muffin/Slug.Slug');
+        $this->setRelated();
     }
 
     /**
@@ -190,7 +194,7 @@ class ArticlesTable extends Table
             return false;
         }
         $limit = Hash::get($options, 'limit');
-        $limit = $limit ?: self::RELATED_LIMIT;
+        $limit = $limit ?: $this->related;
         $collection = new Collection($article['categories']);
         $collection = $collection->extract('slug');
         $categories = $collection->toArray();
@@ -298,5 +302,31 @@ class ArticlesTable extends Table
     public function searchableFields()
     {
         return ['title', 'slug', 'excerpt', 'content'];
+    }
+
+
+    /**
+     * Setter method of related articles limit.
+     *
+     * @param  int $limit Number of related articles.
+     * @return void
+     */
+    public function setRelated($limit = null)
+    {
+        if (is_numeric($limit)) {
+            $this->related = $limit;
+        } else {
+            $this->related = Configure::read('Cms.articles.related');
+        }
+    }
+
+    /**
+     * Returns the related articles limit.
+     *
+     * @return int related articles.
+     */
+    public function getRelated()
+    {
+        return $this->related;
     }
 }
