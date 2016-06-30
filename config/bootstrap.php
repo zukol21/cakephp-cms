@@ -18,3 +18,8 @@ if (!Configure::check('Cms.ckeditor.upload.plugin.url')) {
 if (!Configure::check('Cms.ckeditor.custom.config.url')) {
     Configure::write('Cms.ckeditor.custom.config.url', 'Cms.ckeditor-config');
 }
+
+//CMS
+if (!Configure::check('Cms.articles.related')) {
+    Configure::write('Cms.articles.related', 5);
+}
