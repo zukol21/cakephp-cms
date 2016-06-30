@@ -194,7 +194,7 @@ class ArticlesTable extends Table
             return false;
         }
         $limit = Hash::get($options, 'limit');
-        $limit = $limit ?: self::RELATED_LIMIT;
+        $limit = $limit ?: $this->related;
         $collection = new Collection($article['categories']);
         $collection = $collection->extract('slug');
         $categories = $collection->toArray();
