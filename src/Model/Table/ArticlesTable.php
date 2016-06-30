@@ -3,6 +3,7 @@ namespace Cms\Model\Table;
 
 use ArrayObject;
 use Cake\Collection\Collection;
+use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Query;
@@ -19,10 +20,12 @@ use Cms\Model\Entity\Article;
  */
 class ArticlesTable extends Table
 {
+
     /**
-     * Number of related articles.
+     * Related articles limit
+     * @var int
      */
-    const RELATED_LIMIT = 5;
+    public $related;
 
     /**
      * This variable holds the associated table which
