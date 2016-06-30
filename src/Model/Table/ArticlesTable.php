@@ -74,6 +74,7 @@ class ArticlesTable extends Table
             'className' => 'Cms.Categories'
         ]);
         $this->addBehavior('Muffin/Slug.Slug');
+        $this->setRelated();
     }
 
     /**
@@ -301,5 +302,31 @@ class ArticlesTable extends Table
     public function searchableFields()
     {
         return ['title', 'slug', 'excerpt', 'content'];
+    }
+
+
+    /**
+     * Setter method of related articles limit.
+     *
+     * @param  int $limit Number of related articles.
+     * @return void
+     */
+    public function setRelated($limit = null)
+    {
+        if (is_numeric($limit)) {
+            $this->related = $limit;
+        } else {
+            $this->related = Configure::read('Cms.articles.related');
+        }
+    }
+
+    /**
+     * Returns the related articles limit.
+     *
+     * @return int related articles.
+     */
+    public function getRelated()
+    {
+        return $this->related;
     }
 }
