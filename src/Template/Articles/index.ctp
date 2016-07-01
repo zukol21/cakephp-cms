@@ -22,6 +22,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
             <th><?= $this->Paginator->sort('slug'); ?></th>
             <th><?= $this->Paginator->sort('categories'); ?></th>
             <th><?= $this->Paginator->sort('Author'); ?></th>
+            <th><?= $this->Paginator->sort('Publish'); ?></th>
             <th><?= __d('cms', 'Featured Image'); ?></th>
             <th class="actions"><?= __('Actions'); ?></th>
         </tr>
@@ -40,6 +41,13 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
             ?>
             <td><?= $this->Text->toList($categories); ?></td>
             <td><?= h($article->created_by) ?></td>
+            <td>
+            <?php if ($article->publish_date < new DateTime('now')) : ?>
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+            <?php else : ?>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td>
+            <?php endif; ?>
+            </td>
             <td>
             <?=
                 isset($article->article_featured_images[0])
