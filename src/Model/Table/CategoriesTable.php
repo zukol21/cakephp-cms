@@ -6,6 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cms\Model\Entity\Category;
+use DateTime;
 
 /**
  * Categories Model
@@ -47,7 +48,8 @@ class CategoriesTable extends Table
             'targetForeignKey' => 'article_id',
             'joinTable' => 'articles_categories',
             'className' => 'Cms.Articles',
-            'sort' => ['Articles.publish_date' => 'DESC']
+            'sort' => ['Articles.publish_date' => 'DESC'],
+            'conditions' => ['Articles.publish_date <=' => new DateTime('now')]
         ]);
         $this->addBehavior('Muffin/Slug.Slug');
     }
