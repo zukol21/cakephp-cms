@@ -26,9 +26,6 @@ class CategoriesTableTest extends TestCase
     public $fixtures = [
         'plugin.cms.categories',
         'plugin.cms.articles',
-        'plugin.cms.article_featured_images',
-        'plugin.cms.content_images',
-        'plugin.cms.articles_categories'
     ];
 
     /**

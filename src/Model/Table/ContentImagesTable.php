@@ -12,7 +12,7 @@ class ContentImagesTable extends ImageStorageTable
      * @see ImageStorageTable class
      * @param  uuid $articleId the id of the article
      * @param  object $entity  Entity object
-     * @return boolean         Flag whether the record has got stored or not
+     * @return bool         Flag whether the record has got stored or not
      */
     public function uploadImage($articleId, $entity)
     {

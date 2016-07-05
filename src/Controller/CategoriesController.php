@@ -13,7 +13,7 @@ class CategoriesController extends AppController
     /**
      * Index method
      *
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function index()
     {
@@ -41,7 +41,7 @@ class CategoriesController extends AppController
      * View method
      *
      * @param string|null $id Category id.
-     * @return \Cake\Network\Response|null
+     * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
@@ -125,7 +125,7 @@ class CategoriesController extends AppController
      * Display method is usually used to populater category templates.
      *
      * @param  string $category Category's slug
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function display($category = null)
     {
@@ -159,7 +159,7 @@ class CategoriesController extends AppController
      * @param  string $id category id
      * @param  string $action move action
      * @throws InvalidPrimaryKeyException When provided id is invalid.
-     * @return void
+     * @return \Cake\Network\Response|null
      */
     public function moveNode($id = null, $action = '')
     {
