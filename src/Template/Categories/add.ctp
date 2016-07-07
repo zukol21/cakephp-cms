@@ -7,6 +7,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'Add new'));
     <?php
     echo $this->Form->input('name');
     echo $this->Form->input('parent_id', ['options' => $list, 'escape' => false]);
+    echo $this->Form->input('align_category_article_image', ['options' => $category->get('align_options')]);
     echo $this->Form->input('hide_title');
     ?>
 </fieldset>
