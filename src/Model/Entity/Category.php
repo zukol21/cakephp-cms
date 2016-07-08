@@ -34,4 +34,20 @@ class Category extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    /**
+     * Options for aligning the article image.
+     *
+     * @return array Align options.
+     */
+    protected function _getAlignOptions()
+    {
+        return [
+            'left' => __d('cms', 'Left'),
+            'right' => __d('cms', 'Right'),
+            'center' => __d('cms', 'Center'),
+            'stretch' => __d('cms', 'Stretch'),
+            'img-responsive' => __d('cms', 'Responsive'),
+        ];
+    }
 }

@@ -18,6 +18,10 @@
             <td><?= h($category->hide_title) ?></td>
         </tr>
         <tr>
+            <td><?= __('Align option') ?></td>
+            <td><?= h($category->align_category_article_image) ?></td>
+        </tr>
+        <tr>
             <td><?= __('Parent Category') ?></td>
             <td><?= $category->has('parent_category') ? $this->Html->link($category->parent_category->name, ['controller' => 'Categories', 'action' => 'view', $category->parent_category->id]) : '' ?></td>
         </tr>

@@ -1,0 +1,16 @@
+img.left {
+    display: block;
+}
+
+img.right {
+    float: right;
+}
+
+img.center {
+    display: block;
+    margin: 0 auto;
+}
+
+img.stretch {
+    width: 100%;
+}
