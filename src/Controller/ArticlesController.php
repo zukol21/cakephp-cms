@@ -27,6 +27,7 @@ class ArticlesController extends AppController
         if (is_null($search)) {
             if ($articles->isEmpty()) {
                 $this->Flash->set(__('No articles were found. Please add one.'));
+
                 return $this->redirect(['action' => 'add']);
             }
         } else {
@@ -116,8 +117,8 @@ class ArticlesController extends AppController
                 if ($this->_isValidUpload($this->request->data)) {
                     $this->_upload($article->get('id'));
                 }
-
                 $this->Flash->success(__('The article has been saved.'));
+
                 return $this->redirect(['action' => 'edit', $article->get('id')]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
@@ -146,6 +147,7 @@ class ArticlesController extends AppController
         } else {
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 
@@ -165,6 +167,7 @@ class ArticlesController extends AppController
 
         if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
             $this->Flash->set(__('Upload successful'));
+
             return true;
         }
 
@@ -243,6 +246,7 @@ class ArticlesController extends AppController
         } else {
             $this->Flash->error(__('The featured image could not be deleted. Please, try again.'));
         }
+
         return $this->redirect($this->referer());
     }
 }

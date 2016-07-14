@@ -24,6 +24,7 @@ trait UploadTrait
 
         if ($fileUpload['error']) {
             $this->Flash->error($this->_codeToMessage($fileUpload['error']));
+
             return false;
         }
 
@@ -67,6 +68,7 @@ trait UploadTrait
                 $message = __d('cms', 'Unknown upload error');
                 break;
         }
+
         return $message;
     }
 }

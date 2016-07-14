@@ -25,6 +25,7 @@ class CategoriesController extends AppController
             ->order(['lft' => 'ASC']);
         if ($categories->isEmpty()) {
             $this->Flash->set(__('No categories were found. Please add one.'));
+
             return $this->redirect(['action' => 'add']);
         }
         //Create node property in the entity object
@@ -66,6 +67,7 @@ class CategoriesController extends AppController
             $category = $this->Categories->patchEntity($category, $this->request->data);
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
@@ -92,6 +94,7 @@ class CategoriesController extends AppController
             $category = $this->Categories->patchEntity($category, $this->request->data);
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
@@ -118,6 +121,7 @@ class CategoriesController extends AppController
         } else {
             $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 
@@ -131,6 +135,7 @@ class CategoriesController extends AppController
     {
         if (is_null($category)) {
             $this->Flash->error(__d('cms', 'Please provide a category slug.'));
+
             return $this->redirect('/');
         }
 
@@ -142,6 +147,7 @@ class CategoriesController extends AppController
             ->first();
         if (!$category) {
             $this->Flash->error(__d('cms', 'The category does not exist.'));
+
             return $this->redirect('/');
         }
         //For parent category
@@ -166,6 +172,7 @@ class CategoriesController extends AppController
         $moveActions = ['up', 'down'];
         if (!in_array($action, $moveActions)) {
             $this->Flash->error(__('Unknown move action.'));
+
             return $this->redirect(['action' => 'index']);
         }
         $node = $this->Categories->get($id);
@@ -175,6 +182,7 @@ class CategoriesController extends AppController
         } else {
             $this->Flash->error(__('Fail to move {0} {1}.', $node->name, $action));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }
