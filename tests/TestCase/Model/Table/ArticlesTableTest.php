@@ -58,7 +58,31 @@ class ArticlesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        //Table name
+        $result = $this->Articles->table();
+        $expected = 'articles';
+        $this->assertEquals($expected, $result);
+        //Display field
+        $result = $this->Articles->displayField();
+        $expected = 'title';
+        $this->assertEquals($expected, $result);
+        //Primary key
+        $result = $this->Articles->primaryKey();
+        $expected = 'id';
+        $this->assertEquals($expected, $result);
+        //Behaviors
+        $behaviors = $this->Articles->behaviors()->loaded();
+        $this->assertTrue(in_array('Timestamp', $behaviors));
+        $this->assertTrue(in_array('Slug', $behaviors));
+        //Associations
+        $associations = $this->Articles->associations();
+        $result = [];
+        foreach ($associations as $assocObj) {
+            $result[] = $assocObj->name();
+        }
+        $this->assertTrue(in_array('ArticleFeaturedImages', $result));
+        $this->assertTrue(in_array('ContentImages', $result));
+        $this->assertTrue(in_array('Categories', $result));
     }
 
     /**
