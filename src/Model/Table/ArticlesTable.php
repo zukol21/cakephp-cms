@@ -99,7 +99,7 @@ class ArticlesTable extends Table
 
         $validator
             ->requirePresence('content', 'create')
-            ->notEmpty('content');
+            ->allowEmpty('content');
 
         $validator
             ->requirePresence('categories', 'create')
