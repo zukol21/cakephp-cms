@@ -123,6 +123,7 @@ class ArticlesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['slug']));
+
         return $rules;
     }
 
@@ -143,6 +144,7 @@ class ArticlesTable extends Table
                 ->where(['id' => $options['id']])
                 ->first();
         }
+
         return $query;
     }
 
