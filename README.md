@@ -13,7 +13,7 @@ composer require qobo/cakephp-cms
 
 Load plugin
 ```
-bin/cake plugin load QoboAdminPanel
+bin/cake plugin load Cms
 ```
 
 ## WYSIWYG editor
