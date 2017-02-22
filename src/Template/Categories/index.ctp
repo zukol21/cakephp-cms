@@ -11,7 +11,7 @@ $this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($categories as $category): ?>
+        <?php foreach ($categories as $category) : ?>
         <tr>
             <td><?= $category->node ?></td>
             <td class="actions">

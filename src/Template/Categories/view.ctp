@@ -41,7 +41,7 @@
     <div class="panel-heading">
         <h3 class="panel-title"><?= __('Related Categories') ?></h3>
     </div>
-    <?php if (!empty($category->child_categories)): ?>
+    <?php if (!empty($category->child_categories)) : ?>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -51,7 +51,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($category->child_categories as $childCategories): ?>
+            <?php foreach ($category->child_categories as $childCategories) : ?>
                 <tr>
                     <td><?= h($childCategories->slug) ?></td>
                     <td><?= h($childCategories->name) ?></td>
@@ -64,7 +64,7 @@
             <?php endforeach; ?>
             </tbody>
         </table>
-    <?php else: ?>
+    <?php else : ?>
         <p class="panel-body">no related Categories</p>
     <?php endif; ?>
 </div>
@@ -73,7 +73,7 @@
     <div class="panel-heading">
         <h3 class="panel-title"><?= __('Related Articles') ?></h3>
     </div>
-    <?php if (!empty($category->articles)): ?>
+    <?php if (!empty($category->articles)) : ?>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -91,7 +91,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($category->articles as $articles): ?>
+            <?php foreach ($category->articles as $articles) : ?>
                 <tr>
                     <td><?= h($articles->id) ?></td>
                     <td><?= h($articles->title) ?></td>
@@ -112,7 +112,7 @@
             <?php endforeach; ?>
             </tbody>
         </table>
-    <?php else: ?>
+    <?php else : ?>
         <p class="panel-body">no related Articles</p>
     <?php endif; ?>
 </div>

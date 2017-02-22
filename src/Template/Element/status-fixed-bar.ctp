@@ -13,10 +13,7 @@ foreach ($editableEntites as $entity) {
     <nav class="navbar navbar-inverse navbar-fixed-bottom">
         <div class="container">
             <ul class="nav navbar-nav">
-                <li><?= $this->Html->link(
-                    __d('cms', 'Edit Page'),
-                    ['action' => 'edit', $id]
-                ); ?></li>
+                <li><?= $this->Html->link(__d('cms', 'Edit Page'), ['action' => 'edit', $id]); ?></li>
             </ul>
         </div>
     </nav>
