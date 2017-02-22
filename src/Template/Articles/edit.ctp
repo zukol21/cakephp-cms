@@ -1,5 +1,6 @@
 <?php
 use Cake\Core\Configure;
+
 $this->extend('QoboAdminPanel./Common/panel-wrapper');
 $this->assign('panel-title', __d('QoboAdminPanel', __('Edit {0}', $article->title)));
 $idContent = 'article-content';
@@ -33,9 +34,9 @@ $idContent = 'article-content';
                 <?= $this->Form->file('file', ['class' => 'hidden']); ?>
                 <?= $this->Form->error('file', ['class' => 'hidden']); ?>
                 <?= $this->Html->link(
-                        __d('cms', 'Preview'),
-                        '#',
-                        ['data-target' => '#featuredImage', 'data-toggle' => 'modal']
+                    __d('cms', 'Preview'),
+                    '#',
+                    ['data-target' => '#featuredImage', 'data-toggle' => 'modal']
                 );
                 ?>
             </div>
