@@ -6,7 +6,8 @@
     "require": {
         "cakephp/cakephp": "~3.3.0",
         "fzaninotto/faker": "*",
-        "muffin/slug": "1.1.0"
+        "muffin/slug": "1.1.0",
+        "maiconpinto/cakephp-adminlte-theme": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
