@@ -1,4 +1,3 @@
-<?= $this->element('QoboAdminPanel.main-title'); ?>
 <div class="panel panel-default">
     <!-- Panel header -->
     <div class="panel-heading">

@@ -1,8 +1,3 @@
-<?php
-$this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('title', __d('QoboAdminPanel', 'Article information'));
-$this->assign('panel-title', __d('QoboAdminPanel', $article->title));
-?>
 <table class="table table-striped" cellpadding="0" cellspacing="0">
     <tr>
         <td><?= __('Slug') ?></td>
