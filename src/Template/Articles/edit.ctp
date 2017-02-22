@@ -1,8 +1,6 @@
 <?php
 use Cake\Core\Configure;
 
-$this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('panel-title', __d('QoboAdminPanel', __('Edit {0}', $article->title)));
 $idContent = 'article-content';
 ?>
 <?= $this->Form->create($article, ['type' => 'file']); ?>
@@ -13,15 +11,8 @@ $idContent = 'article-content';
     echo $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]);
     echo $this->Form->input('excerpt', ['type' => 'textarea']);
     echo $this->Form->input('categories._ids', ['options' => $categories, 'escape' => false]);
+    echo $this->Form->input('publish_date', ['type' => 'datetime']);
     ?>
-    <?= $this->element('QoboAdminPanel.datepicker', [
-        'options' => [
-            'fieldName' => 'publish_date',
-            'type' => 'datetimepicker',
-            'label' => true,
-            'value' => $article->publish_date->format('Y/m/d H:i:s')
-        ]
-    ]); ?>
     <div class="form-group">
         <label class="control-label" for="featured-image"><?= __d('cms', 'Featured Image'); ?></label>
         <?php

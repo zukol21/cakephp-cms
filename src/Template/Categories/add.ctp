@@ -1,7 +1,3 @@
-<?php
-$this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('panel-title', __d('QoboAdminPanel', 'Add new'));
-?>
 <?= $this->Form->create($category); ?>
 <fieldset>
     <?php

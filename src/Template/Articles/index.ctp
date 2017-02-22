@@ -1,7 +1,3 @@
-<?php
-$this->extend('QoboAdminPanel./Common/panel-wrapper');
-$this->assign('panel-title', __d('QoboAdminPanel', 'View all'));
-?>
 <div class="pull-right">
     <p class="text-right">
         <?php echo $this->Html->link(
