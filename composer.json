@@ -15,7 +15,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Cms\\": "src"
+            "Cms\\": "src",
+            "Cms\\Test\\Fixture\\": "tests\\Fixture"
         }
     },
     "autoload-dev": {
