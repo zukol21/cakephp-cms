@@ -38,9 +38,9 @@ echo $this->Html->scriptBlock(
     });',
     ['block' => 'scriptBotton']
 );
-$idContent = 'article-content';
+$ckeditorId = 'ckeditor' . uniqid();
 echo $this->element('Cms.ckeditor', [
-    'id' => $idContent,
+    'id' => $ckeditorId,
     'url' => $this->Url->assetUrl(['action' => 'uploadFromEditor', $article->id, '_ext' => 'json'])
 ]);
 ?>
@@ -80,7 +80,7 @@ echo $this->element('Cms.ckeditor', [
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <?= $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]) ?>
+                    <?= $this->Form->input('content', ['type' => 'textarea', 'id' => $ckeditorId]) ?>
                 </div>
             </div>
             <div class="row">
