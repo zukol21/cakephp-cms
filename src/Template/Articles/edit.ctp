@@ -1,4 +1,6 @@
 <?php
+use Cake\I18n\Time;
+
 echo $this->Html->css(
     [
         'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
@@ -38,9 +40,9 @@ echo $this->Html->scriptBlock(
     });',
     ['block' => 'scriptBotton']
 );
-$idContent = 'article-content';
+$ckeditorId = 'ckeditor' . uniqid();
 echo $this->element('Cms.ckeditor', [
-    'id' => $idContent,
+    'id' => $ckeditorId,
     'url' => $this->Url->assetUrl(['action' => 'uploadFromEditor', $article->id, '_ext' => 'json'])
 ]);
 ?>
@@ -48,61 +50,106 @@ echo $this->element('Cms.ckeditor', [
     <h1><?= __('Edit {0}', ['Article']) ?></h1>
 </section>
 <section class="content">
-    <div class="box box-solid">
-        <?= $this->Form->create($article, ['type' => 'file']) ?>
-        <div class="box-body">
+    <?= $this->Form->create($article, ['type' => 'file']) ?>
+    <div class="row">
+        <div class="col-lg-4 col-lg-push-8">
             <div class="row">
-                <div class="col-md-4">
-                    <?= $this->Form->input('title') ?>
-                </div>
-                <div class="col-md-4">
-                    <div><?= $this->Form->label(__('Categories')); ?></div>
-                    <?= $this->Form->select('categories._ids', $categories, [
-                        'class' => 'select2',
-                        'multiple' => true
-                    ]); ?>
-                </div>
-                <div class="col-md-4">
-                    <?= $this->Form->input('publish_date', [
-                        'type' => 'text',
-                        'class' => 'datetimepicker',
-                        'autocomplete' => 'off',
-                        'templates' => [
-                            'input' => '<div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
+                <div class="col-xs-12 col-md-4 col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa fa-info-circle"></i>
+                            <h3 class="box-title">Info</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <?= $this->Form->input('title') ?>
                                 </div>
-                                <input type="{{type}}" name="{{name}}"{{attrs}}/>
-                            </div>'
-                        ]
-                    ]) ?>
+                                <div class="col-xs-12">
+                                    <div><?= $this->Form->label(__('Categories')); ?></div>
+                                    <?= $this->Form->select('categories._ids', $categories, [
+                                        'class' => 'select2',
+                                        'multiple' => true
+                                    ]); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <?= $this->Form->input('content', ['type' => 'textarea', 'id' => $idContent]) ?>
+                <div class="col-xs-12 col-md-4 col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa fa-calendar"></i>
+                            <h3 class="box-title">Publish</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <?= $this->Form->input('publish_date', [
+                                        'type' => 'text',
+                                        'class' => 'datetimepicker',
+                                        'autocomplete' => 'off',
+                                        'value' => $article->publish_date instanceof Time ?
+                                            $article->publish_date->i18nFormat('yyyy-MM-dd HH:mm') :
+                                            $article->publish_date,
+                                        'templates' => [
+                                            'input' => '<div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                                <input type="{{type}}" name="{{name}}"{{attrs}}/>
+                                            </div>'
+                                        ]
+                                    ]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <?= $this->Form->input('excerpt', ['type' => 'textarea']) ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label" for="featured-image">
-                            <?= __d('cms', 'Featured Image') ?>
-                        </label>
-                        <?= $this->Form->file('file') ?>
-                        <?= $this->Form->error('file') ?>
+                <div class="col-xs-12 col-md-4 col-lg-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa fa-file-image-o"></i>
+                            <h3 class="box-title">Featured Image</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="featured-image">
+                                            <?= __d('cms', 'Featured Image') ?>
+                                        </label>
+                                        <?= $this->Form->file('file') ?>
+                                        <?= $this->Form->error('file') ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="box-footer">
-            <?= $this->Form->button(__('Submit'), ['class' => 'btn-primary']) ?>
+        <div class="col-lg-8 col-lg-pull-4">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <h3 class="box-title">Content</h3>
+                </div>
+                <div class="box-body">
+                    <?= $this->Form->input('content', ['type' => 'textarea', 'id' => $ckeditorId, 'label' => false]) ?>
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-ellipsis-h"></i>
+                    <h3 class="box-title">Excerpt</h3>
+                </div>
+                <div class="box-body">
+                    <?= $this->Form->input('excerpt', ['type' => 'textarea', 'label' => false]) ?>
+                </div>
+            </div>
         </div>
-        <?= $this->Form->end() ?>
     </div>
+    <?= $this->Form->button(__('Submit'), ['class' => 'btn-primary']) ?>
+    <?= $this->Form->end() ?>
 </section>

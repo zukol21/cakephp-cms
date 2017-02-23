@@ -1,4 +1,6 @@
 <?php
+$this->loadHelper('Burzum/FileStorage.Image');
+
 echo $this->Html->css('AdminLTE./plugins/datatables/dataTables.bootstrap', ['block' => 'css']);
 echo $this->Html->script(
     [
