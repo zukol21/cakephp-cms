@@ -205,32 +205,6 @@ class ArticlesController extends AppController
     }
 
     /**
-     * Display method is usually used to populater category templates.
-     *
-     * @todo Rendering view file SHOULD be placed in the application.
-     * Create a generic view file.
-     * @param  string $articleSlug Article's slug
-     * @return void
-     */
-    public function display($articleSlug = null)
-    {
-        $article = $this->Articles
-            ->find('slugged', ['slug' => $articleSlug])
-            ->contain($this->Articles->getContain())
-            ->first();
-        if (!$article) {
-            throw new NotFoundException(__('cms', 'Cannot find the article {0}.', $articleSlug));
-        }
-
-        $relatedArticles = $this->Articles->find(
-            'related',
-            ['article' => $article]
-        );
-
-        $this->set(compact('article', 'relatedArticles'));
-    }
-
-    /**
      * Deletes the association and not the record or the physical file.
      *
      * @param  string $id FileStorage Id

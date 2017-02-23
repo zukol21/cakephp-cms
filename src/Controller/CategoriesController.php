@@ -126,40 +126,6 @@ class CategoriesController extends AppController
     }
 
     /**
-     * Display method is usually used to populater category templates.
-     *
-     * @param  string $category Category's slug
-     * @return \Cake\Network\Response|null
-     */
-    public function display($category = null)
-    {
-        if (is_null($category)) {
-            $this->Flash->error(__d('cms', 'Please provide a category slug.'));
-
-            return $this->redirect('/');
-        }
-
-        $category = $this->Categories
-            ->find('slugged', ['slug' => $category])
-            ->contain([
-                'Articles' => ['ArticleFeaturedImages'],
-            ])
-            ->first();
-        if (!$category) {
-            $this->Flash->error(__d('cms', 'The category does not exist.'));
-
-            return $this->redirect('/');
-        }
-        //For parent category
-        $children = $this->Categories
-            ->find('children', ['for' => $category->id])
-            ->contain([
-                'Articles' => ['ArticleFeaturedImages'],
-            ]);
-        $this->set(compact('category', 'children'));
-    }
-
-    /**
      * Move the node.
      *
      * @param  string $id category id
