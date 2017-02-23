@@ -1,3 +1,4 @@
+<?php $this->loadHelper('Burzum/FileStorage.Image'); ?>
 <section class="content-header">
     <h1><?= $this->Html->link(
         __('Articles'),
