@@ -67,12 +67,7 @@ class ArticlesTable extends Table
                 'ContentImages.model' => 'ContentImage'
             ]
         ]);
-        $this->belongsToMany('Categories', [
-            'foreignKey' => 'article_id',
-            'targetForeignKey' => 'category_id',
-            'joinTable' => 'articles_categories',
-            'className' => 'Cms.Categories'
-        ]);
+        $this->belongsTo('Cms.Categories');
         $this->addBehavior('Muffin/Slug.Slug');
         $this->setRelated();
     }
@@ -102,8 +97,8 @@ class ArticlesTable extends Table
             ->allowEmpty('content');
 
         $validator
-            ->requirePresence('categories', 'create')
-            ->notEmpty('categories');
+            ->requirePresence('category_id', 'create')
+            ->notEmpty('category_id');
 
         $validator
             ->dateTime('publish_date')
@@ -141,7 +136,7 @@ class ArticlesTable extends Table
             ->contain($this->getContain());
         if (isset($options['id'])) {
             $query = $query
-                ->where(['id' => $options['id']])
+                ->where(['Articles.id' => $options['id']])
                 ->first();
         }
 

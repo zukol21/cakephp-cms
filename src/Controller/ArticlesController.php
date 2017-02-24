@@ -23,7 +23,7 @@ class ArticlesController extends AppController
         $search = $this->request->query('s');
         $articles = $this->Articles
             ->find('withLatestImage')
-            ->order(['modified' => 'DESC']);
+            ->order(['Articles.modified' => 'DESC']);
         if (is_null($search)) {
             if ($articles->isEmpty()) {
                 $this->Flash->set(__('No articles were found. Please add one.'));
@@ -58,11 +58,8 @@ class ArticlesController extends AppController
     public function view($id = null)
     {
         $article = $this->Articles->find('withLatestImage', ['id' => $id]);
-        $categories = [];
-        foreach ($article->categories as $category) {
-            $categories[] = $category->name;
-        }
-        $this->set(compact('article', 'categories'));
+
+        $this->set(compact('article'));
         $this->set('_serialize', ['article']);
     }
 
