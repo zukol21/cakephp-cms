@@ -21,6 +21,7 @@ echo $this->Html->scriptBlock(
     '$(".select2").select2({
         theme: "bootstrap",
         placeholder: "-- Please choose --",
+        escapeMarkup: function (text) { return text; }
     });',
     ['block' => 'scriptBotton']
 );
