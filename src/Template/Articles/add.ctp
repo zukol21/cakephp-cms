@@ -20,9 +20,7 @@ echo $this->Html->script(
 echo $this->Html->scriptBlock(
     '$(".select2").select2({
         theme: "bootstrap",
-        tags: "true",
         placeholder: "-- Please choose --",
-        allowClear: true
     });',
     ['block' => 'scriptBotton']
 );
