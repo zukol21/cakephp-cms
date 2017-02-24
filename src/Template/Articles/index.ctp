@@ -37,7 +37,7 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <th><?= __('Title'); ?></th>
                         <th><?= __('Slug'); ?></th>
-                        <th><?= __('Categories'); ?></th>
+                        <th><?= __('Category'); ?></th>
                         <th><?= __('Author'); ?></th>
                         <th><?= __('Publish'); ?></th>
                         <th><?= __('Featured Image'); ?></th>
@@ -49,14 +49,7 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <td><?= h($article->title) ?></td>
                         <td><?= h($article->slug) ?></td>
-                        <?php
-                        //Printing out categories
-                        $categories = [];
-                        foreach ($article->categories as $category) {
-                            $categories[] = $category->name;
-                        }
-                        ?>
-                        <td><?= $this->Text->toList($categories); ?></td>
+                        <td><?= h($article->category->name); ?></td>
                         <td><?= h($article->created_by) ?></td>
                         <td>
                         <?php if ($article->publish_date < new DateTime('now')) : ?>

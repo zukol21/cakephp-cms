@@ -5,19 +5,6 @@ use Cake\ORM\Entity;
 
 /**
  * Article Entity.
- *
- * @property string $id
- * @property string $title
- * @property string $slug
- * @property string $excerpt
- * @property string $content
- * @property string $featured_img
- * @property string $category
- * @property string $created_by
- * @property string $modified_by
- * @property \Cake\I18n\Time $publish_date
- * @property \Cake\I18n\Time $created
- * @property \Cake\I18n\Time $modified
  */
 class Article extends Entity
 {

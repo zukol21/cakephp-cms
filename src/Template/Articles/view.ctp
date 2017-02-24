@@ -25,8 +25,8 @@
                                 <div class="col-xs-4 text-right"><strong><?= __('Slug') ?>:</strong></div>
                                 <div class="col-xs-8"><?= h($article->slug) ?></div>
                                 <div class="clearfix"></div>
-                                <div class="col-xs-4 text-right"><strong><?= __('Categories') ?>:</strong></div>
-                                <div class="col-xs-8"><?= $this->Text->toList($categories) ?></div>
+                                <div class="col-xs-4 text-right"><strong><?= __('Category') ?>:</strong></div>
+                                <div class="col-xs-8"><?= h($article->category->name) ?></div>
                                 <div class="clearfix"></div>
                                 <div class="col-xs-4 text-right"><strong><?= __('Created') ?>:</strong></div>
                                 <div class="col-xs-8"><?= h($article->created) ?></div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-xs-4 text-right"><strong><?= __('Publish Date') ?>:</strong></div>
+                                <div class="col-xs-4 text-right"><strong><?= __('Publish date') ?>:</strong></div>
                                 <div class="col-xs-8"><?= h($article->publish_date) ?></div>
                                 <div class="clearfix"></div>
                                 <div class="col-xs-4 text-right"><strong><?= __('Created by') ?>:</strong></div>

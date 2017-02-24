@@ -34,6 +34,7 @@ class CategoriesTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
+        $this->addBehavior('Muffin/Slug.Slug');
 
         $this->belongsTo('ParentCategories', [
             'className' => 'Cms.Categories',
@@ -43,15 +44,10 @@ class CategoriesTable extends Table
             'className' => 'Cms.Categories',
             'foreignKey' => 'parent_id'
         ]);
-        $this->belongsToMany('Articles', [
-            'foreignKey' => 'category_id',
-            'targetForeignKey' => 'article_id',
-            'joinTable' => 'articles_categories',
-            'className' => 'Cms.Articles',
+        $this->hasMany('Cms.Articles', [
             'sort' => ['Articles.publish_date' => 'DESC'],
             'conditions' => ['Articles.publish_date <=' => new DateTime('now')]
         ]);
-        $this->addBehavior('Muffin/Slug.Slug');
     }
 
     /**

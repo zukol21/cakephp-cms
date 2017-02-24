@@ -22,9 +22,8 @@ echo $this->Html->script(
 echo $this->Html->scriptBlock(
     '$(".select2").select2({
         theme: "bootstrap",
-        tags: "true",
         placeholder: "-- Please choose --",
-        allowClear: true
+        escapeMarkup: function (text) { return text; }
     });',
     ['block' => 'scriptBotton']
 );
@@ -66,10 +65,9 @@ echo $this->element('Cms.ckeditor', [
                                     <?= $this->Form->input('title') ?>
                                 </div>
                                 <div class="col-xs-12">
-                                    <div><?= $this->Form->label(__('Categories')); ?></div>
-                                    <?= $this->Form->select('categories._ids', $categories, [
-                                        'class' => 'select2',
-                                        'multiple' => true
+                                    <div><?= $this->Form->label(__('Category')); ?></div>
+                                    <?= $this->Form->select('category_id', $categories, [
+                                        'class' => 'select2'
                                     ]); ?>
                                 </div>
                             </div>
