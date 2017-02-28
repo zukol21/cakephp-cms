@@ -24,7 +24,7 @@ echo $this->Html->scriptBlock(
                         </div>
                         <div class="col-md-6">
                             <?= $this->Form->input('parent_id', [
-                                'options' => $list,
+                                'options' => $categories,
                                 'escape' => false,
                                 'empty' => true
                             ]) ?>
