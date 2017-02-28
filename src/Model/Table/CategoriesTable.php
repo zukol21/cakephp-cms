@@ -36,6 +36,7 @@ class CategoriesTable extends Table
         $this->addBehavior('Tree');
         $this->addBehavior('Muffin/Slug.Slug');
 
+        $this->belongsTo('Cms.Sites');
         $this->belongsTo('ParentCategories', [
             'className' => 'Cms.Categories',
             'foreignKey' => 'parent_id'
