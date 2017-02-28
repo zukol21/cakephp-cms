@@ -71,12 +71,9 @@
                                         <th><?= __('Title') ?></th>
                                         <th><?= __('Slug') ?></th>
                                         <th><?= __('Excerpt') ?></th>
-                                        <th><?= __('Content') ?></th>
                                         <th><?= __('Created By') ?></th>
                                         <th><?= __('Modified By') ?></th>
                                         <th><?= __('Publish Date') ?></th>
-                                        <th><?= __('Created') ?></th>
-                                        <th><?= __('Modified') ?></th>
                                         <th class="actions"><?= __('Actions') ?></th>
                                     </tr>
                                 </thead>
@@ -86,12 +83,9 @@
                                         <td><?= h($article->title) ?></td>
                                         <td><?= h($article->slug) ?></td>
                                         <td><?= h($article->excerpt) ?></td>
-                                        <td><?= h($article->content) ?></td>
                                         <td><?= h($article->created_by) ?></td>
                                         <td><?= h($article->modified_by) ?></td>
                                         <td><?= h($article->publish_date) ?></td>
-                                        <td><?= h($article->created) ?></td>
-                                        <td><?= h($article->modified) ?></td>
                                         <td class="actions">
                                             <div class="btn-group btn-group-xs" role="group">
                                             <?= $this->Html->link(
