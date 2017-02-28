@@ -88,6 +88,7 @@ class CategoriesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['slug']));
+        $rules->add($rules->isUnique(['name', 'site_id']));
         $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
 
         return $rules;
