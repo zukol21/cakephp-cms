@@ -3,6 +3,8 @@ use Migrations\AbstractMigration;
 
 class CreateSites extends AbstractMigration
 {
+    public $autoId = false;
+
     /**
      * Change Method.
      *
@@ -13,6 +15,10 @@ class CreateSites extends AbstractMigration
     public function change()
     {
         $table = $this->table('sites');
+        $table->addColumn('id', 'uuid', [
+            'default' => null,
+            'null' => false,
+        ]);
         $table->addColumn('name', 'string', [
             'default' => null,
             'limit' => 255,
@@ -46,6 +52,9 @@ class CreateSites extends AbstractMigration
         ], [
             'name' => 'UNIQUE_SLUG',
             'unique' => true,
+        ]);
+        $table->addPrimaryKey([
+            'id',
         ]);
         $table->create();
     }
