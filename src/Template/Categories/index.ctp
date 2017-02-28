@@ -34,7 +34,8 @@ echo $this->Html->scriptBlock(
                 <table class="table table-condensed table-vertical-align">
                     <thead>
                         <tr>
-                            <th><?= __('Node'); ?></th>
+                            <th><?= __('Name'); ?></th>
+                            <th><?= __('Site'); ?></th>
                             <th class="actions"><?= __('Actions'); ?></th>
                         </tr>
                     </thead>
@@ -42,6 +43,13 @@ echo $this->Html->scriptBlock(
                         <?php foreach ($categories as $category) : ?>
                         <tr>
                             <td><?= $category->node ?></td>
+                            <td>
+                                <?php if ($category->has('site')) : ?>
+                                <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $category->site->id])?>" class="label label-primary">
+                                    <?= $category->site->name ?>
+                                </a>
+                                <?php endif; ?>
+                            </td>
                             <td class="actions">
                                 <div class="btn-group btn-group-xs" role="group">
                                     <?php if ($category->parent_id) : ?>

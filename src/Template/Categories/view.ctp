@@ -9,8 +9,7 @@
         <div class="col-md-6">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <i class="fa fa-users"></i>
-
+                    <i class="fa fa-info"></i>
                     <h3 class="box-title">Details</h3>
                 </div>
                 <div class="box-body">
@@ -19,8 +18,16 @@
                         <dd><?= h($category->slug) ?></dd>
                         <dt><?= __('Name') ?></dt>
                         <dd><?= h($category->name) ?></dd>
+                        <dt><?= __('Site') ?></dt>
+                        <dd>
+                            <?php if ($category->has('site')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $category->site->id])?>" class="label label-primary">
+                                <?= $category->site->name ?>
+                            </a>
+                            <?php endif; ?>
+                        </dd>
                         <dt><?= __('Hidden title') ?></dt>
-                        <dd><?= h($category->hide_title) ?></dd>
+                        <dd><?= $category->hide_title ? __('Yes') : __('No') ?></dd>
                         <dt><?= __('Align option') ?></dt>
                         <dd><?= h($category->align_category_article_image) ?></dd>
                         <dt><?= __('Parent Category') ?></dt>
@@ -124,6 +131,7 @@
                                     <tr>
                                         <th><?= __('Slug') ?></th>
                                         <th><?= __('Name') ?></th>
+                                        <th><?= __('Site') ?></th>
                                         <th class="actions"><?= __('Actions') ?></th>
                                     </tr>
                                 </thead>
@@ -132,6 +140,13 @@
                                     <tr>
                                         <td><?= h($child->slug) ?></td>
                                         <td><?= h($child->name) ?></td>
+                                        <td>
+                                            <?php if ($child->has('site')) : ?>
+                                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $child->site->id])?>" class="label label-primary">
+                                                <?= $child->site->name ?>
+                                            </a>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="actions">
                                             <div class="btn-group btn-group-xs" role="group">
                                             <?= $this->Html->link(
