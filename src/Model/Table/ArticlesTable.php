@@ -301,7 +301,6 @@ class ArticlesTable extends Table
         return ['title', 'slug', 'excerpt', 'content'];
     }
 
-
     /**
      * Setter method of related articles limit.
      *

@@ -15,7 +15,7 @@ echo $this->Html->scriptBlock(
 );
 ?>
 <section class="content-header">
-    <h1>Categories
+    <h1>Sites
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
                 <?= $this->Html->link(
@@ -35,50 +35,34 @@ echo $this->Html->scriptBlock(
                     <thead>
                         <tr>
                             <th><?= __('Name'); ?></th>
-                            <th><?= __('Site'); ?></th>
+                            <th><?= __('Slug'); ?></th>
+                            <th><?= __('Active'); ?></th>
                             <th class="actions"><?= __('Actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($categories as $category) : ?>
+                        <?php foreach ($sites as $site) : ?>
                         <tr>
-                            <td><?= $category->node ?></td>
-                            <td>
-                                <?php if ($category->has('site')) : ?>
-                                <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $category->site->id])?>" class="label label-primary">
-                                    <?= $category->site->name ?>
-                                </a>
-                                <?php endif; ?>
-                            </td>
+                            <td><?= $site->name ?></td>
+                            <td><?= $site->slug ?></td>
+                            <td><?= $site->active ? __('Yes') : __('No') ?></td>
                             <td class="actions">
                                 <div class="btn-group btn-group-xs" role="group">
-                                    <?php if ($category->parent_id) : ?>
-                                        <?= $this->Form->postLink(
-                                            '<i class="fa fa-arrow-up"></i>',
-                                            ['action' => 'move_node', $category->id, 'up'],
-                                            ['title' => __('Move up'), 'class' => 'btn btn-default', 'escape' => false]
-                                        ) ?>
-                                        <?= $this->Form->postLink(
-                                            '<i class="fa fa-arrow-down"></i>',
-                                            ['action' => 'move_node', $category->id, 'down'],
-                                            ['title' => __('Move down'), 'class' => 'btn btn-default', 'escape' => false]
-                                        ) ?>
-                                    <?php endif; ?>
                                     <?= $this->Html->link(
                                         '<i class="fa fa-eye"></i>',
-                                        ['action' => 'view', $category->id],
+                                        ['action' => 'view', $site->id],
                                         ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                     <?= $this->Html->link(
                                         '<i class="fa fa-pencil"></i>',
-                                        ['action' => 'edit', $category->id],
+                                        ['action' => 'edit', $site->id],
                                         ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                     <?= $this->Form->postLink(
                                         '<i class="fa fa-trash"></i>',
-                                        ['action' => 'delete', $category->id],
+                                        ['action' => 'delete', $site->id],
                                         [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $category->node),
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $site->name),
                                             'title' => __('Delete'),
                                             'class' => 'btn btn-default',
                                             'escape' => false

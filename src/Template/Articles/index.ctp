@@ -49,7 +49,11 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <td><?= h($article->title) ?></td>
                         <td><?= h($article->slug) ?></td>
-                        <td><?= h($article->category->name); ?></td>
+                        <td>
+                            <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->category->id])?>" class="label label-primary">
+                                <?= h($article->category->name); ?>
+                            </a>
+                        </td>
                         <td><?= h($article->created_by) ?></td>
                         <td>
                         <?php if ($article->publish_date < new DateTime('now')) : ?>

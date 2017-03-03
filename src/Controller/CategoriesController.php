@@ -22,6 +22,7 @@ class CategoriesController extends AppController
             ->toArray();
         $categories = $this->Categories
             ->find('all')
+            ->contain('Sites')
             ->order(['lft' => 'ASC']);
         if ($categories->isEmpty()) {
             $this->Flash->set(__('No categories were found. Please add one.'));
@@ -48,7 +49,7 @@ class CategoriesController extends AppController
     public function view($id = null)
     {
         $category = $this->Categories->get($id, [
-            'contain' => ['ParentCategories', 'Articles', 'ChildCategories']
+            'contain' => ['ParentCategories', 'Articles', 'ChildCategories', 'Sites']
         ]);
 
         $this->set('category', $category);
@@ -73,8 +74,9 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $list = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
-        $this->set(compact('category', 'list'));
+        $categories = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
+        $sites = $this->Categories->Sites->find('list')->where(['active' => true]);
+        $this->set(compact('category', 'categories', 'sites'));
         $this->set('_serialize', ['category']);
     }
 
@@ -100,8 +102,9 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
-        $list = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
-        $this->set(compact('category', 'list'));
+        $categories = $this->Categories->find('treeList', ['spacer' => self::TREE_SPACER]);
+        $sites = $this->Categories->Sites->find('list')->where(['active' => true]);
+        $this->set(compact('category', 'categories', 'sites'));
         $this->set('_serialize', ['category']);
     }
 

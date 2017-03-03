@@ -63,7 +63,7 @@ echo $this->element('Cms.ckeditor', [
                                     <?= $this->Form->input('title') ?>
                                 </div>
                                 <div class="col-xs-12">
-                                    <div><?= $this->Form->label(__('Category')); ?></div>
+                                    <div class="required"><?= $this->Form->label(__('Category')); ?></div>
                                     <?= $this->Form->select('category_id', $categories, [
                                         'class' => 'select2'
                                     ]); ?>

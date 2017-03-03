@@ -5,17 +5,11 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cms\Model\Entity\Category;
-use DateTime;
 
 /**
- * Categories Model
- *
- * @property \Cake\ORM\Association\BelongsTo $ParentCategories
- * @property \Cake\ORM\Association\HasMany $ChildCategories
- * @property \Cake\ORM\Association\BelongsToMany $Articles
+ * Sites Model
  */
-class CategoriesTable extends Table
+class SitesTable extends Table
 {
 
     /**
@@ -28,27 +22,14 @@ class CategoriesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('categories');
+        $this->table('sites');
         $this->displayField('name');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Tree');
         $this->addBehavior('Muffin/Slug.Slug');
 
-        $this->belongsTo('Cms.Sites');
-        $this->belongsTo('ParentCategories', [
-            'className' => 'Cms.Categories',
-            'foreignKey' => 'parent_id'
-        ]);
-        $this->hasMany('ChildCategories', [
-            'className' => 'Cms.Categories',
-            'foreignKey' => 'parent_id'
-        ]);
-        $this->hasMany('Cms.Articles', [
-            'sort' => ['Articles.publish_date' => 'DESC'],
-            'conditions' => ['Articles.publish_date <=' => new DateTime('now')]
-        ]);
+        $this->hasMany('Cms.Categories');
     }
 
     /**
@@ -64,16 +45,18 @@ class CategoriesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
+            ->requirePresence('name', 'create')
+            ->notEmpty('name')
+            ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+
+        $validator
             ->notEmpty('slug')
             ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
-
-        $validator
-            ->requirePresence('site_id', 'create')
-            ->notEmpty('site_id');
+            ->boolean('active')
+            ->requirePresence('active', 'create')
+            ->notEmpty('active');
 
         return $validator;
     }
@@ -87,9 +70,8 @@ class CategoriesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->isUnique(['name']));
         $rules->add($rules->isUnique(['slug']));
-        $rules->add($rules->isUnique(['name', 'site_id']));
-        $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
 
         return $rules;
     }

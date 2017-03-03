@@ -9,8 +9,7 @@
         <div class="col-md-6">
             <div class="box box-solid">
                 <div class="box-header with-border">
-                    <i class="fa fa-users"></i>
-
+                    <i class="fa fa-info"></i>
                     <h3 class="box-title">Details</h3>
                 </div>
                 <div class="box-body">
@@ -19,8 +18,16 @@
                         <dd><?= h($category->slug) ?></dd>
                         <dt><?= __('Name') ?></dt>
                         <dd><?= h($category->name) ?></dd>
+                        <dt><?= __('Site') ?></dt>
+                        <dd>
+                            <?php if ($category->has('site')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $category->site->id])?>" class="label label-primary">
+                                <?= $category->site->name ?>
+                            </a>
+                            <?php endif; ?>
+                        </dd>
                         <dt><?= __('Hidden title') ?></dt>
-                        <dd><?= h($category->hide_title) ?></dd>
+                        <dd><?= $category->hide_title ? __('Yes') : __('No') ?></dd>
                         <dt><?= __('Align option') ?></dt>
                         <dd><?= h($category->align_category_article_image) ?></dd>
                         <dt><?= __('Parent Category') ?></dt>
@@ -64,12 +71,9 @@
                                         <th><?= __('Title') ?></th>
                                         <th><?= __('Slug') ?></th>
                                         <th><?= __('Excerpt') ?></th>
-                                        <th><?= __('Content') ?></th>
                                         <th><?= __('Created By') ?></th>
                                         <th><?= __('Modified By') ?></th>
                                         <th><?= __('Publish Date') ?></th>
-                                        <th><?= __('Created') ?></th>
-                                        <th><?= __('Modified') ?></th>
                                         <th class="actions"><?= __('Actions') ?></th>
                                     </tr>
                                 </thead>
@@ -79,12 +83,9 @@
                                         <td><?= h($article->title) ?></td>
                                         <td><?= h($article->slug) ?></td>
                                         <td><?= h($article->excerpt) ?></td>
-                                        <td><?= h($article->content) ?></td>
                                         <td><?= h($article->created_by) ?></td>
                                         <td><?= h($article->modified_by) ?></td>
                                         <td><?= h($article->publish_date) ?></td>
-                                        <td><?= h($article->created) ?></td>
-                                        <td><?= h($article->modified) ?></td>
                                         <td class="actions">
                                             <div class="btn-group btn-group-xs" role="group">
                                             <?= $this->Html->link(
@@ -124,6 +125,7 @@
                                     <tr>
                                         <th><?= __('Slug') ?></th>
                                         <th><?= __('Name') ?></th>
+                                        <th><?= __('Site') ?></th>
                                         <th class="actions"><?= __('Actions') ?></th>
                                     </tr>
                                 </thead>
@@ -132,6 +134,13 @@
                                     <tr>
                                         <td><?= h($child->slug) ?></td>
                                         <td><?= h($child->name) ?></td>
+                                        <td>
+                                            <?php if ($child->has('site')) : ?>
+                                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $child->site->id])?>" class="label label-primary">
+                                                <?= $child->site->name ?>
+                                            </a>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="actions">
                                             <div class="btn-group btn-group-xs" role="group">
                                             <?= $this->Html->link(
