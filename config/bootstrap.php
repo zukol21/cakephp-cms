@@ -1,8 +1,25 @@
 <?php
+use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
 
-//Burzum FileStorage configurations
-include __DIR__ . '/file_storage.php';
+/**
+ * Burzum File-Storage configuration
+ */
+// get app level config
+$config = Configure::read('FileStorage');
+$config = $config ? $config : [];
+
+// load default plugin config
+Configure::load('Cms.file_storage');
+
+// overwrite default plugin config by app level config
+Configure::write('FileStorage', array_replace_recursive(
+    Configure::read('FileStorage'),
+    $config
+));
+
+// This is very important! The hashes are needed to calculate the image versions!
+StorageUtils::generateHashes();
 
 /**
  * Plugin configuration
