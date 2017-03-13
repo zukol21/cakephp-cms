@@ -39,6 +39,7 @@ class CategoriesTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
+        $this->addBehavior('Muffin/Trash.Trash');
 
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('ParentCategories', [
