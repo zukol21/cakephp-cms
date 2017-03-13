@@ -17,6 +17,7 @@ echo $this->Html->scriptBlock(
         <div class="col-xs-12 col-md-6">
             <div class="box box-solid">
                 <?= $this->Form->create($category); ?>
+                <?= $this->Form->hidden('site_id', ['value' => $site->id]) ?>
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -32,15 +33,10 @@ echo $this->Html->scriptBlock(
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <?= $this->Form->input('site_id') ?>
-                        </div>
-                        <div class="col-md-6">
                             <?= $this->Form->input('align_category_article_image', [
                                 'options' => $category->get('align_options')
                             ]) ?>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                         <?php
                             $label = $this->Form->label('hide_title');
