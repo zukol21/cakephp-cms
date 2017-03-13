@@ -68,8 +68,7 @@ class CategoriesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->notEmpty('slug')
-            ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->notEmpty('slug');
 
         $validator
             ->requirePresence('name', 'create')
@@ -91,8 +90,8 @@ class CategoriesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['slug']));
         $rules->add($rules->isUnique(['name', 'site_id']));
+        $rules->add($rules->isUnique(['slug', 'site_id']));
         $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
 
         return $rules;
