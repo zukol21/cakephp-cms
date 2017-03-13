@@ -1,7 +1,9 @@
 <?php
 namespace Cms\Model\Table;
 
+use ArrayObject;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -37,7 +39,6 @@ class CategoriesTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
-        $this->addBehavior('Muffin/Slug.Slug');
 
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('ParentCategories', [
@@ -95,6 +96,23 @@ class CategoriesTable extends Table
         $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
 
         return $rules;
+    }
+
+    /**
+     * beforeMarshal callback
+     *
+     * @param \Cake\Event\Event $event Event object
+     * @param \ArrayAccess $data Request data
+     * @param \ArrayAccess $options Query options
+     * @return void
+     */
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        $this->addBehavior('Muffin/Slug.Slug', [
+            'scope' => [
+                'Categories.site_id' => $data['site_id']
+            ]
+        ]);
     }
 
     /**
