@@ -130,4 +130,41 @@ class CategoriesTable extends Table
 
         return $result;
     }
+
+    /**
+     * Fetch and return Category by id or slug and associated Site id.
+     *
+     * @param string $id Site id or slug.
+     * @param \Cake\ORM\Entity $site Site entity.
+     * @param array $contain Contain associations list (optional).
+     * @return \Cake\ORM\Entity
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     * @throws \InvalidArgumentException
+     */
+    public function getCategoryBySite($id, Entity $site, array $contain = [])
+    {
+        if (empty($id)) {
+            throw new InvalidArgumentException('Category id or slug cannot be empty.');
+        }
+
+        $query = $this->find('all', [
+            'limit' => 1,
+            'conditions' => [
+                'OR' => [
+                    'Categories.id' => $id,
+                    'Categories.slug' => $id
+                ],
+                'Categories.site_id' => $site->id
+            ],
+            'contain' => $contain
+        ]);
+
+        $result = $query->first();
+
+        if (empty($result)) {
+            throw new RecordNotFoundException('Category not found.');
+        }
+
+        return $result;
+    }
 }
