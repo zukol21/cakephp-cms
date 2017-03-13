@@ -17,7 +17,7 @@ class CategoriesController extends AppController
      */
     public function index()
     {
-        $query = $this->Categories->Sites->find('all', ['conditions' => ['active' => true]]);
+        $query = $this->Categories->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
         $sites = $query->all();
 
         $tree = $this->Categories
