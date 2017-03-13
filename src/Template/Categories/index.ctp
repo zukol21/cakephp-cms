@@ -18,11 +18,26 @@ echo $this->Html->scriptBlock(
     <h1>Categories
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
-                <?= $this->Html->link(
+                <?= $this->Form->button(
                     '<i class="fa fa-plus"></i> ' . __('Add'),
-                    ['plugin' => $this->plugin, 'controller' => $this->name, 'action' => 'add'],
-                    ['escape' => false, 'title' => __('Add'), 'class' => 'btn btn-default']
+                    [
+                        'type' => 'button',
+                        'title' => __('Add'),
+                        'class' => 'btn btn-default dropdown-toggle',
+                        'data-toggle' => 'dropdown',
+                        'aria-haspopup' => 'true',
+                        'aria-expanded' => 'false'
+                    ]
                 ) ?>
+                <ul class="dropdown-menu dropdown-menu-right">
+                <?php foreach ($sites as $site) : ?>
+                    <li>
+                        <a href="<?= $this->Url->build(['action' => 'add', $site->slug]); ?>">
+                            <?= $site->name ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
             </div>
         </div>
     </h1>
