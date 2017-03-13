@@ -134,7 +134,7 @@ class CategoriesTable extends Table
                     'Sites.id' => $id,
                     'Sites.slug' => $id
                 ],
-                'active' => true
+                'Sites.active' => true
             ]
         ]);
 
