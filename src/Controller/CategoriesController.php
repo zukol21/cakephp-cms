@@ -17,6 +17,9 @@ class CategoriesController extends AppController
      */
     public function index()
     {
+        $query = $this->Categories->Sites->find('all', ['conditions' => ['active' => true]]);
+        $sites = $query->all();
+
         $tree = $this->Categories
             ->find('treeList', ['spacer' => self::TREE_SPACER])
             ->toArray();
