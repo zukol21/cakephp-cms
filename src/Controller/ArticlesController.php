@@ -20,6 +20,9 @@ class ArticlesController extends AppController
      */
     public function index()
     {
+        $query = $this->Articles->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
+        $sites = $query->all();
+
         $search = $this->request->query('s');
         $articles = $this->Articles
             ->find('withLatestImage')
@@ -44,7 +47,7 @@ class ArticlesController extends AppController
         }
 
         $articles = $this->paginate($articles);
-        $this->set(compact('articles'));
+        $this->set(compact('articles', 'sites'));
         $this->set('_serialize', ['articles']);
     }
 
