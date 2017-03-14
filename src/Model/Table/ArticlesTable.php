@@ -67,6 +67,7 @@ class ArticlesTable extends Table
                 'ContentImages.model' => 'ContentImage'
             ]
         ]);
+        $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
         $this->addBehavior('Muffin/Slug.Slug');
         $this->setRelated();
