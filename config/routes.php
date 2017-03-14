@@ -8,6 +8,7 @@ Router::plugin(
 
         $routes->scope('/site', function ($routes) {
             $routes->connect('/:slug/categories/:action/*', ['controller' => 'Categories'], ['pass' => ['slug']]);
+            $routes->connect('/:slug/articles/:action/*', ['controller' => 'Articles'], ['pass' => ['slug']]);
         });
 
         $routes->fallbacks('DashedRoute');

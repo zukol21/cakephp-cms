@@ -47,32 +47,41 @@ echo $this->Html->scriptBlock(
                             <td><?= $site->slug ?></td>
                             <td><?= $site->active ? __('Yes') : __('No') ?></td>
                             <td class="actions">
-                                <div class="btn-group btn-group-xs" role="group">
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-tag"></i>',
-                                        ['controller' => 'Categories', 'action' => 'add', $site->slug],
-                                        ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-eye"></i>',
-                                        ['action' => 'view', $site->id],
-                                        ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-pencil"></i>',
-                                        ['action' => 'edit', $site->id],
-                                        ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Form->postLink(
-                                        '<i class="fa fa-trash"></i>',
-                                        ['action' => 'delete', $site->id],
-                                        [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $site->name),
-                                            'title' => __('Delete'),
-                                            'class' => 'btn btn-default',
-                                            'escape' => false
-                                        ]
-                                    ) ?>
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-eye"></i>',
+                                            ['action' => 'view', $site->id],
+                                            ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-pencil"></i>',
+                                            ['action' => 'edit', $site->id],
+                                            ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                        <?= $this->Form->postLink(
+                                            '<i class="fa fa-trash"></i>',
+                                            ['action' => 'delete', $site->id],
+                                            [
+                                                'confirm' => __('Are you sure you want to delete # {0}?', $site->name),
+                                                'title' => __('Delete'),
+                                                'class' => 'btn btn-default',
+                                                'escape' => false
+                                            ]
+                                        ) ?>
+                                    </div>
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-tag"></i>',
+                                            ['controller' => 'Categories', 'action' => 'add', $site->slug],
+                                            ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-pencil-square"></i>',
+                                            ['controller' => 'Articles', 'action' => 'add', $site->slug],
+                                            ['title' => __('Create Article'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

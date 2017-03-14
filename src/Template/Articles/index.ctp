@@ -20,11 +20,26 @@ echo $this->Html->scriptBlock(
     <h1>Articles
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
-                <?= $this->Html->link(
+                <?= $this->Form->button(
                     '<i class="fa fa-plus"></i> ' . __('Add'),
-                    ['plugin' => $this->plugin, 'controller' => $this->name, 'action' => 'add'],
-                    ['escape' => false, 'title' => __('Add'), 'class' => 'btn btn-default']
+                    [
+                        'type' => 'button',
+                        'title' => __('Add'),
+                        'class' => 'btn btn-default dropdown-toggle',
+                        'data-toggle' => 'dropdown',
+                        'aria-haspopup' => 'true',
+                        'aria-expanded' => 'false'
+                    ]
                 ) ?>
+                <ul class="dropdown-menu dropdown-menu-right">
+                <?php foreach ($sites as $site) : ?>
+                    <li>
+                        <a href="<?= $this->Url->build(['action' => 'add', $site->slug]); ?>">
+                            <?= $site->name ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
             </div>
         </div>
     </h1>
@@ -37,6 +52,7 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <th><?= __('Title'); ?></th>
                         <th><?= __('Slug'); ?></th>
+                        <th><?= __('Site'); ?></th>
                         <th><?= __('Category'); ?></th>
                         <th><?= __('Author'); ?></th>
                         <th><?= __('Publish'); ?></th>
@@ -50,22 +66,37 @@ echo $this->Html->scriptBlock(
                         <td><?= h($article->title) ?></td>
                         <td><?= h($article->slug) ?></td>
                         <td>
-                            <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->category->id])?>" class="label label-primary">
+                        <?php if ($article->has('site')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $article->site->id])?>" class="label label-primary">
+                                <?= h($article->site->name); ?>
+                            </a>
+                        <?php endif; ?>
+                        </td>
+                        <td>
+                        <?php if ($article->has('category')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->site->slug, $article->category->slug])?>" class="label label-primary">
                                 <?= h($article->category->name); ?>
                             </a>
+                        <?php endif; ?>
                         </td>
-                        <td><?= h($article->created_by) ?></td>
+                        <td>
+                        <?php if ($article->has('author')) : ?>
+                            <a href="<?= $this->Url->build(['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'view', $article->author->id])?>" class="label label-primary">
+                                <?= h($article->author->username) ?>
+                            </a>
+                        <?php endif; ?>
+                        </td>
                         <td>
                         <?php if ($article->publish_date < new DateTime('now')) : ?>
-                            <span class="fa fa-check" aria-hidden="true"></span></td>
+                            <span class="fa fa-check" aria-hidden="true"></span>
                         <?php else : ?>
-                            <span class="fa fa-remove" aria-hidden="true"></span></td>
+                            <span class="fa fa-remove" aria-hidden="true"></span>
                         <?php endif; ?>
                         </td>
                         <td>
                         <?=
                             isset($article->article_featured_images[0])
-                            ? $this->Image->display($article->article_featured_images[0], 'small')
+                            ? $this->Image->display($article->article_featured_images[0], 'small', ['width' => 30])
                             : __d('cms', 'No featured image');
                         ?>
                         </td>
@@ -73,17 +104,17 @@ echo $this->Html->scriptBlock(
                             <div class="btn-group btn-group-xs" role="group">
                                 <?= $this->Html->link(
                                     '<i class="fa fa-eye"></i>',
-                                    ['action' => 'view', $article->id],
+                                    ['action' => 'view', $article->site->slug, $article->slug],
                                     ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                 ) ?>
                                 <?= $this->Html->link(
                                     '<i class="fa fa-pencil"></i>',
-                                    ['action' => 'edit', $article->id],
+                                    ['action' => 'edit', $article->site->slug, $article->slug],
                                     ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                 ) ?>
                                 <?= $this->Form->postLink(
                                     '<i class="fa fa-trash"></i>',
-                                    ['action' => 'delete', $article->id],
+                                    ['action' => 'delete', $article->site->slug, $article->slug],
                                     [
                                         'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
                                         'title' => __('Delete'),

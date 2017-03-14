@@ -1,6 +1,7 @@
 <?php
 namespace Cms\Controller;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
 
@@ -16,21 +17,26 @@ class ArticlesController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
-        $search = $this->request->query('s');
-        $articles = $this->Articles
-            ->find('withLatestImage')
-            ->order(['Articles.modified' => 'DESC']);
-        if (is_null($search)) {
-            if ($articles->isEmpty()) {
-                $this->Flash->set(__('No articles were found. Please add one.'));
+        $query = $this->Articles->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
+        $sites = $query->all();
 
-                return $this->redirect(['action' => 'add']);
-            }
-        } else {
+        $search = $this->request->query('s');
+        $articles = $this->Articles->find('all')->contain([
+            'Author',
+            'Categories',
+            'Sites',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
+            ]
+        ]);
+
+        if (!is_null($search)) {
             $articles = $articles->find(
                 'search',
                 [
@@ -43,21 +49,33 @@ class ArticlesController extends AppController
             }
         }
 
-        $articles = $this->paginate($articles);
-        $this->set(compact('articles'));
+        $this->set(compact('articles', 'sites'));
         $this->set('_serialize', ['articles']);
     }
 
     /**
      * View method
      *
+     * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($siteId, $id = null)
     {
-        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Categories',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
+            ]
+        ]);
+        $article = $query->first();
+
+        if (empty($article)) {
+            throw new RecordNotFoundException('Article not found.');
+        }
 
         $this->set(compact('article'));
         $this->set('_serialize', ['article']);
@@ -66,18 +84,21 @@ class ArticlesController extends AppController
     /**
      * Add method
      *
+     * @param string $siteId Site id or slug.
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($siteId)
     {
+        $site = $this->Articles->getSite($siteId);
         $article = $this->Articles->newEntity();
+
         if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $article->created_by = $user['username'];
-                $article->modified_by = $user['username'];
-            }
-            $article = $this->Articles->patchEntity($article, $this->request->data);
+            $data = $this->request->data;
+            $data['site_id'] = $site->id;
+            $data['created_by'] = $this->Auth->user('id');
+            $data['modified_by'] = $this->Auth->user('id');
+
+            $article = $this->Articles->patchEntity($article, $data);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
                 //Upload the featured image when there is one.
@@ -90,25 +111,45 @@ class ArticlesController extends AppController
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
         }
-        $this->set([
-            'article' => $article,
-            'categories' => $this->Articles->Categories->find('treeList', ['spacer' => self::TREE_SPACER]),
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
         ]);
+
+        $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
 
     /**
      * Edit method
      *
+     * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($siteId, $id = null)
     {
-        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
+        $site = $this->Articles->getSite($siteId);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Categories',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
+            ]
+        ]);
+        $article = $query->first();
+
+        if (empty($article)) {
+            throw new RecordNotFoundException('Article not found.');
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->data);
+            $data = $this->request->data;
+            $data['site_id'] = $site->id;
+            $data['modified_by'] = $this->Auth->user('id');
+            $article = $this->Articles->patchEntity($article, $data);
             if ($this->Articles->save($article)) {
                 //Upload the featured image when there is one.
                 if ($this->_isValidUpload($this->request->data)) {
@@ -116,36 +157,43 @@ class ArticlesController extends AppController
                 }
                 $this->Flash->success(__('The article has been saved.'));
 
-                return $this->redirect(['action' => 'edit', $article->get('id')]);
+                return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
         }
-        $this->set([
-            'article' => $article,
-            'categories' => $this->Articles->Categories->find('treeList', ['spacer' => self::TREE_SPACER]),
+
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
         ]);
+
+        $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
 
     /**
      * Delete method
      *
+     * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($siteId, $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $article = $this->Articles->get($id);
+
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1);
+        $article = $query->first();
+
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));
         } else {
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->referer());
     }
 
     /**

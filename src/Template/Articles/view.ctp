@@ -26,7 +26,11 @@
                                 <div class="col-xs-8"><?= h($article->slug) ?></div>
                                 <div class="clearfix"></div>
                                 <div class="col-xs-4 text-right"><strong><?= __('Category') ?>:</strong></div>
-                                <div class="col-xs-8"><?= h($article->category->name) ?></div>
+                                <div class="col-xs-8">
+                                <?php if ($article->has('category')) : ?>
+                                    <?= h($article->category->name) ?>
+                                <?php endif; ?>
+                                </div>
                                 <div class="clearfix"></div>
                                 <div class="col-xs-4 text-right"><strong><?= __('Created') ?>:</strong></div>
                                 <div class="col-xs-8"><?= h($article->created) ?></div>

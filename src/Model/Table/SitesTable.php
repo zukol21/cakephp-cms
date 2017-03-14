@@ -31,6 +31,7 @@ class SitesTable extends Table
         $this->addBehavior('Muffin/Trash.Trash');
 
         $this->hasMany('Cms.Categories');
+        $this->hasMany('Cms.Articles');
     }
 
     /**

@@ -5,20 +5,23 @@ use ArrayObject;
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
-use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Entity\Article;
+use Cms\Model\Table\BaseTable;
+use InvalidArgumentException;
 
 /**
  * Articles Model
  *
  */
-class ArticlesTable extends Table
+class ArticlesTable extends BaseTable
 {
 
     /**
@@ -52,6 +55,9 @@ class ArticlesTable extends Table
         $this->setContain();
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Muffin/Slug.Slug');
+        $this->addBehavior('Muffin/Trash.Trash');
+
         $this->hasMany('ArticleFeaturedImages', [
             'className' => 'Cms.ArticleFeaturedImages',
             'foreignKey' => 'foreign_key',
@@ -67,8 +73,18 @@ class ArticlesTable extends Table
                 'ContentImages.model' => 'ContentImage'
             ]
         ]);
+        $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
-        $this->addBehavior('Muffin/Slug.Slug');
+        $this->belongsTo('Author', [
+            'className' => 'CakeDC/Users.Users',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('Editor', [
+            'className' => 'CakeDC/Users.Users',
+            'foreignKey' => 'modified_by'
+        ]);
+
         $this->setRelated();
     }
 
@@ -104,6 +120,10 @@ class ArticlesTable extends Table
             ->dateTime('publish_date')
             ->requirePresence('publish_date', 'create')
             ->notEmpty('publish_date');
+
+        $validator
+            ->requirePresence('site_id', 'create')
+            ->notEmpty('site_id');
 
         return $validator;
     }
