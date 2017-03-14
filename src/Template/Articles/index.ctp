@@ -65,11 +65,19 @@ echo $this->Html->scriptBlock(
                         <td><?= h($article->title) ?></td>
                         <td><?= h($article->slug) ?></td>
                         <td>
-                            <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->category->id])?>" class="label label-primary">
+                        <?php if ($article->has('category')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->site->slug, $article->category->slug])?>" class="label label-primary">
                                 <?= h($article->category->name); ?>
                             </a>
+                        <?php endif; ?>
                         </td>
-                        <td><?= h($article->created_by) ?></td>
+                        <td>
+                        <?php if ($article->has('author')) : ?>
+                            <a href="<?= $this->Url->build(['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'view', $article->author->id])?>" class="label label-primary">
+                                <?= h($article->author->username) ?>
+                            </a>
+                        <?php endif; ?>
+                        </td>
                         <td>
                         <?php if ($article->publish_date < new DateTime('now')) : ?>
                             <span class="fa fa-check" aria-hidden="true"></span></td>
