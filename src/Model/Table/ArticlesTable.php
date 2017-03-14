@@ -72,6 +72,16 @@ class ArticlesTable extends Table
         ]);
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
+        $this->belongsTo('Author', [
+            'className' => 'CakeDC/Users.Users',
+            'foreignKey' => 'created_by'
+        ]);
+
+        $this->belongsTo('Editor', [
+            'className' => 'CakeDC/Users.Users',
+            'foreignKey' => 'modified_by'
+        ]);
+
         $this->setRelated();
     }
 
