@@ -1,6 +1,7 @@
 <?php
 namespace Cms\Controller;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
 
@@ -16,7 +17,7 @@ class ArticlesController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
@@ -24,10 +25,11 @@ class ArticlesController extends AppController
         $sites = $query->all();
 
         $search = $this->request->query('s');
-        $articles = $this->Articles
-            ->find('all')
-            ->contain(['Author', 'Categories', 'Sites', 'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]])
-            ->order(['Articles.modified' => 'DESC']);
+        $articles = $this->Articles->find('all')->order(['Articles.modified' => 'DESC'])->contain([
+            'Author', 'Categories', 'Sites', 'ArticleFeaturedImages' => [
+                'sort' => ['created' => 'DESC']
+            ]
+        ]);
 
         if (!is_null($search)) {
             $articles = $articles->find(
@@ -49,13 +51,26 @@ class ArticlesController extends AppController
     /**
      * View method
      *
+     * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view($siteId, $id = null)
     {
-        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Categories',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
+            ]
+        ]);
+        $article = $query->first();
+
+        if (empty($article)) {
+            throw new RecordNotFoundException('Article not found.');
+        }
 
         $this->set(compact('article'));
         $this->set('_serialize', ['article']);
@@ -104,7 +119,20 @@ class ArticlesController extends AppController
      */
     public function edit($id = null)
     {
-        $article = $this->Articles->find('withLatestImage', ['id' => $id]);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Categories',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
+            ]
+        ]);
+        $article = $query->first();
+
+        if (empty($article)) {
+            throw new RecordNotFoundException('Article not found.');
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             if ($this->Articles->save($article)) {
@@ -136,7 +164,10 @@ class ArticlesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $article = $this->Articles->get($id);
+
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1);
+        $article = $query->first();
+
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));
         } else {
