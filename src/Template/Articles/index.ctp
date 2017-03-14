@@ -104,17 +104,17 @@ echo $this->Html->scriptBlock(
                             <div class="btn-group btn-group-xs" role="group">
                                 <?= $this->Html->link(
                                     '<i class="fa fa-eye"></i>',
-                                    ['action' => 'view', $article->id],
+                                    ['action' => 'view', $article->site->slug, $article->slug],
                                     ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                 ) ?>
                                 <?= $this->Html->link(
                                     '<i class="fa fa-pencil"></i>',
-                                    ['action' => 'edit', $article->id],
+                                    ['action' => 'edit', $article->site->slug, $article->slug],
                                     ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                 ) ?>
                                 <?= $this->Form->postLink(
                                     '<i class="fa fa-trash"></i>',
-                                    ['action' => 'delete', $article->id],
+                                    ['action' => 'delete', $article->site->slug, $article->slug],
                                     [
                                         'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
                                         'title' => __('Delete'),
