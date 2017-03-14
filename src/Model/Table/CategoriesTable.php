@@ -40,6 +40,11 @@ class CategoriesTable extends Table
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
         $this->addBehavior('Muffin/Trash.Trash');
+        $this->addBehavior('Muffin/Slug.Slug', [
+            'unique' => function (Entity $entity, $slug, $separator) {
+                return $this->_uniqueSlug($entity, $slug, $separator);
+            }
+        ]);
 
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('ParentCategories', [
@@ -95,23 +100,6 @@ class CategoriesTable extends Table
         $rules->add($rules->existsIn(['parent_id'], 'ParentCategories'));
 
         return $rules;
-    }
-
-    /**
-     * beforeMarshal callback
-     *
-     * @param \Cake\Event\Event $event Event object
-     * @param \ArrayAccess $data Request data
-     * @param \ArrayAccess $options Query options
-     * @return void
-     */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
-    {
-        $this->addBehavior('Muffin/Slug.Slug', [
-            'scope' => [
-                'Categories.site_id' => $data['site_id']
-            ]
-        ]);
     }
 
     /**
@@ -183,5 +171,45 @@ class CategoriesTable extends Table
         }
 
         return $result;
+    }
+
+    /**
+     * Returns a unique slug.
+     *
+     * @param \Cake\ORM\Entity $entity Entity.
+     * @param string $slug Slug.
+     * @param string $separator Separator.
+     * @return string Unique slug.
+     */
+    protected function _uniqueSlug(Entity $entity, $slug, $separator)
+    {
+        $behavior = $this->behaviors()->Slug;
+
+        $primaryKey = $this->primaryKey();
+        $field = $this->aliasField($behavior->config('field'));
+
+        $conditions = [
+            $field => $slug,
+            'Categories.site_id' => $entity->site_id
+        ];
+        $conditions += $behavior->config('scope');
+        if ($id = $entity->{$primaryKey}) {
+            $conditions['NOT'][$this->_table->aliasField($primaryKey)] = $id;
+        }
+
+        $i = 0;
+        $suffix = '';
+        $length = $behavior->config('length');
+
+        while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
+            $i++;
+            $suffix = $separator . $i;
+            if ($length && $length < mb_strlen($slug . $suffix)) {
+                $slug = mb_substr($slug, 0, $length - mb_strlen($suffix));
+            }
+            $conditions[$field] = $slug . $suffix;
+        }
+
+        return $slug . $suffix;
     }
 }
