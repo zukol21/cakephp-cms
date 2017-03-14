@@ -25,7 +25,8 @@ class ArticlesController extends AppController
 
         $search = $this->request->query('s');
         $articles = $this->Articles
-            ->find('withLatestImage')
+            ->find('all')
+            ->contain(['Author', 'Categories', 'Sites', 'ArticleFeaturedImages' => ['sort' => ['created' => 'DESC']]])
             ->order(['Articles.modified' => 'DESC']);
 
         if (!is_null($search)) {
