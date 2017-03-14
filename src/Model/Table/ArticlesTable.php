@@ -52,6 +52,8 @@ class ArticlesTable extends Table
         $this->setContain();
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Muffin/Trash.Trash');
+
         $this->hasMany('ArticleFeaturedImages', [
             'className' => 'Cms.ArticleFeaturedImages',
             'foreignKey' => 'foreign_key',
