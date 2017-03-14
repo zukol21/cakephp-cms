@@ -26,7 +26,8 @@ class CategoriesController extends AppController
         $categories = $this->Categories
             ->find('all')
             ->contain('Sites')
-            ->order(['lft' => 'ASC']);
+            ->order(['Categories.site_id' => 'ASC', 'Categories.lft' => 'ASC']);
+
         if ($categories->isEmpty()) {
             $this->Flash->set(__('No categories were found. Please add one.'));
 
