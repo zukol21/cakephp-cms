@@ -52,6 +52,7 @@ class ArticlesTable extends Table
         $this->setContain();
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Muffin/Slug.Slug');
         $this->addBehavior('Muffin/Trash.Trash');
 
         $this->hasMany('ArticleFeaturedImages', [
@@ -71,7 +72,6 @@ class ArticlesTable extends Table
         ]);
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
-        $this->addBehavior('Muffin/Slug.Slug');
         $this->setRelated();
     }
 
