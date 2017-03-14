@@ -96,7 +96,7 @@ echo $this->Html->scriptBlock(
                         <td>
                         <?=
                             isset($article->article_featured_images[0])
-                            ? $this->Image->display($article->article_featured_images[0], 'small')
+                            ? $this->Image->display($article->article_featured_images[0], 'small', ['width' => 30])
                             : __d('cms', 'No featured image');
                         ?>
                         </td>
