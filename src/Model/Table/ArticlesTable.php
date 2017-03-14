@@ -108,6 +108,10 @@ class ArticlesTable extends Table
             ->requirePresence('publish_date', 'create')
             ->notEmpty('publish_date');
 
+        $validator
+            ->requirePresence('site_id', 'create')
+            ->notEmpty('site_id');
+
         return $validator;
     }
 
