@@ -34,7 +34,7 @@ class SitesController extends AppController
     public function view($id = null)
     {
         $site = $this->Sites->get($id, [
-            'contain' => ['Categories']
+            'contain' => ['Categories', 'Articles']
         ]);
 
         $this->set('site', $site);
