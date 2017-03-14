@@ -24,7 +24,6 @@ class ArticlesController extends AppController
         $query = $this->Articles->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
         $sites = $query->all();
 
-        $search = $this->request->query('s');
         $articles = $this->Articles->find('all')->contain([
             'Author',
             'Categories',
@@ -35,19 +34,6 @@ class ArticlesController extends AppController
                 ]
             ]
         ]);
-
-        if (!is_null($search)) {
-            $articles = $articles->find(
-                'search',
-                [
-                    'fieldNames' => $this->Articles->searchableFields(),
-                    'term' => $search,
-                ]
-            );
-            if ($articles->isEmpty()) {
-                $this->Flash->set(__d('cms', 'No articles found for the search term: {0}', $search));
-            }
-        }
 
         $this->set(compact('articles', 'sites'));
         $this->set('_serialize', ['articles']);
