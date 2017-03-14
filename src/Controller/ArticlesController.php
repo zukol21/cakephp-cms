@@ -25,9 +25,14 @@ class ArticlesController extends AppController
         $sites = $query->all();
 
         $search = $this->request->query('s');
-        $articles = $this->Articles->find('all')->order(['Articles.modified' => 'DESC'])->contain([
-            'Author', 'Categories', 'Sites', 'ArticleFeaturedImages' => [
-                'sort' => ['created' => 'DESC']
+        $articles = $this->Articles->find('all')->contain([
+            'Author',
+            'Categories',
+            'Sites',
+            'ArticleFeaturedImages' => [
+                'sort' => [
+                    'created' => 'DESC'
+                ]
             ]
         ]);
 
