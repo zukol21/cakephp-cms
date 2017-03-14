@@ -5,6 +5,11 @@ Router::plugin(
     'Cms',
     function ($routes) {
         $routes->extensions(['json']);
+
+        $routes->scope('/site', function ($routes) {
+            $routes->connect('/:slug/categories/:action/*', ['controller' => 'Categories'], ['pass' => ['slug']]);
+        });
+
         $routes->fallbacks('DashedRoute');
     }
 );

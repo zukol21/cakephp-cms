@@ -18,11 +18,26 @@ echo $this->Html->scriptBlock(
     <h1>Categories
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
-                <?= $this->Html->link(
+                <?= $this->Form->button(
                     '<i class="fa fa-plus"></i> ' . __('Add'),
-                    ['plugin' => $this->plugin, 'controller' => $this->name, 'action' => 'add'],
-                    ['escape' => false, 'title' => __('Add'), 'class' => 'btn btn-default']
+                    [
+                        'type' => 'button',
+                        'title' => __('Add'),
+                        'class' => 'btn btn-default dropdown-toggle',
+                        'data-toggle' => 'dropdown',
+                        'aria-haspopup' => 'true',
+                        'aria-expanded' => 'false'
+                    ]
                 ) ?>
+                <ul class="dropdown-menu dropdown-menu-right">
+                <?php foreach ($sites as $site) : ?>
+                    <li>
+                        <a href="<?= $this->Url->build(['action' => 'add', $site->slug]); ?>">
+                            <?= $site->name ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
             </div>
         </div>
     </h1>
@@ -55,30 +70,30 @@ echo $this->Html->scriptBlock(
                                     <?php if ($category->parent_id) : ?>
                                         <?= $this->Form->postLink(
                                             '<i class="fa fa-arrow-up"></i>',
-                                            ['action' => 'move_node', $category->id, 'up'],
+                                            ['action' => 'moveNode', $category->site->slug, $category->slug, 'up'],
                                             ['title' => __('Move up'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
                                         <?= $this->Form->postLink(
                                             '<i class="fa fa-arrow-down"></i>',
-                                            ['action' => 'move_node', $category->id, 'down'],
+                                            ['action' => 'moveNode', $category->site->slug, $category->slug, 'down'],
                                             ['title' => __('Move down'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
                                     <?php endif; ?>
                                     <?= $this->Html->link(
                                         '<i class="fa fa-eye"></i>',
-                                        ['action' => 'view', $category->id],
+                                        ['action' => 'view', $category->site->slug, $category->slug],
                                         ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                     <?= $this->Html->link(
                                         '<i class="fa fa-pencil"></i>',
-                                        ['action' => 'edit', $category->id],
+                                        ['action' => 'edit', $category->site->slug, $category->slug],
                                         ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                     <?= $this->Form->postLink(
                                         '<i class="fa fa-trash"></i>',
-                                        ['action' => 'delete', $category->id],
+                                        ['action' => 'delete', $category->site->slug, $category->slug],
                                         [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $category->node),
+                                            'confirm' => __('Are you sure you want to delete # {0}?', $category->name),
                                             'title' => __('Delete'),
                                             'class' => 'btn btn-default',
                                             'escape' => false

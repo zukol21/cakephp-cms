@@ -49,6 +49,11 @@ echo $this->Html->scriptBlock(
                             <td class="actions">
                                 <div class="btn-group btn-group-xs" role="group">
                                     <?= $this->Html->link(
+                                        '<i class="fa fa-tag"></i>',
+                                        ['controller' => 'Categories', 'action' => 'add', $site->slug],
+                                        ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
+                                    ) ?>
+                                    <?= $this->Html->link(
                                         '<i class="fa fa-eye"></i>',
                                         ['action' => 'view', $site->id],
                                         ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
