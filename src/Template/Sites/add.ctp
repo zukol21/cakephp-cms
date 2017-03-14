@@ -27,6 +27,7 @@ echo $this->Html->scriptBlock(
                             $label = $this->Form->label('active');
                             echo $this->Form->input('active', [
                                 'type' => 'checkbox',
+                                'checked' => true,
                                 'class' => 'square',
                                 'label' => false,
                                 'templates' => [
