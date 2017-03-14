@@ -28,6 +28,7 @@ class SitesTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Slug.Slug');
+        $this->addBehavior('Muffin/Trash.Trash');
 
         $this->hasMany('Cms.Categories');
     }
