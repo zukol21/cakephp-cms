@@ -345,41 +345,4 @@ class ArticlesTable extends BaseTable
     {
         return $this->related;
     }
-
-    /**
-     * Fetch and return Article by id or slug and associated Site id.
-     *
-     * @param string $id Article id or slug.
-     * @param \Cake\ORM\Entity $site Site entity.
-     * @param array $contain Contain associations list (optional).
-     * @return \Cake\ORM\Entity
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
-     * @throws \InvalidArgumentException
-     */
-    public function getArticleBySite($id, Entity $site, array $contain = [])
-    {
-        if (empty($id)) {
-            throw new InvalidArgumentException('Article id or slug cannot be empty.');
-        }
-
-        $query = $this->find('all', [
-            'limit' => 1,
-            'conditions' => [
-                'OR' => [
-                    'Articles.id' => $id,
-                    'Articles.slug' => $id
-                ],
-                'Articles.site_id' => $site->id
-            ],
-            'contain' => $contain
-        ]);
-
-        $result = $query->first();
-
-        if (empty($result)) {
-            throw new RecordNotFoundException('Article not found.');
-        }
-
-        return $result;
-    }
 }
