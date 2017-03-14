@@ -88,9 +88,9 @@ echo $this->Html->scriptBlock(
                         </td>
                         <td>
                         <?php if ($article->publish_date < new DateTime('now')) : ?>
-                            <span class="fa fa-check" aria-hidden="true"></span></td>
+                            <span class="fa fa-check" aria-hidden="true"></span>
                         <?php else : ?>
-                            <span class="fa fa-remove" aria-hidden="true"></span></td>
+                            <span class="fa fa-remove" aria-hidden="true"></span>
                         <?php endif; ?>
                         </td>
                         <td>
