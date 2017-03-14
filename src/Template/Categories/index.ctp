@@ -66,8 +66,31 @@ echo $this->Html->scriptBlock(
                                 <?php endif; ?>
                             </td>
                             <td class="actions">
-                                <div class="btn-group btn-group-xs" role="group">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-eye"></i>',
+                                            ['action' => 'view', $category->site->slug, $category->slug],
+                                            ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-pencil"></i>',
+                                            ['action' => 'edit', $category->site->slug, $category->slug],
+                                            ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
+                                        ) ?>
+                                        <?= $this->Form->postLink(
+                                            '<i class="fa fa-trash"></i>',
+                                            ['action' => 'delete', $category->site->slug, $category->slug],
+                                            [
+                                                'confirm' => __('Are you sure you want to delete # {0}?', $category->name),
+                                                'title' => __('Delete'),
+                                                'class' => 'btn btn-default',
+                                                'escape' => false
+                                            ]
+                                        ) ?>
+                                    </div>
                                     <?php if ($category->parent_id) : ?>
+                                    <div class="btn-group btn-group-xs" role="group">
                                         <?= $this->Form->postLink(
                                             '<i class="fa fa-arrow-up"></i>',
                                             ['action' => 'moveNode', $category->site->slug, $category->slug, 'up'],
@@ -78,27 +101,8 @@ echo $this->Html->scriptBlock(
                                             ['action' => 'moveNode', $category->site->slug, $category->slug, 'down'],
                                             ['title' => __('Move down'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
+                                    </div>
                                     <?php endif; ?>
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-eye"></i>',
-                                        ['action' => 'view', $category->site->slug, $category->slug],
-                                        ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-pencil"></i>',
-                                        ['action' => 'edit', $category->site->slug, $category->slug],
-                                        ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Form->postLink(
-                                        '<i class="fa fa-trash"></i>',
-                                        ['action' => 'delete', $category->site->slug, $category->slug],
-                                        [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $category->name),
-                                            'title' => __('Delete'),
-                                            'class' => 'btn btn-default',
-                                            'escape' => false
-                                        ]
-                                    ) ?>
                                 </div>
                             </td>
                         </tr>
