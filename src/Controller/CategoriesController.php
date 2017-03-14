@@ -69,7 +69,9 @@ class CategoriesController extends AppController
         $category = $this->Categories->newEntity();
 
         if ($this->request->is('post')) {
-            $category = $this->Categories->patchEntity($category, $this->request->data);
+            $data = $this->request->data;
+            $data['site_id'] = $site->id;
+            $category = $this->Categories->patchEntity($category, $data);
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
@@ -102,7 +104,9 @@ class CategoriesController extends AppController
         $category = $this->Categories->getCategoryBySite($id, $site);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $category = $this->Categories->patchEntity($category, $this->request->data);
+            $data = $this->request->data;
+            $data['site_id'] = $site->id;
+            $category = $this->Categories->patchEntity($category, $data);
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 

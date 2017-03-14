@@ -17,7 +17,6 @@ echo $this->Html->scriptBlock(
         <div class="col-xs-12 col-md-6">
             <div class="box box-solid">
                 <?= $this->Form->create($category); ?>
-                <?= $this->Form->hidden('site_id', ['value' => $site->id]) ?>
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-6">
