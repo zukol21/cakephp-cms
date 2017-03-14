@@ -27,13 +27,8 @@ class ArticlesController extends AppController
         $articles = $this->Articles
             ->find('withLatestImage')
             ->order(['Articles.modified' => 'DESC']);
-        if (is_null($search)) {
-            if ($articles->isEmpty()) {
-                $this->Flash->set(__('No articles were found. Please add one.'));
 
-                return $this->redirect(['action' => 'add']);
-            }
-        } else {
+        if (!is_null($search)) {
             $articles = $articles->find(
                 'search',
                 [

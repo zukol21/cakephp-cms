@@ -28,11 +28,6 @@ class CategoriesController extends AppController
             ->contain('Sites')
             ->order(['Categories.site_id' => 'ASC', 'Categories.lft' => 'ASC']);
 
-        if ($categories->isEmpty()) {
-            $this->Flash->set(__('No categories were found. Please add one.'));
-
-            return $this->redirect(['action' => 'add']);
-        }
         //Create node property in the entity object
         foreach ($categories as $category) {
             if (in_array($category->id, array_keys($tree))) {
