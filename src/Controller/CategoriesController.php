@@ -67,7 +67,6 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
-     * @throws \InvalidArgumentException
      */
     public function add($siteId)
     {
