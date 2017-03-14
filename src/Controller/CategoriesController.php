@@ -84,11 +84,12 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
+
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
         ]);
-        // $sites = $this->Categories->Sites->find('list')->where(['active' => true]);
+
         $this->set(compact('category', 'categories', 'site'));
         $this->set('_serialize', ['category']);
     }
@@ -116,10 +117,12 @@ class CategoriesController extends AppController
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
+
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id, 'Categories.id !=' => $category->id],
             'spacer' => self::TREE_SPACER
         ]);
+
         $this->set(compact('category', 'categories', 'site'));
         $this->set('_serialize', ['category']);
     }
@@ -168,6 +171,7 @@ class CategoriesController extends AppController
 
         $site = $this->Categories->getSite($siteId);
         $category = $this->Categories->getCategoryBySite($id, $site);
+
         $moveFunction = 'move' . $action;
         if ($this->Categories->{$moveFunction}($category)) {
             $this->Flash->success(__('{0} has been moved {1} successfully.', $category->name, $action));
