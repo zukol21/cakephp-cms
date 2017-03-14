@@ -52,6 +52,7 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <th><?= __('Title'); ?></th>
                         <th><?= __('Slug'); ?></th>
+                        <th><?= __('Site'); ?></th>
                         <th><?= __('Category'); ?></th>
                         <th><?= __('Author'); ?></th>
                         <th><?= __('Publish'); ?></th>
@@ -64,6 +65,13 @@ echo $this->Html->scriptBlock(
                     <tr>
                         <td><?= h($article->title) ?></td>
                         <td><?= h($article->slug) ?></td>
+                        <td>
+                        <?php if ($article->has('site')) : ?>
+                            <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $article->site->id])?>" class="label label-primary">
+                                <?= h($article->site->name); ?>
+                            </a>
+                        <?php endif; ?>
+                        </td>
                         <td>
                         <?php if ($article->has('category')) : ?>
                             <a href="<?= $this->Url->build(['controller' => 'Categories', 'action' => 'view', $article->site->slug, $article->category->slug])?>" class="label label-primary">
