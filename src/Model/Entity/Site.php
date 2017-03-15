@@ -4,9 +4,9 @@ namespace Cms\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Article Entity.
+ * Site Entity
  */
-class Article extends Entity
+class Site extends Entity
 {
 
     /**
@@ -20,6 +20,6 @@ class Article extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

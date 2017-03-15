@@ -31,7 +31,6 @@ trait UploadTrait
         return true;
     }
 
-
     /**
      * Converts code to message.
      *

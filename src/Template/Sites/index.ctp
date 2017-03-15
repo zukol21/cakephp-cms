@@ -15,29 +15,14 @@ echo $this->Html->scriptBlock(
 );
 ?>
 <section class="content-header">
-    <h1>Categories
+    <h1>Sites
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
-                <?= $this->Form->button(
+                <?= $this->Html->link(
                     '<i class="fa fa-plus"></i> ' . __('Add'),
-                    [
-                        'type' => 'button',
-                        'title' => __('Add'),
-                        'class' => 'btn btn-default dropdown-toggle',
-                        'data-toggle' => 'dropdown',
-                        'aria-haspopup' => 'true',
-                        'aria-expanded' => 'false'
-                    ]
+                    ['plugin' => $this->plugin, 'controller' => $this->name, 'action' => 'add'],
+                    ['escape' => false, 'title' => __('Add'), 'class' => 'btn btn-default']
                 ) ?>
-                <ul class="dropdown-menu dropdown-menu-right">
-                <?php foreach ($sites as $site) : ?>
-                    <li>
-                        <a href="<?= $this->Url->build(['action' => 'add', $site->slug]); ?>">
-                            <?= $site->name ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
             </div>
         </div>
     </h1>
@@ -50,59 +35,53 @@ echo $this->Html->scriptBlock(
                     <thead>
                         <tr>
                             <th><?= __('Name'); ?></th>
-                            <th><?= __('Site'); ?></th>
+                            <th><?= __('Slug'); ?></th>
+                            <th><?= __('Active'); ?></th>
                             <th class="actions"><?= __('Actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($categories as $category) : ?>
+                        <?php foreach ($sites as $site) : ?>
                         <tr>
-                            <td><?= $category->node ?></td>
-                            <td>
-                                <?php if ($category->has('site')) : ?>
-                                <a href="<?= $this->Url->build(['controller' => 'Sites', 'action' => 'view', $category->site->id])?>" class="label label-primary">
-                                    <?= $category->site->name ?>
-                                </a>
-                                <?php endif; ?>
-                            </td>
+                            <td><?= $site->name ?></td>
+                            <td><?= $site->slug ?></td>
+                            <td><?= $site->active ? __('Yes') : __('No') ?></td>
                             <td class="actions">
                                 <div class="btn-toolbar" role="toolbar">
                                     <div class="btn-group btn-group-xs" role="group">
                                         <?= $this->Html->link(
                                             '<i class="fa fa-eye"></i>',
-                                            ['action' => 'view', $category->site->slug, $category->slug],
+                                            ['action' => 'view', $site->id],
                                             ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
                                         <?= $this->Html->link(
                                             '<i class="fa fa-pencil"></i>',
-                                            ['action' => 'edit', $category->site->slug, $category->slug],
+                                            ['action' => 'edit', $site->id],
                                             ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
                                         <?= $this->Form->postLink(
                                             '<i class="fa fa-trash"></i>',
-                                            ['action' => 'delete', $category->site->slug, $category->slug],
+                                            ['action' => 'delete', $site->id],
                                             [
-                                                'confirm' => __('Are you sure you want to delete # {0}?', $category->name),
+                                                'confirm' => __('Are you sure you want to delete # {0}?', $site->name),
                                                 'title' => __('Delete'),
                                                 'class' => 'btn btn-default',
                                                 'escape' => false
                                             ]
                                         ) ?>
                                     </div>
-                                    <?php if ($category->parent_id) : ?>
                                     <div class="btn-group btn-group-xs" role="group">
-                                        <?= $this->Form->postLink(
-                                            '<i class="fa fa-arrow-up"></i>',
-                                            ['action' => 'moveNode', $category->site->slug, $category->slug, 'up'],
-                                            ['title' => __('Move up'), 'class' => 'btn btn-default', 'escape' => false]
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-tag"></i>',
+                                            ['controller' => 'Categories', 'action' => 'add', $site->slug],
+                                            ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
-                                        <?= $this->Form->postLink(
-                                            '<i class="fa fa-arrow-down"></i>',
-                                            ['action' => 'moveNode', $category->site->slug, $category->slug, 'down'],
-                                            ['title' => __('Move down'), 'class' => 'btn btn-default', 'escape' => false]
+                                        <?= $this->Html->link(
+                                            '<i class="fa fa-pencil-square"></i>',
+                                            ['controller' => 'Articles', 'action' => 'add', $site->slug],
+                                            ['title' => __('Create Article'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
                                     </div>
-                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
