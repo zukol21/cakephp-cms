@@ -6,7 +6,7 @@
     "require": {
         "cakedc/users": "^4.0",
         "muffin/slug": "1.1.0",
-        "qobo/cakephp-utils": "^1.0"
+        "qobo/cakephp-utils": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0",
