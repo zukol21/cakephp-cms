@@ -33,6 +33,17 @@ Configure::write('TinyMCE', array_replace_recursive(
 ));
 
 /**
+ * elFinder configuration
+ */
+$config = Configure::read('TinymceElfinder');
+$config = $config ? $config : [];
+Configure::load('Cms.elfinder');
+Configure::write('TinymceElfinder', array_replace_recursive(
+    Configure::read('TinymceElfinder'),
+    $config
+));
+
+/**
  * Plugin configuration
  *
  * Following configuration can be overridden by the application or other plugin.
