@@ -39,11 +39,8 @@ echo $this->Html->scriptBlock(
     });',
     ['block' => 'scriptBotton']
 );
-$ckeditorId = 'ckeditor' . uniqid();
-echo $this->element('Cms.ckeditor', [
-    'id' => $ckeditorId,
-    'url' => $this->Url->assetUrl(['action' => 'uploadFromEditor', $article->id, '_ext' => 'json'])
-]);
+// load tinyMCE
+echo $this->element('Cms.tinymce');
 ?>
 <section class="content-header">
     <h1><?= __('Edit {0}', ['Article']) ?></h1>
@@ -134,7 +131,7 @@ echo $this->element('Cms.ckeditor', [
                     <h3 class="box-title">Content</h3>
                 </div>
                 <div class="box-body">
-                    <?= $this->Form->input('content', ['type' => 'textarea', 'id' => $ckeditorId, 'label' => false]) ?>
+                    <?= $this->Form->input('content', ['type' => 'textarea', 'class' => 'tinymce', 'label' => false]) ?>
                 </div>
             </div>
             <div class="box box-solid">
