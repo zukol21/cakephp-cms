@@ -42,18 +42,3 @@ Configure::write('TinymceElfinder', array_replace_recursive(
     Configure::read('TinymceElfinder'),
     $config
 ));
-
-/**
- * Plugin configuration
- *
- * Following configuration can be overridden by the application or other plugin.
- */
-
-//CKEditor specific
-if (!Configure::check('Cms.ckeditor.upload.plugin.url')) {
-    Configure::write('Cms.ckeditor.upload.plugin.url', 'Cms.ckeditor-upload-plugin');
-}
-
-if (!Configure::check('Cms.ckeditor.custom.config.url')) {
-    Configure::write('Cms.ckeditor.custom.config.url', 'Cms.ckeditor-config');
-}
