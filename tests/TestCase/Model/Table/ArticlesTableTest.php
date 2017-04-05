@@ -81,7 +81,6 @@ class ArticlesTableTest extends TestCase
             $result[] = $assocObj->name();
         }
         $this->assertTrue(in_array('ArticleFeaturedImages', $result));
-        $this->assertTrue(in_array('ContentImages', $result));
         $this->assertTrue(in_array('Categories', $result));
     }
 

@@ -37,13 +37,6 @@ class ArticlesTable extends BaseTable
             ],
             'sort' => ['ArticleFeaturedImages.created' => 'DESC']
         ]);
-        $this->hasMany('ContentImages', [
-            'className' => 'Cms.ContentImages',
-            'foreignKey' => 'foreign_key',
-            'conditions' => [
-                'ContentImages.model' => 'ContentImage'
-            ]
-        ]);
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
         $this->belongsTo('Author', [
