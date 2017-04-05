@@ -22,6 +22,17 @@ Configure::write('FileStorage', array_replace_recursive(
 StorageUtils::generateHashes();
 
 /**
+ * TinyMCE configuration
+ */
+$config = Configure::read('TinyMCE');
+$config = $config ? $config : [];
+Configure::load('Cms.tinymce');
+Configure::write('TinyMCE', array_replace_recursive(
+    Configure::read('TinyMCE'),
+    $config
+));
+
+/**
  * Plugin configuration
  *
  * Following configuration can be overridden by the application or other plugin.
