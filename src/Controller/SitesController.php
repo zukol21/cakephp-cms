@@ -1,6 +1,7 @@
 <?php
 namespace Cms\Controller;
 
+use Cake\Event\Event;
 use Cms\Controller\AppController;
 
 /**
@@ -10,6 +11,16 @@ use Cms\Controller\AppController;
  */
 class SitesController extends AppController
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+
+        // pass article types to all views
+        $this->set('types', $this->Sites->Articles->getTypes());
+    }
 
     /**
      * Index method
