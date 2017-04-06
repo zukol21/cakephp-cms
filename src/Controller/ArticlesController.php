@@ -4,6 +4,7 @@ namespace Cms\Controller;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
+use InvalidArgumentException;
 
 /**
  * Articles Controller
@@ -70,17 +71,26 @@ class ArticlesController extends AppController
     /**
      * Add method
      *
-     * @param string $siteId Site id or slug.
+     * @param string $siteId Site id or slug
+     * @param string $type Site type
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @throws \InvalidArgumentException
      */
-    public function add($siteId)
+    public function add($siteId, $type)
     {
+        $typeOptions = $this->Articles->getTypeOptions($type);
+
+        if (empty($typeOptions)) {
+            throw new InvalidArgumentException('Unsupported Article type provided.');
+        }
+
         $site = $this->Articles->getSite($siteId);
         $article = $this->Articles->newEntity();
 
         if ($this->request->is('post')) {
             $data = $this->request->data;
             $data['site_id'] = $site->id;
+            $data['type'] = $type;
             $data['created_by'] = $this->Auth->user('id');
             $data['modified_by'] = $this->Auth->user('id');
 
@@ -102,6 +112,7 @@ class ArticlesController extends AppController
             'spacer' => self::TREE_SPACER
         ]);
 
+        $this->set('typeOptions', $typeOptions);
         $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
@@ -110,12 +121,20 @@ class ArticlesController extends AppController
      * Edit method
      *
      * @param string $siteId Site id or slug.
+     * @param string $type Site type.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \InvalidArgumentException
      */
-    public function edit($siteId, $id = null)
+    public function edit($siteId, $type, $id = null)
     {
+        $typeOptions = $this->Articles->getTypeOptions($type);
+
+        if (empty($typeOptions)) {
+            throw new InvalidArgumentException('Unsupported Article type provided.');
+        }
+
         $site = $this->Articles->getSite($siteId);
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
             'Categories',
@@ -134,6 +153,7 @@ class ArticlesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
             $data['site_id'] = $site->id;
+            $data['type'] = $type;
             $data['modified_by'] = $this->Auth->user('id');
             $article = $this->Articles->patchEntity($article, $data);
             if ($this->Articles->save($article)) {
@@ -154,6 +174,7 @@ class ArticlesController extends AppController
             'spacer' => self::TREE_SPACER
         ]);
 
+        $this->set('typeOptions', $typeOptions);
         $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
