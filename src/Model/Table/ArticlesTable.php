@@ -1,6 +1,8 @@
 <?php
 namespace Cms\Model\Table;
 
+use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use Cms\Model\Table\BaseTable;
@@ -11,6 +13,24 @@ use Cms\Model\Table\BaseTable;
  */
 class ArticlesTable extends BaseTable
 {
+    /**
+     * Article types list.
+     *
+     * @var array
+     */
+    protected $_types = [];
+
+    /**
+     * Type fields default.
+     *
+     * @var array
+     */
+    protected $_fieldDefaults = [
+        'renderAs' => 'text',
+        'required' => true,
+        'editor' => false
+    ];
+
     /**
      * Initialize method
      *
@@ -102,5 +122,52 @@ class ArticlesTable extends BaseTable
         $rules->add($rules->isUnique(['slug']));
 
         return $rules;
+    }
+
+    /**
+     * Returns supported types.
+     *
+     * @return array
+     */
+    public function getTypes()
+    {
+        if (!empty($this->_types)) {
+            return $this->_types;
+        }
+
+        $this->_types = Configure::read('CMS.Articles.types');
+        foreach ($this->_types as $k => $v) {
+            if ((bool)$v['enabled']) {
+                continue;
+            }
+
+            unset($this->_types[$k]);
+        }
+
+        return $this->_types;
+    }
+
+    /**
+     * Returns type options.
+     *
+     * @param string $type Type name
+     * @return array
+     */
+    public function getTypeOptions($type)
+    {
+        $result = [];
+
+        $types = $this->getTypes();
+        if (!array_key_exists($type, $types)) {
+            return $result;
+        }
+
+        $result = $types[$type];
+        // normalize options
+        foreach ($result['fields'] as &$v) {
+            $v = array_merge($this->_fieldDefaults, $v);
+        }
+
+        return $result;
     }
 }
