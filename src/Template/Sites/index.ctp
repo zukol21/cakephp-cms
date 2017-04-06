@@ -1,4 +1,6 @@
 <?php
+use Cake\Utility\Inflector;
+
 echo $this->Html->css('AdminLTE./plugins/datatables/dataTables.bootstrap', ['block' => 'css']);
 echo $this->Html->script(
     [
@@ -76,11 +78,31 @@ echo $this->Html->scriptBlock(
                                             ['controller' => 'Categories', 'action' => 'add', $site->slug],
                                             ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
                                         ) ?>
-                                        <?= $this->Html->link(
-                                            '<i class="fa fa-pencil-square"></i>',
-                                            ['controller' => 'Articles', 'action' => 'add', $site->slug],
-                                            ['title' => __('Create Article'), 'class' => 'btn btn-default', 'escape' => false]
+                                        <?= $this->Form->button('<i class="fa fa-pencil-square"></i>', [
+                                            'type' => 'button',
+                                            'title' => __('Create Article'),
+                                            'class' => 'btn btn-default dropdown-toggle',
+                                            'data-toggle' => 'dropdown',
+                                            'aria-haspopup' => 'true',
+                                            'aria-expanded' => 'false',
+                                            'escape' => false
+                                        ]
+                                            // ['controller' => 'Articles', 'action' => 'add', $site->slug],
                                         ) ?>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                        <?php foreach (array_keys($types) as $type) : ?>
+                                            <li>
+                                                <a href="<?= $this->Url->build([
+                                                    'controller' => 'Articles',
+                                                    'action' => 'add',
+                                                    $site->slug,
+                                                    $type
+                                                ]); ?>">
+                                                    <?= Inflector::humanize($type) ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                        </ul>
                                     </div>
                                 </div>
                             </td>

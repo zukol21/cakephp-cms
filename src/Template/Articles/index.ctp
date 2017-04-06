@@ -109,7 +109,7 @@ echo $this->Html->scriptBlock(
                                 ) ?>
                                 <?= $this->Html->link(
                                     '<i class="fa fa-pencil"></i>',
-                                    ['action' => 'edit', $article->site->slug, $article->slug],
+                                    ['action' => 'edit', $article->site->slug, $article->type, $article->slug],
                                     ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
                                 ) ?>
                                 <?= $this->Form->postLink(
