@@ -1,25 +1,34 @@
 <?php
 use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
+use Cms\Event\ElFinderConfigListener;
+
+/**
+ * Cms configuration
+ */
+// get app level config
+$config = Configure::read('CMS');
+$config = $config ? $config : [];
+// load default plugin config
+Configure::load('Cms.cms');
+// overwrite default plugin config by app level config
+Configure::write('CMS', array_replace_recursive(
+    Configure::read('CMS'),
+    $config
+));
 
 /**
  * Burzum File-Storage configuration
  */
-// get app level config
 $config = Configure::read('FileStorage');
 $config = $config ? $config : [];
-
-// load default plugin config
 Configure::load('Cms.file_storage');
-
-// overwrite default plugin config by app level config
 Configure::write('FileStorage', array_replace_recursive(
     Configure::read('FileStorage'),
     $config
 ));
-
-// This is very important! The hashes are needed to calculate the image versions!
-StorageUtils::generateHashes();
+StorageUtils::generateHashes(); // This is very important! The hashes are needed to calculate the image versions!
 
 /**
  * TinyMCE configuration
@@ -42,3 +51,5 @@ Configure::write('TinymceElfinder', array_replace_recursive(
     Configure::read('TinymceElfinder'),
     $config
 ));
+
+EventManager::instance()->on(new ElFinderConfigListener());
