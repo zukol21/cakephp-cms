@@ -69,6 +69,36 @@ class ArticlesController extends AppController
     }
 
     /**
+     * Type method
+     *
+     * @param string $siteId Site id or slug.
+     * @param string|null $id Type slug.
+     * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function type($siteId, $id)
+    {
+        $site = $this->Articles->getSite($siteId);
+        $articles = $this->Articles->find('all', [
+            'conditions' => ['Articles.type' => $id],
+            'contain' => ['Sites', 'ArticleFeaturedImages']
+        ]);
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+        $article = $this->Articles->newEntity();
+
+        $this->set('type', $id);
+        $this->set('types', [$id => $this->Articles->getTypeOptions($id)]);
+        $this->set('site', $site);
+        $this->set('articles', $articles);
+        $this->set('categories', $categories);
+        $this->set('article', $article);
+        $this->set('_serialize', ['type']);
+    }
+
+    /**
      * Add method
      *
      * @param string $siteId Site id or slug
