@@ -5,7 +5,6 @@ use Cake\Core\Configure;
 echo $this->Html->script('Cms./plugins/tinymce/tinymce.min', ['block' => 'scriptBotton']);
 echo $this->TinymceElfinder->defineElfinderBrowser(true);
 
-$elfinderConfig = Configure::read('TinymceElfinder');
 
 // initialize tinyMCE
 echo $this->Html->scriptBlock(
