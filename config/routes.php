@@ -14,6 +14,9 @@ Router::plugin(
                 ['pass' => ['slug', 'type']]
             );
             $routes->connect(
+                '/:slug/types/view/:type/*',
+                ['controller' => 'Articles', 'action' => 'type'],
+                ['pass' => ['slug', 'type']]
             );
         });
 
