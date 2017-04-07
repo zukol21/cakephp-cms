@@ -131,21 +131,32 @@ class ArticlesTable extends BaseTable
     /**
      * Returns supported types.
      *
+     * @param bool $withOptions Flag for including type options
      * @return array
      */
-    public function getTypes()
+    public function getTypes($withOptions = true)
     {
         if (!empty($this->_types)) {
             return $this->_types;
         }
 
         $this->_types = Configure::read('CMS.Articles.types');
-        foreach ($this->_types as $k => $v) {
-            if ((bool)$v['enabled']) {
+        foreach ($this->_types as $k => &$v) {
+            if (!(bool)$v['enabled']) {
+                unset($this->_types[$k]);
+
                 continue;
             }
 
-            unset($this->_types[$k]);
+            // normalize options
+            foreach ($v['fields'] as &$field) {
+                $field = array_merge($this->_fieldDefaults, $field);
+            }
+
+        }
+
+        if (!(bool)$withOptions) {
+            return array_keys($this->_types);
         }
 
         return $this->_types;
@@ -167,10 +178,6 @@ class ArticlesTable extends BaseTable
         }
 
         $result = $types[$type];
-        // normalize options
-        foreach ($result['fields'] as &$v) {
-            $v = array_merge($this->_fieldDefaults, $v);
-        }
 
         return $result;
     }
