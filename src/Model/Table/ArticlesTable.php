@@ -107,6 +107,10 @@ class ArticlesTable extends BaseTable
             ->requirePresence('site_id', 'create')
             ->notEmpty('site_id');
 
+        $validator
+            ->requirePresence('type', 'create')
+            ->notEmpty('type');
+
         return $validator;
     }
 
