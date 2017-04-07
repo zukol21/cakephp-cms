@@ -237,7 +237,7 @@ class ArticlesController extends AppController
      * Uploads and stores the related file.
      *
      * @param  int|null $articleId id of the relate slide
-     * @return bool           flag
+     * @return void
      */
     protected function _upload($articleId = null)
     {
@@ -247,13 +247,8 @@ class ArticlesController extends AppController
             $this->request->data
         );
 
-        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
-            $this->Flash->set(__('Upload successful'));
-
-            return true;
-        }
-
-        return false;
+        // upload image
+        $this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity);
     }
 
     /**
