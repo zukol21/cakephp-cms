@@ -56,6 +56,10 @@ return [
                             'renderAs' => 'textarea',
                             'editor' => true
                         ],
+                        'Description' => [
+                            'field' => 'excerpt',
+                            'renderAs' => 'textarea'
+                        ],
                         'Featured Image' => [
                             'field' => 'featured_image',
                             'renderAs' => 'file'
@@ -70,7 +74,8 @@ return [
                             'field' => 'title'
                         ],
                         'URL' => [
-                            'field' => 'content'
+                            'field' => 'content',
+                            'renderAs' => 'url'
                         ]
                     ]
                 ],
