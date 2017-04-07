@@ -14,9 +14,6 @@ Router::plugin(
                 ['pass' => ['slug', 'type']]
             );
             $routes->connect(
-                '/:slug/category/:category/display/*',
-                ['controller' => 'Categories', 'action' => 'display'],
-                ['pass' => ['slug', 'category']]
             );
         });
 
