@@ -152,7 +152,6 @@ class ArticlesTable extends BaseTable
             foreach ($v['fields'] as &$field) {
                 $field = array_merge($this->_fieldDefaults, $field);
             }
-
         }
 
         if (!(bool)$withOptions) {

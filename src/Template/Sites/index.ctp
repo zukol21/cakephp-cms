@@ -86,9 +86,7 @@ echo $this->Html->scriptBlock(
                                             'aria-haspopup' => 'true',
                                             'aria-expanded' => 'false',
                                             'escape' => false
-                                        ]
-                                            // ['controller' => 'Articles', 'action' => 'add', $site->slug],
-                                        ) ?>
+                                        ]) ?>
                                         <ul class="dropdown-menu dropdown-menu-right">
                                         <?php foreach (array_keys($types) as $type) : ?>
                                             <li>
