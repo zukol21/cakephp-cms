@@ -3,13 +3,13 @@
     <h1><?= h($site->name) . ' &raquo; ' . Inflector::humanize($type) ?></h1>
 </section>
 <section class="content">
-    <?= $this->element('Categories/new_articles', [
+    <?= $this->element('Articles/new', [
         'categories' => $categories,
         'site' => $site,
         'article' => $article,
         'articleTypes' => $types
     ]) ?>
-    <?= $this->element('Categories/articles', [
+    <?= $this->element('Articles/list', [
         'articles' => $articles,
         'articleTypes' => $types
     ]) ?>
