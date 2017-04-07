@@ -50,10 +50,17 @@ class CategoriesController extends AppController
     {
         $site = $this->Categories->getSite($siteId);
         $category = $this->Categories->getCategoryBySite($id, $site, [
-            'ParentCategories', 'Articles', 'ChildCategories', 'Sites'
+            'Articles' => ['Sites', 'ArticleFeaturedImages'], 'Sites'
         ]);
+        $categories = $this->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+        $article = $this->Categories->Articles->newEntity();
 
         $this->set('category', $category);
+        $this->set('categories', $categories);
+        $this->set('article', $article);
         $this->set('_serialize', ['category']);
     }
 
