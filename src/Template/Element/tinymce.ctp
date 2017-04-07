@@ -2,7 +2,7 @@
 use Cake\Core\Configure;
 
 // load tinyMCE editor and elFinder file manager
-echo $this->Html->script('Cms./plugins/tinymce/tinymce.min');
+echo $this->Html->script('Cms./plugins/tinymce/tinymce.min', ['block' => 'scriptBotton']);
 echo $this->TinymceElfinder->defineElfinderBrowser(true);
 
 $elfinderConfig = Configure::read('TinymceElfinder');
