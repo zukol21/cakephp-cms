@@ -236,7 +236,14 @@ class ArticlesController extends AppController
         );
 
         // upload image
-        $this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity);
+        $uploaded = $this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity);
+        if ($uploaded) {
+            // delete old image
+            $this->Articles->ArticleFeaturedImages->deleteAll([
+                'ArticleFeaturedImages.foreign_key' => $articleId,
+                'ArticleFeaturedImages.path !=' => $entity->path
+            ]);
+        }
     }
 
     /**
