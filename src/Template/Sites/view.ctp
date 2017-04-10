@@ -1,21 +1,3 @@
-<?php
-$this->loadHelper('Burzum/FileStorage.Image');
-
-echo $this->Html->css('AdminLTE./plugins/datatables/dataTables.bootstrap', ['block' => 'css']);
-echo $this->Html->script(
-    [
-        'AdminLTE./plugins/datatables/jquery.dataTables.min',
-        'AdminLTE./plugins/datatables/dataTables.bootstrap.min'
-    ],
-    [
-        'block' => 'scriptBotton'
-    ]
-);
-echo $this->Html->scriptBlock(
-    '$(".table-datatable").DataTable({});',
-    ['block' => 'scriptBotton']
-);
-?>
 <section class="content-header">
     <h1><?= $this->Html->link(
         __('Sites'),
@@ -57,16 +39,11 @@ echo $this->Html->scriptBlock(
                             <?= __('Related Categories'); ?>
                         </a>
                     </li>
-                    <li role="presentation">
-                        <a href="#related-articles" aria-controls="related-articles" role="tab" data-toggle="tab">
-                            <?= __('Related Articles'); ?>
-                        </a>
-                    </li>
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="related-categories">
                         <?php if (!empty($site->categories)) : ?>
-                        <table class="table table-hover table-condensed table-vertical-align table-datatable" width="100%">
+                        <table class="table table-hover table-condensed table-vertical-align">
                             <thead>
                                 <tr>
                                     <th><?= __('Name') ?></th>
