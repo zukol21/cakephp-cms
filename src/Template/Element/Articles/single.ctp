@@ -35,6 +35,13 @@ $data = ['article' => $article];
             </div>
             <div class="box-footer small">
                 <div class="text-right text-muted">
+                <?= $this->Html->link(Inflector::humanize($article->category->slug), [
+                    'controller' => 'Categories',
+                    'action' => 'view',
+                    $article->site->slug,
+                    $article->category->slug
+                ]) ?>
+                |
                 <?= __('Published') ?>
                 <?= $article->publish_date->timeAgoInWords([
                     'format' => 'MMM d, YYY | HH:mm',
