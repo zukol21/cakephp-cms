@@ -205,7 +205,7 @@ class ArticlesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain('Sites');
         $article = $query->first();
 
         if ($this->Articles->delete($article)) {
@@ -214,7 +214,7 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->referer());
+        return $this->redirect(['action' => 'type', $article->site->slug, $article->type]);
     }
 
     /**
