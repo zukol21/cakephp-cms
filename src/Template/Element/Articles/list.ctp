@@ -26,11 +26,18 @@ foreach ($articles as $article) {
 ?>
 <div class ="row">
 <?php foreach ($elements as $element) : ?>
-    <div class="col-xs-12 col-md-4 col-lg-3">
+    <div class="col-xs-12 col-md-6 col-lg-4">
         <div class="box box-solid">
             <div class="box-header with-border">
                 <i class="fa fa-<?= $types[$element['data']['article']->type]['icon'] ?>"></i>
-                <h3 class="box-title"><?= $element['data']['article']->title ?></h3>
+                <h3 class="box-title">
+                <?= $this->Html->link(h($element['data']['article']->title), [
+                    'controller' => 'Articles',
+                    'action' => 'view',
+                    $element['data']['article']->site->slug,
+                    $element['data']['article']->type,
+                    $element['data']['article']->slug
+                ]) ?></h3>
                 <div class="box-tools pull-right">
                     <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
                         'title' => __('Edit'),
@@ -45,20 +52,12 @@ foreach ($articles as $article) {
                 <?= $this->element($element['name'], $element['data']); ?>
             </div>
             <div class="box-footer small">
-                <div class="row">
-                    <div class="col-xs-4">
-                    </div>
-                    <div class="col-xs-4 text-center">
-                        <?= $this->Html->link(__('MORE'), [
-                            'controller' => 'Articles',
-                            'action' => 'view',
-                            $element['data']['article']->site->slug,
-                            $element['data']['article']->slug
-                        ]) ?>
-                    </div>
-                    <div class="col-xs-4 text-muted text-right">
-                        <?= $element['data']['article']->publish_date->format('Y-m-d H:m') ?>
-                    </div>
+                <div class="text-muted text-right">
+                    <?= __('Published') ?>
+                    <?= $element['data']['article']->publish_date->timeAgoInWords([
+                        'format' => 'MMM d, YYY',
+                        'end' => '1 month'
+                    ]) ?>
                 </div>
             </div>
         </div>
