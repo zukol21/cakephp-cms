@@ -37,6 +37,7 @@ $this->Html->scriptBlock(
             <?php foreach (array_keys($articleTypes) as $type) : ?>
                 <div role="tabpanel" class="tab-pane fade" id="<?= $type ?>">
                 <?= $this->element('Articles/post', [
+                    'categories' => $categories,
                     'url' => ['controller' => 'Articles', 'action' => 'add', $site->slug, $type],
                     'article' => $article,
                     'typeOptions' => $articleTypes[$type]
