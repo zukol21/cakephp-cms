@@ -16,31 +16,6 @@ class ArticlesController extends AppController
     use UploadTrait;
 
     /**
-     * Index method
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $query = $this->Articles->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
-        $sites = $query->all();
-
-        $articles = $this->Articles->find('all')->contain([
-            'Author',
-            'Categories',
-            'Sites',
-            'ArticleFeaturedImages' => [
-                'sort' => [
-                    'created' => 'DESC'
-                ]
-            ]
-        ]);
-
-        $this->set(compact('articles', 'sites'));
-        $this->set('_serialize', ['articles']);
-    }
-
-    /**
      * View method
      *
      * @param string $siteId Site id or slug.
@@ -141,7 +116,7 @@ class ArticlesController extends AppController
                     $this->_upload($article->get('id'));
                 }
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'type', $site->slug, $type]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
@@ -202,7 +177,7 @@ class ArticlesController extends AppController
                 }
                 $this->Flash->success(__('The article has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'view', $site->slug, $type, $article->slug]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
