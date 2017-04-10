@@ -5,18 +5,6 @@ use Cake\ORM\Entity;
 
 /**
  * Category Entity.
- *
- * @property string $id
- * @property string $slug
- * @property string $name
- * @property string $parent_id
- * @property \Cms\Model\Entity\Category $parent_category
- * @property int $lft
- * @property int $rght
- * @property \Cake\I18n\Time $created
- * @property \Cake\I18n\Time $modified
- * @property \Cms\Model\Entity\Category[] $child_categories
- * @property \Cms\Model\Entity\Article[] $articles
  */
 class Category extends Entity
 {
@@ -34,20 +22,4 @@ class Category extends Entity
         '*' => true,
         'id' => false,
     ];
-
-    /**
-     * Options for aligning the article image.
-     *
-     * @return array Align options.
-     */
-    protected function _getAlignOptions()
-    {
-        return [
-            'left' => __d('cms', 'Left'),
-            'right' => __d('cms', 'Right'),
-            'center' => __d('cms', 'Center'),
-            'stretch' => __d('cms', 'Stretch'),
-            'img-responsive' => __d('cms', 'Responsive'),
-        ];
-    }
 }
