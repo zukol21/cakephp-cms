@@ -9,25 +9,25 @@ Router::plugin(
         $routes->scope('/site', function ($routes) {
             // Categories routes
             $routes->connect(
-                '/:slug/categories/:action/*',
+                '/:site_slug/categories/:action/*',
                 ['controller' => 'Categories'],
-                ['pass' => ['slug']]
+                ['pass' => ['site_slug']]
             );
             $routes->connect(
-                '/:slug/category/:type/view/*',
+                '/:site_slug/category/:category_slug/view/*',
                 ['controller' => 'Categories', 'action' => 'view'],
-                ['pass' => ['slug', 'type']]
+                ['pass' => ['site_slug', 'category_slug']]
             );
             // Articles routes
             $routes->connect(
-                '/:slug/articles/:action/:type/*',
+                '/:site_slug/articles/:action/:article_type/*',
                 ['controller' => 'Articles'],
-                ['pass' => ['slug', 'type']]
+                ['pass' => ['site_slug', 'article_type']]
             );
             $routes->connect(
-                '/:slug/type/:type/view/*',
+                '/:site_slug/type/:article_type/view/*',
                 ['controller' => 'Articles', 'action' => 'type'],
-                ['pass' => ['slug', 'type']]
+                ['pass' => ['site_slug', 'article_type']]
             );
         });
 
