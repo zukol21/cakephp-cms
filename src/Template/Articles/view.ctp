@@ -1,33 +1,36 @@
-<?php
-use Cake\Utility\Inflector;
-
-$element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
-
-// fallback to plugin's element
-if (!$this->elementExists($element)) {
-    $element = Inflector::camelize($article->type) . '/single';
-}
-
-// fallback to default element
-if (!$this->elementExists($element)) {
-    $element = 'Common/single';
-}
-
-$data = ['article' => $article];
-?>
+<?php use Cake\Utility\Inflector; ?>
 <section class="content-header">
     <h1>
         <?php
+        $typeUrl = $this->Html->link(Inflector::humanize($article->type), [
+            'controller' => 'Articles',
+            'action' => 'type',
+            $article->site->slug,
+            $article->type
+        ]);
         if ($article->title) {
-            echo Inflector::humanize($article->type) . ' &raquo; ' . h($article->title);
+            echo $typeUrl . ' &raquo; ' . h($article->title);
         } else {
-            echo h($article->category->name) . ' &raquo; ' . Inflector::humanize($article->type);
+            $categoryUrl = $this->Html->link(h($article->category->name), [
+                'controller' => 'Categories',
+                'action' => 'view',
+                $article->site->slug,
+                $article->category->slug
+            ]);
+            echo $categoryUrl . ' &raquo; ' . $typeUrl;
         }
         ?>
     </h1>
 </section>
 <section class="content">
-    <div class="row">
-    <?= $this->element($element, $data); ?>
-    </div>
+    <?= $this->element('Articles/new', [
+        'categories' => $categories,
+        'site' => $article->site,
+        'article' => $newArticle,
+        'articleTypes' => $types
+    ]) ?>
+    <?= $this->element('Articles/single', [
+        'article' => $article,
+        'articleTypes' => $types
+    ]) ?>
 </section>
