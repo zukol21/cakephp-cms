@@ -23,10 +23,23 @@ foreach ($articles as $article) {
         ]
     ];
 }
+
+$grid = [
+    'md' => 2,
+    'lg' => 3
+];
+$count = -1;
 ?>
 <div class ="row">
 <?php foreach ($elements as $element) : ?>
-    <div class="col-xs-12 col-md-6 col-lg-4">
+    <?php $count++; ?>
+    <?php if (is_int($count / $grid['md'])) : ?>
+        <div class="clearfix visible-md"></div>
+    <?php endif; ?>
+    <?php if (is_int($count / $grid['lg'])) : ?>
+        <div class="clearfix visible-lg"></div>
+    <?php endif; ?>
+    <div class="col-xs-12 col-md-<?= 12 / $grid['md'] ?> col-lg-<?= 12 / $grid['lg'] ?>">
         <div class="box box-solid">
             <div class="box-header with-border">
                 <i class="fa fa-<?= $types[$element['data']['article']->type]['icon'] ?>"></i>
