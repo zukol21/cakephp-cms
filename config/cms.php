@@ -82,6 +82,19 @@ return [
                         ]
                     ]
                 ],
+                'faq' => [
+                    'enabled' => true,
+                    'label' => 'FAQ',
+                    'icon' => 'question-circle',
+                    'fields' => [
+                        'Question' => [
+                            'field' => 'title'
+                        ],
+                        'Answer' => [
+                            'field' => 'content'
+                        ]
+                    ]
+                ],
             ]
         ]
     ]
