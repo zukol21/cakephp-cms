@@ -20,8 +20,6 @@ echo $this->Html->script(
     ],
     ['block' => 'scriptBotton']
 );
-// load tinyMCE
-echo $this->element('Cms.tinymce');
 
 $formOptions = ['type' => 'file'];
 if (!empty($url)) {
@@ -64,6 +62,7 @@ if (!empty($url)) {
         <div class="box box-solid">
             <div class="box-body">
             <?php
+            $loadedEditor = false;
             foreach ($typeOptions['fields'] as $field => $options) {
                 if ('file' === $options['renderAs']) {
                     $hasImage = !empty($article->article_featured_images[0]) ? true : false;
@@ -86,6 +85,12 @@ if (!empty($url)) {
                         'label' => $field,
                         'class' => (bool)$options['editor'] ? 'tinymce' : ''
                     ]);
+                }
+
+                if ((bool)$options['editor'] && !$loadedEditor) {
+                    $loadedEditor = true;
+                    // load tinyMCE
+                    echo $this->element('Cms.tinymce');
                 }
             } ?>
             </div>
