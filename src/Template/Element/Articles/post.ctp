@@ -14,29 +14,10 @@ echo $this->Html->script(
     [
         'AdminLTE./plugins/daterangepicker/moment.min',
         'AdminLTE./plugins/daterangepicker/daterangepicker',
-        'AdminLTE./plugins/select2/select2.full.min'
+        'AdminLTE./plugins/select2/select2.full.min',
+        'Cms.select2.init',
+        'Cms.datetimepicker.init',
     ],
-    ['block' => 'scriptBotton']
-);
-echo $this->Html->scriptBlock(
-    '$(".select2").select2({
-        theme: "bootstrap",
-        width: "100%",
-        placeholder: "-- Please choose --",
-        escapeMarkup: function (text) { return text; }
-    });',
-    ['block' => 'scriptBotton']
-);
-echo $this->Html->scriptBlock(
-    '$(".datetimepicker").daterangepicker({
-        singleDatePicker: true,
-        showDropdowns: true,
-        timePicker: true,
-        drops: "down",
-        timePicker12Hour: false,
-        timePickerIncrement: 5,
-        format: "YYYY-MM-DD HH:mm"
-    });',
     ['block' => 'scriptBotton']
 );
 // load tinyMCE

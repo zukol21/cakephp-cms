@@ -7,11 +7,7 @@ echo $this->TinymceElfinder->defineElfinderBrowser(true);
 
 // initialize tinyMCE
 echo $this->Html->scriptBlock(
-    '$(document).ready(function() {
-        // tinymce init
-        var config = ' . json_encode(Configure::read('TinyMCE')) . ';
-        config.file_browser_callback = elFinderBrowser;
-        tinyMCE.init(config);
-    });',
+    'var tinymce_init_config = ' . json_encode(Configure::read('TinyMCE')) . ';',
     ['block' => 'scriptBotton']
 );
+echo $this->Html->script('Cms.tinymce.init', ['block' => 'scriptBotton']);
