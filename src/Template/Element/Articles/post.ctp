@@ -3,7 +3,8 @@ echo $this->Html->css(
     [
         'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
         'AdminLTE./plugins/select2/select2.min',
-        'Cms.select2-bootstrap.min'
+        'Cms.select2-bootstrap.min',
+        'Cms.style'
     ],
     [
         'block' => 'css'
@@ -20,6 +21,7 @@ echo $this->Html->script(
 echo $this->Html->scriptBlock(
     '$(".select2").select2({
         theme: "bootstrap",
+        width: "100%",
         placeholder: "-- Please choose --",
         escapeMarkup: function (text) { return text; }
     });',
