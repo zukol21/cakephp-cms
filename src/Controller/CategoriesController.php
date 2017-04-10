@@ -82,7 +82,7 @@ class CategoriesController extends AppController
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
@@ -117,7 +117,7 @@ class CategoriesController extends AppController
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
@@ -153,7 +153,7 @@ class CategoriesController extends AppController
             $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->referer());
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
     }
 
     /**
@@ -171,7 +171,7 @@ class CategoriesController extends AppController
         if (!in_array($action, $moveActions)) {
             $this->Flash->error(__('Unknown move action.'));
 
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Sites', 'action' => 'view', $siteId]);
         }
 
         $site = $this->Categories->getSite($siteId);
@@ -184,6 +184,6 @@ class CategoriesController extends AppController
             $this->Flash->error(__('Fail to move {0} {1}.', $category->name, $action));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
     }
 }
