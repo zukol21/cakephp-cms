@@ -28,6 +28,21 @@ $data = ['article' => $article];
                         'data-toggle' => 'modal',
                         'data-target' => '#' . $article->slug
                     ]) ?>
+                    <?= $this->Form->postLink(
+                        '<i class="fa fa-trash"></i>',
+                        [
+                            'controller' => 'Articles',
+                            'action' => 'delete',
+                            $article->site->slug,
+                            $article->slug
+                        ],
+                        [
+                            'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
+                            'title' => __('Delete'),
+                            'class' => 'btn btn-box-tool',
+                            'escape' => false
+                        ]
+                    ) ?>
                 </div>
             </div>
             <div class="box-body">

@@ -59,6 +59,21 @@ $count = -1;
                         'data-toggle' => 'modal',
                         'data-target' => '#' . $element['data']['article']->slug
                     ]) ?>
+                    <?= $this->Form->postLink(
+                        '<i class="fa fa-trash"></i>',
+                        [
+                            'controller' => 'Articles',
+                            'action' => 'delete',
+                            $element['data']['article']->site->slug,
+                            $element['data']['article']->slug
+                        ],
+                        [
+                            'confirm' => __('Are you sure you want to delete # {0}?', $element['data']['article']->title),
+                            'title' => __('Delete'),
+                            'class' => 'btn btn-box-tool',
+                            'escape' => false
+                        ]
+                    ) ?>
                 </div>
             </div>
             <div class="box-body">
