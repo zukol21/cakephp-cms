@@ -1,6 +1,5 @@
-<?php use Cake\Utility\Inflector; ?>
 <section class="content-header">
-    <h1><?= h($site->name) . ' &raquo; ' . Inflector::humanize($type) ?></h1>
+    <h1><?= h($site->name) . ' &raquo; ' . h($types[$type]['label']) ?></h1>
 </section>
 <section class="content">
     <?= $this->element('Articles/new', [

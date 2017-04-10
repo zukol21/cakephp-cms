@@ -1,6 +1,4 @@
 <?php
-use Cake\Utility\Inflector;
-
 $this->Html->scriptBlock(
     '$(document).on("click", "li.active > a", function() {
         $($(this).parent("li")).removeClass("active");
@@ -19,15 +17,16 @@ $this->Html->scriptBlock(
     <div class="box-body no-padding">
         <div class="nav-tabs-custom no-margin no-shadow">
             <ul class="nav nav-tabs">
-            <?php foreach (array_keys($articleTypes) as $type) : ?>
+            <?php foreach ($articleTypes as $type => $typeOptions) : ?>
                 <li>
                     <?= $this->Html->link(
-                        Inflector::humanize($type),
+                        '<i class="fa fa-' . $typeOptions['icon'] . '"></i> ' . $typeOptions['label'],
                         '#' . $type,
                         [
                             'data-toggle' => 'tab',
                             'aria-expanded' => 'true',
-                            'style' => 'cursor: auto;'
+                            'style' => 'cursor: auto;',
+                            'escape' => false
                         ]
                     ) ?>
                 </li>
@@ -35,7 +34,7 @@ $this->Html->scriptBlock(
             </ul>
             <div class="tab-content">
             <?php foreach (array_keys($articleTypes) as $type) : ?>
-                <div role="tabpanel" class="tab-pane fade" id="<?= $type ?>">
+                <div role="tabpanel" class="tab-pane fade" id="<?= h($type) ?>">
                 <?= $this->element('Articles/post', [
                     'categories' => $categories,
                     'url' => ['controller' => 'Articles', 'action' => 'add', $site->slug, $type],

@@ -19,6 +19,7 @@ $data = ['article' => $article];
     <div class="col-xs-12">
         <div class="box box-solid">
             <div class="box-header with-border">
+                <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>
                 <div class="box-tools pull-right">
                     <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
@@ -50,7 +51,7 @@ $data = ['article' => $article];
             </div>
             <div class="box-footer small">
                 <div class="text-right text-muted">
-                <?= $this->Html->link(Inflector::humanize($article->category->slug), [
+                <?= $this->Html->link($article->category->name, [
                     'controller' => 'Categories',
                     'action' => 'view',
                     $article->site->slug,
@@ -74,7 +75,7 @@ $data = ['article' => $article];
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="<?= $article->slug ?>Label">
-                    <?= __('Edit') ?> <?= $article->title ? $article->title : Inflector::humanize($article->type) ?>
+                    <?= __('Edit') ?> <?= $article->title ?>
                 </h4>
             </div>
             <div class="modal-body">

@@ -1,8 +1,7 @@
-<?php use Cake\Utility\Inflector; ?>
 <section class="content-header">
     <h1>
         <?php
-        $typeUrl = $this->Html->link(Inflector::humanize($article->type), [
+        $typeUrl = $this->Html->link($types[$article->type]['label'], [
             'controller' => 'Articles',
             'action' => 'type',
             $article->site->slug,

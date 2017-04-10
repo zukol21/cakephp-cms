@@ -99,7 +99,7 @@ $count = -1;
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="<?= $article->slug ?>Label">
-                        <?= __('Edit') ?> <?= $article->title ? $article->title : Inflector::humanize($article->type) ?>
+                        <?= __('Edit') ?> <?= $article->title ?>
                     </h4>
                 </div>
                 <div class="modal-body">
