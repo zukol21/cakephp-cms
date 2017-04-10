@@ -4,6 +4,7 @@ namespace Cms\Model\Table;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Table\BaseTable;
 
@@ -148,10 +149,13 @@ class ArticlesTable extends BaseTable
                 continue;
             }
 
-            // normalize options
+            // normalize field options
             foreach ($v['fields'] as &$field) {
                 $field = array_merge($this->_fieldDefaults, $field);
             }
+
+            // normalize label
+            $v['label'] = $v['label'] ? $v['label'] : Inflector::humanize($k);
         }
 
         if (!(bool)$withOptions) {
