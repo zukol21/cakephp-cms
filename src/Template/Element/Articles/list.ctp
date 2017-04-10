@@ -42,15 +42,19 @@ $count = -1;
     <div class="col-xs-12 col-md-<?= 12 / $grid['md'] ?> col-lg-<?= 12 / $grid['lg'] ?>">
         <div class="box box-solid">
             <div class="box-header with-border">
-                <i class="fa fa-<?= $types[$element['data']['article']->type]['icon'] ?>"></i>
+                <i class="fa fa-<?= $types[$element['data']['article']->type]['icon'] ?> text-muted"></i>
                 <h3 class="box-title">
-                <?= $this->Html->link(h($element['data']['article']->title), [
-                    'controller' => 'Articles',
-                    'action' => 'view',
-                    $element['data']['article']->site->slug,
-                    $element['data']['article']->type,
-                    $element['data']['article']->slug
-                ]) ?></h3>
+                <?= $this->Html->link(
+                    $this->Text->truncate($element['data']['article']->title, 35, ['exact' => false]),
+                    [
+                        'controller' => 'Articles',
+                        'action' => 'view',
+                        $element['data']['article']->site->slug,
+                        $element['data']['article']->type,
+                        $element['data']['article']->slug
+                    ],
+                    ['title' => h($element['data']['article']->title)]
+                ) ?></h3>
                 <div class="box-tools pull-right">
                     <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
                         'title' => __('Edit'),

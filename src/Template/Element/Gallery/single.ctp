@@ -16,7 +16,7 @@ $imgCount = count($images);
                 <li data-target="#carousel-gallery" data-slide-to="<?= $i ?>" class="<?= 0 === $i ? 'active' : '' ?>"></li>
             <?php endfor; ?>
             </ol>
-            <div class="carousel-inner" style="height: 400px !important;">
+            <div class="carousel-inner" style="height: 350px !important;">
                 <?php for ($i = 0; $i < $imgCount; $i++) : ?>
                 <div class="item text-center<?= 0 === $i ? ' active' : '' ?>">
                     <?= $this->html->image($images[$i]) ?>

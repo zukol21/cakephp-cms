@@ -11,9 +11,6 @@ $this->Html->scriptBlock(
 );
 ?>
 <div class="box box-solid">
-    <div class="box-header">
-        <h3 class="box-title"><?= __('Add New') ?>:</h3>
-    </div>
     <div class="box-body no-padding">
         <div class="nav-tabs-custom no-margin no-shadow">
             <ul class="nav nav-tabs">
