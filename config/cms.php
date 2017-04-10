@@ -91,7 +91,8 @@ return [
                             'field' => 'title'
                         ],
                         'Answer' => [
-                            'field' => 'content'
+                            'field' => 'content',
+                            'renderAs' => 'textarea'
                         ]
                     ]
                 ],
