@@ -17,7 +17,7 @@ class SitesController extends AppController
      */
     public function index()
     {
-        $sites = $this->paginate($this->Sites);
+        $sites = $this->Sites->find('all')->all();
 
         $this->set(compact('sites'));
         $this->set('_serialize', ['sites']);
