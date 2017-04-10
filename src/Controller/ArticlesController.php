@@ -44,13 +44,15 @@ class ArticlesController extends AppController
      * View method
      *
      * @param string $siteId Site id or slug.
+     * @param string $typeId Type slug.
      * @param string|null $id Article id.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($siteId, $id = null)
+    public function view($siteId, $typeId, $id = null)
     {
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Sites',
             'Categories',
             'ArticleFeaturedImages' => [
                 'sort' => [
@@ -63,8 +65,16 @@ class ArticlesController extends AppController
         if (empty($article)) {
             throw new RecordNotFoundException('Article not found.');
         }
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $article->site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
 
-        $this->set(compact('article'));
+        $this->set('type', $typeId);
+        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
+        $this->set('article', $article);
+        $this->set('newArticle', $this->Articles->newEntity());
+        $this->set('categories', $categories);
         $this->set('_serialize', ['article']);
     }
 
