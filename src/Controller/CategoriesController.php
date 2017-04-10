@@ -11,34 +11,6 @@ use Cms\Controller\AppController;
 class CategoriesController extends AppController
 {
     /**
-     * Index method
-     *
-     * @return \Cake\Network\Response|null
-     */
-    public function index()
-    {
-        $query = $this->Categories->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
-        $sites = $query->all();
-
-        $tree = $this->Categories
-            ->find('treeList', ['spacer' => self::TREE_SPACER])
-            ->toArray();
-        $categories = $this->Categories
-            ->find('all')
-            ->contain('Sites')
-            ->order(['Categories.site_id' => 'ASC', 'Categories.lft' => 'ASC']);
-
-        //Create node property in the entity object
-        foreach ($categories as $category) {
-            if (in_array($category->id, array_keys($tree))) {
-                $category->node = $tree[$category->id];
-            }
-        }
-        $this->set(compact('categories', 'sites'));
-        $this->set('_serialize', ['categories']);
-    }
-
-    /**
      * View method
      *
      * @param string $siteId Site id or slug.
