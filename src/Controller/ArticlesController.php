@@ -92,6 +92,8 @@ class ArticlesController extends AppController
      */
     public function add($siteId, $type)
     {
+        $this->request->allowMethod(['post']);
+
         $typeOptions = $this->Articles->getTypeOptions($type);
 
         if (empty($typeOptions)) {
@@ -143,6 +145,8 @@ class ArticlesController extends AppController
      */
     public function edit($siteId, $type, $id = null)
     {
+        $this->request->allowMethod(['patch', 'post', 'put']);
+
         $typeOptions = $this->Articles->getTypeOptions($type);
 
         if (empty($typeOptions)) {
