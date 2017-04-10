@@ -25,6 +25,7 @@ return [
             'types' => [
                 'article' => [
                     'enabled' => true,
+                    'label' => 'Article',
                     'icon' => 'file-text',
                     'fields' => [
                         'Title' => [
@@ -46,6 +47,7 @@ return [
                 ],
                 'gallery' => [
                     'enabled' => true,
+                    'label' => 'Gallery',
                     'icon' => 'picture-o',
                     'fields' => [
                         'Title' => [
@@ -67,6 +69,7 @@ return [
                     ],
                 ],
                 'link' => [
+                    'label' => 'Link',
                     'enabled' => true,
                     'icon' => 'link',
                     'fields' => [
