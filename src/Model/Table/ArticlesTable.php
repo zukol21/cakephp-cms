@@ -152,6 +152,14 @@ class ArticlesTable extends BaseTable
             // normalize field options
             foreach ($v['fields'] as &$field) {
                 $field = array_merge($this->_fieldDefaults, $field);
+                // normalize options
+                if (!empty($field['options'])) {
+                    $options = [];
+                    foreach ($field['options'] as $index => $option) {
+                        $options[Inflector::underscore(Inflector::classify($option))] = $option;
+                    }
+                    $field['options'] = $options;
+                }
             }
 
             // normalize label
