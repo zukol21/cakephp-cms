@@ -57,8 +57,8 @@ class CategoriesFixture extends TestFixture
         ],
         [
             'id' => '00000000-0000-0000-0000-000000000002',
-            'slug' => 'general',
-            'name' => 'General',
+            'slug' => 'news',
+            'name' => 'News',
             'parent_id' => '00000000-0000-0000-0000-000000000001',
             'lft' => 1,
             'rght' => 1,
