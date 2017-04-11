@@ -136,7 +136,6 @@ class CategoriesTableTest extends TestCase
         $this->CategoriesTable->save($entity);
         $this->assertEquals('foo-bar', $entity->slug);
 
-
         $anotherEntity = $this->CategoriesTable->newEntity();
         $anotherEntity = $this->CategoriesTable->patchEntity($anotherEntity, $data);
         $this->CategoriesTable->save($anotherEntity);
