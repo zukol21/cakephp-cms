@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     $('.datetimepicker').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,

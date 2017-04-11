@@ -1,8 +1,8 @@
-(function($) {
+(function ($) {
     /**
      * TinyMCE init
      */
-    $(document).ready(function() {
+    $(document).ready(function () {
         var config = {};
         if ('undefined' !== typeof tinymce_init_config) {
             config = tinymce_init_config;
