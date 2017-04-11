@@ -24,5 +24,8 @@
             "Cms\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
-    }
+    },
+    "scripts": {
+        "post-update-cmd": "CakephpTinymceElfinder\\Console\\Installer::postUpdate"
+    },
 }
