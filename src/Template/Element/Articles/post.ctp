@@ -61,38 +61,10 @@ if (!empty($url)) {
     <div class="col-lg-8 col-lg-pull-4">
         <div class="box box-solid">
             <div class="box-body">
-            <?php
-            $loadedEditor = false;
-            foreach ($typeOptions['fields'] as $field => $options) {
-                if ('file' === $options['renderAs']) {
-                    $hasImage = !empty($article->article_featured_images[0]) ? true : false;
-                    if ($hasImage) {
-                        $field .= '&nbsp;' . $this->html->image(
-                            $article->article_featured_images[0]->path,
-                            ['class' => 'img-circle', 'style' => 'height: 20px; width 20px;']
-                        );
-                    }
-                    echo $this->Form->input('file', [
-                        'type' => $options['renderAs'],
-                        'required' => $hasImage ? false : (bool)$options['required'],
-                        'label' => $field,
-                        'escape' => false
-                    ]);
-                } else {
-                    echo $this->Form->input($options['field'], [
-                        'type' => $options['renderAs'],
-                        'required' => (bool)$options['editor'] ? false : (bool)$options['required'],
-                        'label' => $field,
-                        'class' => (bool)$options['editor'] ? 'tinymce' : ''
-                    ]);
-                }
-
-                if ((bool)$options['editor'] && !$loadedEditor) {
-                    $loadedEditor = true;
-                    // load tinyMCE
-                    echo $this->element('Cms.tinymce');
-                }
-            } ?>
+                <?= $this->element('Articles/field', [
+                    'typeOptions' => $typeOptions,
+                    'article' => $article
+                ]) ?>
             </div>
         </div>
     </div>
