@@ -3,23 +3,6 @@
 return [
     'CMS' => [
         'Articles' => [
-            'structure' => [
-                'content' => [
-                    'content'
-                ],
-                'excerpt' => [
-                    'excerpt'
-                ],
-                'info' => [
-                    'title'
-                ],
-                'publish' => [
-                    'publish_date'
-                ],
-                'featured_image' => [
-                    'featured_image'
-                ]
-            ],
             'types' => [
                 'article' => [
                     'enabled' => true,
