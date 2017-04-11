@@ -60,7 +60,7 @@ class ArticlesFixture extends TestFixture
             'created' => '2017-04-11 10:00:38',
             'modified' => '2017-04-11 10:00:38',
             'category_id' => '00000000-0000-0000-0000-000000000001',
-            'trashed' => '2017-04-11 10:00:38',
+            'trashed' => null,
             'site_id' => '00000000-0000-0000-0000-000000000001',
             'type' => 'article'
         ],
