@@ -16,7 +16,7 @@ class CategoriesTableTest extends TestCase
      *
      * @var \Cms\Model\Table\CategoriesTable
      */
-    public $Categories;
+    public $CategoriesTable;
 
     /**
      * Fixtures
@@ -25,7 +25,13 @@ class CategoriesTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.cms.categories',
+        'plugin.cms.sites',
         'plugin.cms.articles',
+        'plugin.cms.article_featured_images',
+        'plugin.cms.author',
+        'plugin.cms.social_accounts',
+        'plugin.cms.users',
+        'plugin.cms.editor'
     ];
 
     /**
@@ -37,7 +43,7 @@ class CategoriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Categories') ? [] : ['className' => 'Cms\Model\Table\CategoriesTable'];
-        $this->Categories = TableRegistry::get('Categories', $config);
+        $this->CategoriesTable = TableRegistry::get('Categories', $config);
     }
 
     /**
@@ -47,7 +53,7 @@ class CategoriesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Categories);
+        unset($this->CategoriesTable);
 
         parent::tearDown();
     }
@@ -78,6 +84,16 @@ class CategoriesTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getCategoryBySite method
+     *
+     * @return void
+     */
+    public function testGetCategoryBySite()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
