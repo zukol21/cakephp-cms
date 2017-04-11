@@ -49,9 +49,9 @@ class ArticlesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 'eaa0c177-c7c3-427c-ba56-67da925c10f9',
-            'title' => 'Lorem ipsum dolor sit amet',
-            'slug' => 'Lorem ipsum dolor sit amet',
+            'id' => '00000000-0000-0000-0000-000000000001',
+            'title' => 'First Article',
+            'slug' => 'first-article',
             'excerpt' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'content' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'created_by' => '162deb54-dc40-4967-b6d2-451c371fdb2d',
@@ -59,10 +59,10 @@ class ArticlesFixture extends TestFixture
             'publish_date' => '2017-04-11 10:00:38',
             'created' => '2017-04-11 10:00:38',
             'modified' => '2017-04-11 10:00:38',
-            'category_id' => '30fd73a4-ebb4-4f3e-b1c7-0fec5570ba22',
+            'category_id' => '00000000-0000-0000-0000-000000000001',
             'trashed' => '2017-04-11 10:00:38',
-            'site_id' => '0d48a85d-0c29-431f-a003-95439970a55b',
-            'type' => 'Lorem ipsum dolor sit amet'
+            'site_id' => '00000000-0000-0000-0000-000000000001',
+            'type' => 'article'
         ],
     ];
 }

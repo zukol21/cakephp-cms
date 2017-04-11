@@ -43,9 +43,9 @@ class SitesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '18670678-525e-4586-bdea-45b0411e50ba',
-            'name' => 'Lorem ipsum dolor sit amet',
-            'slug' => 'Lorem ipsum dolor sit amet',
+            'id' => '00000000-0000-0000-0000-000000000001',
+            'name' => 'Blog',
+            'slug' => 'blog',
             'active' => 1,
             'created' => '2017-04-11 10:00:32',
             'modified' => '2017-04-11 10:00:32',

@@ -44,15 +44,27 @@ class CategoriesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '6c81008f-f0de-4263-b5a7-23d2e9941144',
-            'slug' => 'Lorem ipsum dolor sit amet',
-            'name' => 'Lorem ipsum dolor sit amet',
-            'parent_id' => '4382516c-394a-4aa0-8dcf-77d07531f90c',
+            'id' => '00000000-0000-0000-0000-000000000001',
+            'slug' => 'general',
+            'name' => 'General',
+            'parent_id' => null,
             'lft' => 1,
             'rght' => 1,
             'created' => '2017-04-11 10:00:25',
             'modified' => '2017-04-11 10:00:25',
-            'site_id' => 'a48e6e04-dd43-41e5-b673-82525bd0c252',
+            'site_id' => '00000000-0000-0000-0000-000000000001',
+            'trashed' => '2017-04-11 10:00:25'
+        ],
+        [
+            'id' => '00000000-0000-0000-0000-000000000002',
+            'slug' => 'general',
+            'name' => 'General',
+            'parent_id' => '00000000-0000-0000-0000-000000000001',
+            'lft' => 1,
+            'rght' => 1,
+            'created' => '2017-04-11 10:00:25',
+            'modified' => '2017-04-11 10:00:25',
+            'site_id' => '00000000-0000-0000-0000-000000000001',
             'trashed' => '2017-04-11 10:00:25'
         ],
     ];
