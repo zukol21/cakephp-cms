@@ -34,18 +34,18 @@ return [
                         'Title' => [
                             'field' => 'title',
                         ],
-                        'Images' => [
-                            'field' => 'content',
-                            'renderAs' => 'textarea',
-                            'editor' => true
+                        'Featured Image' => [
+                            'field' => 'featured_image',
+                            'renderAs' => 'file'
                         ],
                         'Description' => [
                             'field' => 'excerpt',
                             'renderAs' => 'textarea'
                         ],
-                        'Featured Image' => [
-                            'field' => 'featured_image',
-                            'renderAs' => 'file'
+                        'Images' => [
+                            'field' => 'content',
+                            'renderAs' => 'textarea',
+                            'editor' => true
                         ]
                     ],
                 ],
