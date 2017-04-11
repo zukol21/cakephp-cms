@@ -1,8 +1,6 @@
 <?php
 use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Cms\Event\ElFinderConfigListener;
 
 /**
  * Cms configuration
@@ -51,5 +49,3 @@ Configure::write('TinymceElfinder', array_replace_recursive(
     Configure::read('TinymceElfinder'),
     $config
 ));
-
-EventManager::instance()->on(new ElFinderConfigListener());
