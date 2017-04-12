@@ -7,7 +7,7 @@ return [
                 'article' => [
                     'enabled' => true,
                     'label' => 'Article',
-                    'icon' => 'file-text',
+                    'icon' => 'pencil-square',
                     'fields' => [
                         'Title' => [
                             'field' => 'title'
