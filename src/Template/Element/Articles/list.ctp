@@ -78,11 +78,30 @@ foreach ($articles as $article) {
             </div>
             <div class="box-footer small">
                 <div class="text-muted text-right">
-                    <?= __('Published') ?>
-                    <?= $element['data']['article']->publish_date->timeAgoInWords([
-                        'format' => 'MMM d, YYY',
-                        'end' => '1 month'
-                    ]) ?>
+                <?php
+                if ('type' === $this->request->action) {
+                    $assocUrl = $this->Html->link($element['data']['article']->category->name, [
+                        'controller' => 'Categories',
+                        'action' => 'view',
+                        $element['data']['article']->site->slug,
+                        $element['data']['article']->category->slug
+                    ]);
+                } else {
+                    $assocUrl = $this->Html->link($types[$element['data']['article']->type]['label'], [
+                        'controller' => 'Articles',
+                        'action' => 'type',
+                        $element['data']['article']->site->slug,
+                        $element['data']['article']->type
+                    ]);
+                }
+                ?>
+                <?= $assocUrl ?>
+                |
+                <?= __('Published') ?>
+                <?= $element['data']['article']->publish_date->timeAgoInWords([
+                    'format' => 'MMM d, YYY',
+                    'end' => '1 month'
+                ]) ?>
                 </div>
             </div>
         </div>
