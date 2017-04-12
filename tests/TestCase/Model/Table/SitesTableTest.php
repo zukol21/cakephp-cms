@@ -68,7 +68,14 @@ class SitesTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = ['name' => 'Foo bar', 'active' => true];
+        $entity = $this->Sites->newEntity();
+        $entity = $this->Sites->patchEntity($entity, $data);
+
+        $this->Sites->save($entity);
+
+        $this->assertNotEmpty($entity->id);
+        $this->assertEquals('foo-bar', $entity->slug);
     }
 
     /**

@@ -1,7 +1,10 @@
 <?php
 namespace Cms\Model\Table;
 
+use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Model\Table\BaseTable;
 
@@ -11,6 +14,24 @@ use Cms\Model\Table\BaseTable;
  */
 class ArticlesTable extends BaseTable
 {
+    /**
+     * Article types list.
+     *
+     * @var array
+     */
+    protected $_types = [];
+
+    /**
+     * Type fields default.
+     *
+     * @var array
+     */
+    protected $_fieldDefaults = [
+        'renderAs' => 'text',
+        'required' => true,
+        'editor' => false
+    ];
+
     /**
      * Initialize method
      *
@@ -36,13 +57,6 @@ class ArticlesTable extends BaseTable
                 'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
             ],
             'sort' => ['ArticleFeaturedImages.created' => 'DESC']
-        ]);
-        $this->hasMany('ContentImages', [
-            'className' => 'Cms.ContentImages',
-            'foreignKey' => 'foreign_key',
-            'conditions' => [
-                'ContentImages.model' => 'ContentImage'
-            ]
         ]);
         $this->belongsTo('Cms.Sites');
         $this->belongsTo('Cms.Categories');
@@ -94,6 +108,10 @@ class ArticlesTable extends BaseTable
             ->requirePresence('site_id', 'create')
             ->notEmpty('site_id');
 
+        $validator
+            ->requirePresence('type', 'create')
+            ->notEmpty('type');
+
         return $validator;
     }
 
@@ -109,5 +127,69 @@ class ArticlesTable extends BaseTable
         $rules->add($rules->isUnique(['slug']));
 
         return $rules;
+    }
+
+    /**
+     * Returns supported types.
+     *
+     * @param bool $withOptions Flag for including type options
+     * @return array
+     */
+    public function getTypes($withOptions = true)
+    {
+        if (!empty($this->_types)) {
+            return $this->_types;
+        }
+
+        $this->_types = Configure::read('CMS.Articles.types');
+        foreach ($this->_types as $k => &$v) {
+            if (!(bool)$v['enabled']) {
+                unset($this->_types[$k]);
+
+                continue;
+            }
+
+            // normalize field options
+            foreach ($v['fields'] as &$field) {
+                $field = array_merge($this->_fieldDefaults, $field);
+                // normalize options
+                if (!empty($field['options'])) {
+                    $options = [];
+                    foreach ($field['options'] as $index => $option) {
+                        $options[Inflector::underscore(Inflector::classify($option))] = $option;
+                    }
+                    $field['options'] = $options;
+                }
+            }
+
+            // normalize label
+            $v['label'] = $v['label'] ? $v['label'] : Inflector::humanize($k);
+        }
+
+        if (!(bool)$withOptions) {
+            return array_keys($this->_types);
+        }
+
+        return $this->_types;
+    }
+
+    /**
+     * Returns type options.
+     *
+     * @param string $type Type name
+     * @return array
+     */
+    public function getTypeOptions($type)
+    {
+        $result = [];
+
+        $types = $this->getTypes();
+        if (!array_key_exists($type, $types)) {
+            return $result;
+        }
+
+        $result = $types[$type];
+
+        return $result;
     }
 }

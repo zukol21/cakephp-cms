@@ -5,7 +5,8 @@
     "license": "GPL-2.0",
     "require": {
         "cakedc/users": "^4.0",
-        "muffin/slug": "1.1.0",
+        "hashmode/cakephp-tinymce-elfinder": "^1.0",
+        "muffin/slug": "^1.0",
         "qobo/cakephp-utils": "^2.0"
     },
     "require-dev": {
@@ -23,5 +24,8 @@
             "Cms\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
+    },
+    "scripts": {
+        "post-update-cmd": "CakephpTinymceElfinder\\Console\\Installer::postUpdate"
     }
 }

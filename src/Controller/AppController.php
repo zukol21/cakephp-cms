@@ -1,8 +1,8 @@
 <?php
-
 namespace Cms\Controller;
 
 use App\Controller\AppController as BaseController;
+use Cake\Event\Event;
 
 class AppController extends BaseController
 {
@@ -19,5 +19,18 @@ class AppController extends BaseController
     {
         parent::initialize();
         $this->loadComponent('RequestHandler');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+
+        if ($this->{$this->name}->association('Articles')) {
+            // pass article types to all views
+            $this->set('types', $this->{$this->name}->Articles->getTypes());
+        }
     }
 }

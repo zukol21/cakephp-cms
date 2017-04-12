@@ -11,34 +11,6 @@ use Cms\Controller\AppController;
 class CategoriesController extends AppController
 {
     /**
-     * Index method
-     *
-     * @return \Cake\Network\Response|null
-     */
-    public function index()
-    {
-        $query = $this->Categories->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
-        $sites = $query->all();
-
-        $tree = $this->Categories
-            ->find('treeList', ['spacer' => self::TREE_SPACER])
-            ->toArray();
-        $categories = $this->Categories
-            ->find('all')
-            ->contain('Sites')
-            ->order(['Categories.site_id' => 'ASC', 'Categories.lft' => 'ASC']);
-
-        //Create node property in the entity object
-        foreach ($categories as $category) {
-            if (in_array($category->id, array_keys($tree))) {
-                $category->node = $tree[$category->id];
-            }
-        }
-        $this->set(compact('categories', 'sites'));
-        $this->set('_serialize', ['categories']);
-    }
-
-    /**
      * View method
      *
      * @param string $siteId Site id or slug.
@@ -50,10 +22,17 @@ class CategoriesController extends AppController
     {
         $site = $this->Categories->getSite($siteId);
         $category = $this->Categories->getCategoryBySite($id, $site, [
-            'ParentCategories', 'Articles', 'ChildCategories', 'Sites'
+            'Articles' => ['Sites', 'ArticleFeaturedImages'], 'Sites'
         ]);
+        $categories = $this->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+        $article = $this->Categories->Articles->newEntity();
 
         $this->set('category', $category);
+        $this->set('categories', $categories);
+        $this->set('article', $article);
         $this->set('_serialize', ['category']);
     }
 
@@ -75,7 +54,7 @@ class CategoriesController extends AppController
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
@@ -110,7 +89,7 @@ class CategoriesController extends AppController
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
@@ -146,7 +125,7 @@ class CategoriesController extends AppController
             $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->referer());
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
     }
 
     /**
@@ -164,7 +143,7 @@ class CategoriesController extends AppController
         if (!in_array($action, $moveActions)) {
             $this->Flash->error(__('Unknown move action.'));
 
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Sites', 'action' => 'view', $siteId]);
         }
 
         $site = $this->Categories->getSite($siteId);
@@ -177,6 +156,6 @@ class CategoriesController extends AppController
             $this->Flash->error(__('Fail to move {0} {1}.', $category->name, $action));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
     }
 }

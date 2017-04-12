@@ -10,15 +10,14 @@ use Cms\Controller\AppController;
  */
 class SitesController extends AppController
 {
-
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
-        $sites = $this->paginate($this->Sites);
+        $sites = $this->Sites->find('all')->all();
 
         $this->set(compact('sites'));
         $this->set('_serialize', ['sites']);
@@ -28,14 +27,33 @@ class SitesController extends AppController
      * View method
      *
      * @param string|null $id Site id.
-     * @return \Cake\Network\Response|null
+     * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
         $site = $this->Sites->get($id, [
-            'contain' => ['Categories', 'Articles']
+            'contain' => [
+                'Articles',
+                'Categories' => function ($q) {
+                    return $q->order(['Categories.lft' => 'ASC']);
+                }
+            ]
         ]);
+
+        if ($site->categories) {
+            $tree = $this->Sites->Categories
+                ->find('treeList', ['spacer' => self::TREE_SPACER])
+                ->where(['Categories.site_id' => $site->id])
+                ->toArray();
+            // create node property in the entity object
+            foreach ($site->categories as $category) {
+                if (!array_key_exists($category->id, $tree)) {
+                    continue;
+                }
+                $category->node = $tree[$category->id];
+            }
+        }
 
         $this->set('site', $site);
         $this->set('_serialize', ['site']);

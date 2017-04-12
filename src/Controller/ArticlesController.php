@@ -4,6 +4,7 @@ namespace Cms\Controller;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
+use InvalidArgumentException;
 
 /**
  * Articles Controller
@@ -15,41 +16,18 @@ class ArticlesController extends AppController
     use UploadTrait;
 
     /**
-     * Index method
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $query = $this->Articles->Sites->find('all', ['conditions' => ['Sites.active' => true]]);
-        $sites = $query->all();
-
-        $articles = $this->Articles->find('all')->contain([
-            'Author',
-            'Categories',
-            'Sites',
-            'ArticleFeaturedImages' => [
-                'sort' => [
-                    'created' => 'DESC'
-                ]
-            ]
-        ]);
-
-        $this->set(compact('articles', 'sites'));
-        $this->set('_serialize', ['articles']);
-    }
-
-    /**
      * View method
      *
      * @param string $siteId Site id or slug.
+     * @param string $typeId Type slug.
      * @param string|null $id Article id.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($siteId, $id = null)
+    public function view($siteId, $typeId, $id = null)
     {
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
+            'Sites',
             'Categories',
             'ArticleFeaturedImages' => [
                 'sort' => [
@@ -62,25 +40,73 @@ class ArticlesController extends AppController
         if (empty($article)) {
             throw new RecordNotFoundException('Article not found.');
         }
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $article->site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
 
-        $this->set(compact('article'));
+        $this->set('type', $typeId);
+        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
+        $this->set('article', $article);
+        $this->set('newArticle', $this->Articles->newEntity());
+        $this->set('categories', $categories);
         $this->set('_serialize', ['article']);
+    }
+
+    /**
+     * Type method
+     *
+     * @param string $siteId Site id or slug.
+     * @param string $typeId Type slug.
+     * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function type($siteId, $typeId)
+    {
+        $site = $this->Articles->getSite($siteId);
+        $articles = $this->Articles->find('all', [
+            'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
+            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages']
+        ]);
+        $categories = $this->Articles->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+
+        $this->set('type', $typeId);
+        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
+        $this->set('site', $site);
+        $this->set('articles', $articles);
+        $this->set('categories', $categories);
+        $this->set('article', $this->Articles->newEntity());
+        $this->set('_serialize', ['type']);
     }
 
     /**
      * Add method
      *
-     * @param string $siteId Site id or slug.
+     * @param string $siteId Site id or slug
+     * @param string $type Site type
      * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @throws \InvalidArgumentException
      */
-    public function add($siteId)
+    public function add($siteId, $type)
     {
+        $this->request->allowMethod(['post']);
+
+        $typeOptions = $this->Articles->getTypeOptions($type);
+
+        if (empty($typeOptions)) {
+            throw new InvalidArgumentException('Unsupported Article type provided.');
+        }
+
         $site = $this->Articles->getSite($siteId);
         $article = $this->Articles->newEntity();
 
         if ($this->request->is('post')) {
             $data = $this->request->data;
             $data['site_id'] = $site->id;
+            $data['type'] = $type;
             $data['created_by'] = $this->Auth->user('id');
             $data['modified_by'] = $this->Auth->user('id');
 
@@ -92,7 +118,7 @@ class ArticlesController extends AppController
                     $this->_upload($article->get('id'));
                 }
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'type', $site->slug, $type]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
@@ -102,6 +128,7 @@ class ArticlesController extends AppController
             'spacer' => self::TREE_SPACER
         ]);
 
+        $this->set('typeOptions', $typeOptions);
         $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
@@ -110,12 +137,22 @@ class ArticlesController extends AppController
      * Edit method
      *
      * @param string $siteId Site id or slug.
+     * @param string $type Site type.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \InvalidArgumentException
      */
-    public function edit($siteId, $id = null)
+    public function edit($siteId, $type, $id = null)
     {
+        $this->request->allowMethod(['patch', 'post', 'put']);
+
+        $typeOptions = $this->Articles->getTypeOptions($type);
+
+        if (empty($typeOptions)) {
+            throw new InvalidArgumentException('Unsupported Article type provided.');
+        }
+
         $site = $this->Articles->getSite($siteId);
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
             'Categories',
@@ -134,6 +171,7 @@ class ArticlesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
             $data['site_id'] = $site->id;
+            $data['type'] = $type;
             $data['modified_by'] = $this->Auth->user('id');
             $article = $this->Articles->patchEntity($article, $data);
             if ($this->Articles->save($article)) {
@@ -143,7 +181,7 @@ class ArticlesController extends AppController
                 }
                 $this->Flash->success(__('The article has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'view', $site->slug, $type, $article->slug]);
             } else {
                 $this->Flash->error(__('The article could not be saved. Please, try again.'));
             }
@@ -154,6 +192,7 @@ class ArticlesController extends AppController
             'spacer' => self::TREE_SPACER
         ]);
 
+        $this->set('typeOptions', $typeOptions);
         $this->set(compact('article', 'categories', 'site'));
         $this->set('_serialize', ['article']);
     }
@@ -170,7 +209,7 @@ class ArticlesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1);
+        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain('Sites');
         $article = $query->first();
 
         if ($this->Articles->delete($article)) {
@@ -179,14 +218,14 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->referer());
+        return $this->redirect(['action' => 'type', $article->site->slug, $article->type]);
     }
 
     /**
      * Uploads and stores the related file.
      *
      * @param  int|null $articleId id of the relate slide
-     * @return bool           flag
+     * @return void
      */
     protected function _upload($articleId = null)
     {
@@ -196,43 +235,15 @@ class ArticlesController extends AppController
             $this->request->data
         );
 
-        if ($this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity)) {
-            $this->Flash->set(__('Upload successful'));
-
-            return true;
+        // upload image
+        $uploaded = $this->Articles->ArticleFeaturedImages->uploadImage($articleId, $entity);
+        if ($uploaded) {
+            // delete old image
+            $this->Articles->ArticleFeaturedImages->deleteAll([
+                'ArticleFeaturedImages.foreign_key' => $articleId,
+                'ArticleFeaturedImages.path !=' => $entity->path
+            ]);
         }
-
-        return false;
-    }
-
-    /**
-     * Uploads the files from the CKeditor.
-     *
-     * @link http://docs.ckeditor.com/#!/guide/dev_file_upload
-     * @param  int|null $articleId id of the relate slide
-     * @return void
-     */
-    public function uploadFromEditor($articleId = null)
-    {
-        $result = [];
-        $this->request->is(['ajax']);
-        if (!$this->request->data['upload']['error']) {
-            $file = ['file' => $this->request->data['upload']];
-            $entity = $this->Articles->ContentImages->newEntity();
-            $entity = $this->Articles->ContentImages->patchEntity(
-                $entity,
-                $file
-            );
-            if ($this->Articles->ContentImages->uploadImage($articleId, $entity)) {
-                $result['uploaded'] = 1;
-                $result['url'] = $entity->path;
-            }
-        } else {
-            $result['uploaded'] = 0;
-            $result['error']['message'] = __d('cms', 'Failed to upload.');
-        }
-        $this->set('result', $result);
-        $this->set('_serialize', 'result');
     }
 
     /**
