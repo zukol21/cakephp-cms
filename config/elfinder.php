@@ -3,7 +3,7 @@ use Cake\Routing\Router;
 
 return [
     'TinymceElfinder' => [
-        'title' => 'Elfinder File Manager',
+        'title' => 'File Manager',
         'client_options' => [
             'width' => 900,
             'height' => 500,
