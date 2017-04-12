@@ -1,25 +1,28 @@
+<?php
+$this->Breadcrumbs->templates([
+    'separator' => '',
+]);
+$this->Breadcrumbs->add($article->site->name);
+$this->Breadcrumbs->add($article->category->name, [
+    'controller' => 'Categories',
+    'action' => 'view',
+    $article->site->slug,
+    $article->category->slug
+]);
+$this->Breadcrumbs->add($types[$article->type]['label'], [
+    'controller' => 'Articles',
+    'action' => 'type',
+    $article->site->slug,
+    $article->type
+]);
+$this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
+?>
 <section class="content-header">
-    <h1>
-        <?php
-        $typeUrl = $this->Html->link($types[$article->type]['label'], [
-            'controller' => 'Articles',
-            'action' => 'type',
-            $article->site->slug,
-            $article->type
-        ]);
-        if ($article->title) {
-            echo $typeUrl . ' &raquo; ' . h($article->title);
-        } else {
-            $categoryUrl = $this->Html->link(h($article->category->name), [
-                'controller' => 'Categories',
-                'action' => 'view',
-                $article->site->slug,
-                $article->category->slug
-            ]);
-            echo $categoryUrl . ' &raquo; ' . $typeUrl;
-        }
-        ?>
-    </h1>
+    <h1><?= h($article->title) ?></h1>
+    <?= $this->Breadcrumbs->render(
+        ['class' => 'breadcrumb'],
+        ['separator' => false]
+    ) ?>
 </section>
 <section class="content">
     <?= $this->element('Articles/new', [

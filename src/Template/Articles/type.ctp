@@ -1,5 +1,16 @@
+<?php
+$this->Breadcrumbs->templates([
+    'separator' => '',
+]);
+$this->Breadcrumbs->add($site->name);
+$this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
+?>
 <section class="content-header">
-    <h1><?= h($site->name) . ' &raquo; ' . h($types[$type]['label']) ?></h1>
+    <h1><?= h($types[$type]['label']) ?></h1>
+    <?= $this->Breadcrumbs->render(
+        ['class' => 'breadcrumb'],
+        ['separator' => false]
+    ) ?>
 </section>
 <section class="content">
     <?= $this->element('Articles/new', [
