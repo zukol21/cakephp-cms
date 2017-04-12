@@ -9,9 +9,10 @@
 
 ## Requirements
 
-[Cakephp-Tinymce-Elfinder](https://github.com/hashmode/cakephp-tinymce-elfinder) plugin
-[UseMuffin/Slug](https://github.com/UseMuffin/Slug) plugin
-[UseMuffin/Trash](https://github.com/UseMuffin/Trash) plugin
+**Plugins:**
+- [Cakephp-Tinymce-Elfinder](https://github.com/hashmode/cakephp-tinymce-elfinder)
+- [UseMuffin/Slug](https://github.com/UseMuffin/Slug)
+- [UseMuffin/Trash](https://github.com/UseMuffin/Trash)
 
 ## Setup
 
@@ -40,6 +41,22 @@ bin/cake plugin load CakephpTinymceElfinder --routes
 
 The plugin's WYSIWYG editor is [tinyMCE 4.*](https://www.tinymce.com) which is used to create/edit the article content.
 
-## ToDo
-1. Add documentation for Articles, Categories
-2. PHPUnit tests
+## Article types
+
+Article types are configured in `Configure::read('CMS.Articles.types')`.
+
+The plugin defines four standard article types:
+- Article
+- Gallery
+- Link
+- FAQ
+
+Types can be overriden/extended/removed by modifying the `CMS.Articles.types` configuration.
+
+Each article type requires a configuration as shown in `config/cms.php`.
+
+There are two rendering layouts for each article type, one for the listing and one for the single view. Both layouts have default elements which are used as fallbacks.
+
+When you define a new article type, you can control its layout by creating two elements in the following paths (you can copy the plugin's ones as a starting point):
+- src/Template/Element/Plugin/Cms/[type_name_camel_cased]/list.ctp
+- src/Template/Element/Plugin/Cms/[type_name_camel_cased]/single.ctp
