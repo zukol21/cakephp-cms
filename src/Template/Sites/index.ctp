@@ -47,7 +47,7 @@ echo $this->Html->script(
                                 <div class="btn-group btn-group-xs" role="group">
                                     <?= $this->Html->link(
                                         '<i class="fa fa-eye"></i>',
-                                        ['action' => 'view', $site->id],
+                                        ['action' => 'view', $site->slug],
                                         ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                     <?= $this->Html->link(
