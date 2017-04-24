@@ -1,12 +1,6 @@
 <?php
 use Cake\Utility\Inflector;
 
-echo $this->Html->script([
-    'Cms./plugins/masonry/masonry.pkgd.min',
-    'Cms./plugins/imagesloaded/imagesloaded.pkgd.min',
-    'Cms.masonry.init'
-], ['block' => 'scriptBotton']);
-
 $elements = [];
 foreach ($articles as $article) {
     $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/list';
