@@ -1,5 +1,5 @@
 <section class="content-header">
-    <h1><?= h($site->name) ?></h1>
+    <h1><?= h($site->name) ?> <small><?= __('Site') ?></small></h1>
 </section>
 <section class="content">
     <div class="row">
