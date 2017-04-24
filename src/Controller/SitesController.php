@@ -49,11 +49,14 @@ class SitesController extends AppController
 
         $site = $query->firstOrFail();
 
+        $categories = $this->Sites->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+        $article = $this->Sites->Articles->newEntity();
+
         if ($site->categories) {
-            $tree = $this->Sites->Categories
-                ->find('treeList', ['spacer' => self::TREE_SPACER])
-                ->where(['Categories.site_id' => $site->id])
-                ->toArray();
+            $tree = $categories->toArray();
             // create node property in the entity object
             foreach ($site->categories as $category) {
                 if (!array_key_exists($category->id, $tree)) {
@@ -64,6 +67,8 @@ class SitesController extends AppController
         }
 
         $this->set('site', $site);
+        $this->set('categories', $categories);
+        $this->set('article', $article);
         $this->set('_serialize', ['site']);
     }
 
