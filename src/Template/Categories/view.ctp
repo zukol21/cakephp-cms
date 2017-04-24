@@ -23,4 +23,9 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
         'articles' => $category->articles,
         'articleTypes' => $types
     ]) ?>
+    <?= $this->element('Articles/modal', [
+        'articles' => $category->articles,
+        'articleTypes' => $types,
+        'categories' => $categories
+    ]) ?>
 </section>
