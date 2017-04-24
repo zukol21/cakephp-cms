@@ -1,7 +1,6 @@
 <?php
 namespace Cms\Model\Table;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Table;
 use InvalidArgumentException;
 
@@ -15,11 +14,12 @@ class BaseTable extends Table
      * Fetch and return Site by id or slug.
      *
      * @param string $id Site id or slug.
+     * @param array $contain Related records to contain.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getSite($id)
+    public function getSite($id, array $contain = [])
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Site id or slug cannot be empty.');
@@ -34,14 +34,8 @@ class BaseTable extends Table
                 ],
                 'Sites.active' => true
             ]
-        ]);
+        ])->contain($contain);
 
-        $result = $query->first();
-
-        if (empty($result)) {
-            throw new RecordNotFoundException('Site not found.');
-        }
-
-        return $result;
+        return $query->firstOrFail();
     }
 }
