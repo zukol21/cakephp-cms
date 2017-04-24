@@ -1,1 +1,0 @@
-<?= $this->Text->truncate($article->content, 200) ?>

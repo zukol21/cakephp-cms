@@ -1,7 +1,6 @@
 <?php
 namespace Cms\Controller;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
 use InvalidArgumentException;
@@ -22,7 +21,6 @@ class ArticlesController extends AppController
      * @param string $typeId Type slug.
      * @param string|null $id Article id.
      * @return void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($siteId, $typeId, $id = null)
     {
@@ -35,11 +33,8 @@ class ArticlesController extends AppController
                 ]
             ]
         ]);
-        $article = $query->first();
+        $article = $query->firstOrFail();
 
-        if (empty($article)) {
-            throw new RecordNotFoundException('Article not found.');
-        }
         $categories = $this->Articles->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $article->site->id],
             'spacer' => self::TREE_SPACER
@@ -63,10 +58,11 @@ class ArticlesController extends AppController
      */
     public function type($siteId, $typeId)
     {
-        $site = $this->Articles->getSite($siteId);
+        $site = $this->Articles->getSite($siteId, ['Categories']);
         $articles = $this->Articles->find('all', [
             'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
-            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages']
+            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages'],
+            'order' => ['Articles.publish_date' => 'DESC']
         ]);
         $categories = $this->Articles->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
@@ -74,7 +70,6 @@ class ArticlesController extends AppController
         ]);
 
         $this->set('type', $typeId);
-        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
         $this->set('site', $site);
         $this->set('articles', $articles);
         $this->set('categories', $categories);
@@ -140,7 +135,6 @@ class ArticlesController extends AppController
      * @param string $type Site type.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
      * @throws \InvalidArgumentException
      */
     public function edit($siteId, $type, $id = null)
@@ -162,11 +156,7 @@ class ArticlesController extends AppController
                 ]
             ]
         ]);
-        $article = $query->first();
-
-        if (empty($article)) {
-            throw new RecordNotFoundException('Article not found.');
-        }
+        $article = $query->firstOrFail();
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
@@ -203,14 +193,13 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
      * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($siteId, $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
 
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain('Sites');
-        $article = $query->first();
+        $article = $query->firstOrFail();
 
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));

@@ -26,26 +26,40 @@ class SitesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Site id.
+     * @param string|null $id Site id or slug.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $site = $this->Sites->get($id, [
+        $query = $this->Sites->find('all', [
+            'where' => [
+                'OR' => [
+                    'id' => $id,
+                    'slug' => $id
+                ]
+            ],
             'contain' => [
-                'Articles',
+                'Articles' => function ($q) {
+                    return $q->order(['Articles.publish_date' => 'DESC'])
+                        ->contain(['Sites', 'ArticleFeaturedImages']);
+                },
                 'Categories' => function ($q) {
                     return $q->order(['Categories.lft' => 'ASC']);
                 }
             ]
         ]);
 
+        $site = $query->firstOrFail();
+
+        $categories = $this->Sites->Categories->find('treeList', [
+            'conditions' => ['Categories.site_id' => $site->id],
+            'spacer' => self::TREE_SPACER
+        ]);
+        $article = $this->Sites->Articles->newEntity();
+
         if ($site->categories) {
-            $tree = $this->Sites->Categories
-                ->find('treeList', ['spacer' => self::TREE_SPACER])
-                ->where(['Categories.site_id' => $site->id])
-                ->toArray();
+            $tree = $categories->toArray();
             // create node property in the entity object
             foreach ($site->categories as $category) {
                 if (!array_key_exists($category->id, $tree)) {
@@ -56,6 +70,8 @@ class SitesController extends AppController
         }
 
         $this->set('site', $site);
+        $this->set('categories', $categories);
+        $this->set('article', $article);
         $this->set('_serialize', ['site']);
     }
 

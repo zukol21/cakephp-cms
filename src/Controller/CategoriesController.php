@@ -20,9 +20,13 @@ class CategoriesController extends AppController
      */
     public function view($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId);
+        $site = $this->Categories->getSite($siteId, ['Categories']);
         $category = $this->Categories->getCategoryBySite($id, $site, [
-            'Articles' => ['Sites', 'ArticleFeaturedImages'], 'Sites'
+            'Sites',
+            'Articles' => function ($q) {
+                return $q->order(['Articles.publish_date' => 'DESC'])
+                    ->contain(['Sites', 'ArticleFeaturedImages']);
+            }
         ]);
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
@@ -30,6 +34,7 @@ class CategoriesController extends AppController
         ]);
         $article = $this->Categories->Articles->newEntity();
 
+        $this->set('site', $site);
         $this->set('category', $category);
         $this->set('categories', $categories);
         $this->set('article', $article);

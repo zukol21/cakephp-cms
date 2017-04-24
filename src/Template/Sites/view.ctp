@@ -1,12 +1,9 @@
 <section class="content-header">
-    <h1><?= $this->Html->link(
-        __('Sites'),
-        ['action' => 'index']
-    ) . ' &raquo; ' . h($site->name) ?></h1>
+    <h1><?= h($site->name) ?> <small><?= __('Site') ?></small></h1>
 </section>
 <section class="content">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-4">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <i class="fa fa-info"></i>
@@ -20,18 +17,11 @@
                         <dd><?= h($site->slug) ?></dd>
                         <dt><?= __('Active') ?></dt>
                         <dd><?= $site->active ? __('Yes') : __('No'); ?></dd>
-                        <dt><?= __('Created') ?></dt>
-                        <dd><?= h($site->created) ?></dd>
-                        <dt><?= __('Modified') ?></dt>
-                        <dd><?= h($site->modified) ?></dd>
                     </dl>
                 </div>
             </div>
         </div>
-    </div>
-    <hr />
-    <div class="row">
-        <div class="col-xs-12">
+        <div class="col-lg-8">
             <div class="nav-tabs-custom">
                 <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
@@ -104,6 +94,36 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <?= $this->element('Articles/new', [
+        'categories' => $categories,
+        'site' => $site,
+        'article' => $article,
+        'articleTypes' => $types
+    ]) ?>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-md-3 col-md-push-9">
+            <div class="row">
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Categories/list', ['categories' => $site->categories, 'site' => $site]) ?>
+                </div>
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Types/list', ['types' => $types, 'site' => $site]) ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
+            <?= $this->element('Articles/list', [
+                'articles' => $site->articles,
+                'articleTypes' => $types
+            ]) ?>
+            <?= $this->element('Articles/modal', [
+                'articles' => $site->articles,
+                'articleTypes' => $types,
+                'categories' => $categories
+            ]) ?>
         </div>
     </div>
 </section>
