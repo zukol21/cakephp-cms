@@ -70,7 +70,6 @@ class ArticlesController extends AppController
         ]);
 
         $this->set('type', $typeId);
-        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
         $this->set('site', $site);
         $this->set('articles', $articles);
         $this->set('categories', $categories);
