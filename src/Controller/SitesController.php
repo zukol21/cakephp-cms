@@ -26,13 +26,19 @@ class SitesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Site id.
+     * @param string|null $id Site id or slug.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $site = $this->Sites->get($id, [
+        $query = $this->Sites->find('all', [
+            'where' => [
+                'OR' => [
+                    'id' => $id,
+                    'slug' => $id
+                ]
+            ],
             'contain' => [
                 'Articles',
                 'Categories' => function ($q) {
@@ -40,6 +46,8 @@ class SitesController extends AppController
                 }
             ]
         ]);
+
+        $site = $query->firstOrFail();
 
         if ($site->categories) {
             $tree = $this->Sites->Categories
