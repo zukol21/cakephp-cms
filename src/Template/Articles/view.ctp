@@ -2,7 +2,11 @@
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
-$this->Breadcrumbs->add($article->site->name);
+$this->Breadcrumbs->add($article->site->name, [
+    'controller' => 'Sites',
+    'action' => 'view',
+    $article->site->slug
+]);
 $this->Breadcrumbs->add($article->category->name, [
     'controller' => 'Categories',
     'action' => 'view',

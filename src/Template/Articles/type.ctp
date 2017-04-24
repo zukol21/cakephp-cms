@@ -2,7 +2,11 @@
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
-$this->Breadcrumbs->add($site->name);
+$this->Breadcrumbs->add($site->name, [
+    'controller' => 'Sites',
+    'action' => 'view',
+    $site->slug
+]);
 $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
 ?>
 <section class="content-header">
