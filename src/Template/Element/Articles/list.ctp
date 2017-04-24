@@ -32,77 +32,21 @@ foreach ($articles as $article) {
 ?>
 <div class ="row masonry-container">
 <?php foreach ($elements as $element) : ?>
-    <div class="col-xs-12 col-md-6 col-lg-4 item">
-        <div class="box box-solid">
+    <?= $this->element('Articles/blocks', ['element' => $element, 'types' => $types]) ?>
+    <?= $this->element($element['name'], $element['data']) ?>
+    <div class="col-xs-12 item">
+        <div class="box box-solid <?= $this->fetch('article-box-classes') ?>">
             <div class="box-header with-border">
-                <i class="fa fa-<?= $types[$element['data']['article']->type]['icon'] ?> text-muted"></i>
-                <h3 class="box-title">
-                <?= $this->Html->link(
-                    $this->Text->truncate($element['data']['article']->title, 35, ['exact' => false]),
-                    [
-                        'controller' => 'Articles',
-                        'action' => 'view',
-                        $element['data']['article']->site->slug,
-                        $element['data']['article']->type,
-                        $element['data']['article']->slug
-                    ],
-                    ['title' => h($element['data']['article']->title)]
-                ) ?></h3>
+                <?= $this->fetch('article-header') ?>
                 <div class="box-tools pull-right">
-                    <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
-                        'title' => __('Edit'),
-                        'class' => 'btn btn-box-tool',
-                        'escape' => false,
-                        'data-toggle' => 'modal',
-                        'data-target' => '#' . $element['data']['article']->slug
-                    ]) ?>
-                    <?= $this->Form->postLink(
-                        '<i class="fa fa-trash"></i>',
-                        [
-                            'controller' => 'Articles',
-                            'action' => 'delete',
-                            $element['data']['article']->site->slug,
-                            $element['data']['article']->slug
-                        ],
-                        [
-                            'confirm' => __('Are you sure you want to delete # {0}?', $element['data']['article']->title),
-                            'title' => __('Delete'),
-                            'class' => 'btn btn-box-tool',
-                            'escape' => false
-                        ]
-                    ) ?>
+                    <?= $this->fetch('article-action-buttons') ?>
                 </div>
             </div>
             <div class="box-body">
-                <?= $this->element($element['name'], $element['data']); ?>
+            <?= $this->fetch('article-body') ?>
             </div>
             <div class="box-footer small">
-                <div class="text-muted text-right">
-                <?php
-                if ('type' === $this->request->action) {
-                    $assocUrl = $this->Html->link($element['data']['article']->category->name, [
-                        'controller' => 'Categories',
-                        'action' => 'view',
-                        $element['data']['article']->site->slug,
-                        $element['data']['article']->category->slug
-                    ]);
-                } else {
-                    $assocUrl = $this->Html->link($types[$element['data']['article']->type]['label'], [
-                        'controller' => 'Articles',
-                        'action' => 'type',
-                        $element['data']['article']->site->slug,
-                        $element['data']['article']->type
-                    ]);
-                }
-                ?>
-                <?= $assocUrl ?>
-                |
-                <?= __('Published') ?>
-                <?= $element['data']['article']->publish_date->timeAgoInWords([
-                    'format' => 'MMM d, YYY',
-                    'end' => '1 month'
-                ]) ?>
-                </div>
+                <?= $this->fetch('article-footer') ?>
             </div>
         </div>
     </div>
