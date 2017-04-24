@@ -7,12 +7,12 @@ foreach ($articles as $article) {
 
     // fallback to plugin's element
     if (!$this->elementExists($element)) {
-        $element = Inflector::camelize($article->type) . '/list';
+        $element = 'Types/' . Inflector::camelize($article->type) . '/list';
     }
 
     // fallback to default element
     if (!$this->elementExists($element)) {
-        $element = 'Common/list';
+        $element = 'Types/Common/list';
     }
 
     $elements[] = [
