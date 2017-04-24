@@ -22,7 +22,11 @@ class CategoriesController extends AppController
     {
         $site = $this->Categories->getSite($siteId);
         $category = $this->Categories->getCategoryBySite($id, $site, [
-            'Articles' => ['Sites', 'ArticleFeaturedImages'], 'Sites'
+            'Sites',
+            'Articles' => function ($q) {
+                return $q->order(['Articles.publish_date' => 'DESC'])
+                    ->contain(['Sites', 'ArticleFeaturedImages']);
+            }
         ]);
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],

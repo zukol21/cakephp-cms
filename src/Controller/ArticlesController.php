@@ -61,7 +61,8 @@ class ArticlesController extends AppController
         $site = $this->Articles->getSite($siteId);
         $articles = $this->Articles->find('all', [
             'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
-            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages']
+            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages'],
+            'order' => ['Articles.publish_date' => 'DESC']
         ]);
         $categories = $this->Articles->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],

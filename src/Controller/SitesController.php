@@ -40,7 +40,10 @@ class SitesController extends AppController
                 ]
             ],
             'contain' => [
-                'Articles' => ['Sites', 'ArticleFeaturedImages'],
+                'Articles' => function ($q) {
+                    return $q->order(['Articles.publish_date' => 'DESC'])
+                        ->contain(['Sites', 'ArticleFeaturedImages']);
+                },
                 'Categories' => function ($q) {
                     return $q->order(['Categories.lft' => 'ASC']);
                 }
