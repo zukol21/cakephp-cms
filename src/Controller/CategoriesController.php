@@ -34,6 +34,7 @@ class CategoriesController extends AppController
         ]);
         $article = $this->Categories->Articles->newEntity();
 
+        $this->set('site', $site);
         $this->set('category', $category);
         $this->set('categories', $categories);
         $this->set('article', $article);
