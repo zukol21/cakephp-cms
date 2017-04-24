@@ -3,7 +3,7 @@
 </section>
 <section class="content">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-4">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <i class="fa fa-info"></i>
@@ -17,18 +17,11 @@
                         <dd><?= h($site->slug) ?></dd>
                         <dt><?= __('Active') ?></dt>
                         <dd><?= $site->active ? __('Yes') : __('No'); ?></dd>
-                        <dt><?= __('Created') ?></dt>
-                        <dd><?= h($site->created) ?></dd>
-                        <dt><?= __('Modified') ?></dt>
-                        <dd><?= h($site->modified) ?></dd>
                     </dl>
                 </div>
             </div>
         </div>
-    </div>
-    <hr />
-    <div class="row">
-        <div class="col-xs-12">
+        <div class="col-lg-8">
             <div class="nav-tabs-custom">
                 <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
