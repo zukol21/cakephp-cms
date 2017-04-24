@@ -32,5 +32,9 @@ class AppController extends BaseController
             // pass article types to all views
             $this->set('types', $this->{$this->name}->Articles->getTypes());
         }
+
+        if ('Articles' === $this->name) {
+            $this->set('types', $this->Articles->getTypes());
+        }
     }
 }
