@@ -10,7 +10,7 @@ $this->Breadcrumbs->add($site->name, [
 $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h1><?= h($category->name) ?></h1>
+    <h1><?= h($category->name) ?> <small><?= __('Category') ?></small></h1>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
