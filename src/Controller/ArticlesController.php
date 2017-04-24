@@ -58,7 +58,7 @@ class ArticlesController extends AppController
      */
     public function type($siteId, $typeId)
     {
-        $site = $this->Articles->getSite($siteId);
+        $site = $this->Articles->getSite($siteId, ['Categories']);
         $articles = $this->Articles->find('all', [
             'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
             'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages'],

@@ -20,7 +20,7 @@ class CategoriesController extends AppController
      */
     public function view($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId);
+        $site = $this->Categories->getSite($siteId, ['Categories']);
         $category = $this->Categories->getCategoryBySite($id, $site, [
             'Sites',
             'Articles' => function ($q) {
