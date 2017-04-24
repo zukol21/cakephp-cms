@@ -106,4 +106,72 @@
             </div>
         </div>
     </div>
+    <?= $this->element('Articles/new', [
+        'categories' => $categories,
+        'site' => $site,
+        'article' => $article,
+        'articleTypes' => $types
+    ]) ?>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-md-3 col-md-push-9">
+            <div class="row">
+                <div class="col-xs-6 col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa fa-tag"></i>
+                            <h3 class="box-title"><?= __('Categories') ?></h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <ul class="nav nav-stacked">
+                                <?php foreach ($site->categories as $category) : ?>
+                                <li>
+                                    <?= $this->Html->link($category->name, [
+                                        'controller' => 'Categories',
+                                        'action' => 'view',
+                                        $site->slug,
+                                        $category->slug
+                                    ]) ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa fa-tags"></i>
+                            <h3 class="box-title"><?= __('Article Types') ?></h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <ul class="nav nav-stacked">
+                                <?php foreach ($types as $type => $typeOptions) : ?>
+                                <li>
+                                    <?= $this->Html->link($typeOptions['label'], [
+                                        'controller' => 'Articles',
+                                        'action' => 'type',
+                                        $site->slug,
+                                        $type
+                                    ]) ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-9 col-md-pull-3">
+            <?= $this->element('Articles/list', [
+                'articles' => $site->articles,
+                'articleTypes' => $types
+            ]) ?>
+            <?= $this->element('Articles/modal', [
+                'articles' => $site->articles,
+                'articleTypes' => $types,
+                'categories' => $categories
+            ]) ?>
+        </div>
+    </div>
 </section>
