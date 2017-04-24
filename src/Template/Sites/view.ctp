@@ -1,8 +1,5 @@
 <section class="content-header">
-    <h1><?= $this->Html->link(
-        __('Sites'),
-        ['action' => 'index']
-    ) . ' &raquo; ' . h($site->name) ?></h1>
+    <h1><?= h($site->name) ?></h1>
 </section>
 <section class="content">
     <div class="row">
