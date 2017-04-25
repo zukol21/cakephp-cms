@@ -1,5 +1,18 @@
 <section class="content-header">
-    <h1><?= h($site->name) ?> <small><?= __('Site') ?></small></h1>
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <h1><?= h($site->name) ?> <small><?= __('Site') ?></small></h1>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <div class="pull-right">
+                <div class="btn-group btn-group-sm" role="group">
+                <?= $this->element('Cms.Menu/view_top', [
+                    'user' => $user
+                ]); ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <section class="content">
     <div class="row">
