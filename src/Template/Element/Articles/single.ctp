@@ -5,12 +5,12 @@ $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
 // fallback to plugin's element
 if (!$this->elementExists($element)) {
-    $element = Inflector::camelize($article->type) . '/single';
+    $element = 'Types/' . Inflector::camelize($article->type) . '/single';
 }
 
 // fallback to default element
 if (!$this->elementExists($element)) {
-    $element = 'Common/single';
+    $element = 'Types/Common/single';
 }
 
 $data = ['article' => $article];
