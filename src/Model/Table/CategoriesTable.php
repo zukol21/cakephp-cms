@@ -127,7 +127,7 @@ class CategoriesTable extends BaseTable
                 'Categories.site_id' => $site->id
             ],
             'contain' => $contain
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
 
         $result = $query->first();
 

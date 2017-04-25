@@ -26,19 +26,21 @@ class ArticlesController extends AppController
     {
         $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
             'Sites',
-            'Categories',
+            'Categories' => function ($q) {
+                return $q->applyOptions(['accessCheck' => false]);
+            },
             'ArticleFeaturedImages' => [
                 'sort' => [
                     'created' => 'DESC'
                 ]
             ]
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
         $article = $query->firstOrFail();
 
         $categories = $this->Articles->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $article->site->id],
             'spacer' => self::TREE_SPACER
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
 
         $this->set('type', $typeId);
         $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
@@ -58,16 +60,26 @@ class ArticlesController extends AppController
      */
     public function type($siteId, $typeId)
     {
-        $site = $this->Articles->getSite($siteId, ['Categories']);
+        $site = $this->Articles->getSite($siteId, [
+            'Categories' => function ($q) {
+                return $q->applyOptions(['accessCheck' => false]);
+            }
+        ]);
         $articles = $this->Articles->find('all', [
             'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
-            'contain' => ['Sites', 'Categories', 'ArticleFeaturedImages'],
+            'contain' => [
+                'Sites',
+                'Categories' => function ($q) {
+                    return $q->applyOptions(['accessCheck' => false]);
+                },
+                'ArticleFeaturedImages'
+            ],
             'order' => ['Articles.publish_date' => 'DESC']
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
         $categories = $this->Articles->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
 
         $this->set('type', $typeId);
         $this->set('site', $site);

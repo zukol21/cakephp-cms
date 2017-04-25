@@ -33,7 +33,7 @@ class SitesController extends AppController
     public function view($id = null)
     {
         $query = $this->Sites->find('all', [
-            'where' => [
+            'conditions' => [
                 'OR' => [
                     'id' => $id,
                     'slug' => $id
@@ -42,10 +42,10 @@ class SitesController extends AppController
             'contain' => [
                 'Articles' => function ($q) {
                     return $q->order(['Articles.publish_date' => 'DESC'])
-                        ->contain(['Sites', 'ArticleFeaturedImages']);
+                        ->contain(['Sites', 'ArticleFeaturedImages'])->applyOptions(['accessCheck' => false]);
                 },
                 'Categories' => function ($q) {
-                    return $q->order(['Categories.lft' => 'ASC']);
+                    return $q->order(['Categories.lft' => 'ASC'])->applyOptions(['accessCheck' => false]);
                 }
             ]
         ]);
@@ -55,7 +55,7 @@ class SitesController extends AppController
         $categories = $this->Sites->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
         $article = $this->Sites->Articles->newEntity();
 
         if ($site->categories) {

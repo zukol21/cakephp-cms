@@ -20,18 +20,23 @@ class CategoriesController extends AppController
      */
     public function view($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId, ['Categories']);
+        $site = $this->Categories->getSite($siteId, [
+            'Categories' => function ($q) {
+                return $q->applyOptions(['accessCheck' => false]);
+            }
+        ]);
         $category = $this->Categories->getCategoryBySite($id, $site, [
             'Sites',
             'Articles' => function ($q) {
                 return $q->order(['Articles.publish_date' => 'DESC'])
-                    ->contain(['Sites', 'ArticleFeaturedImages']);
+                    ->contain(['Sites', 'ArticleFeaturedImages'])
+                    ->applyOptions(['accessCheck' => false]);
             }
         ]);
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
-        ]);
+        ])->applyOptions(['accessCheck' => false]);
         $article = $this->Categories->Articles->newEntity();
 
         $this->set('site', $site);
