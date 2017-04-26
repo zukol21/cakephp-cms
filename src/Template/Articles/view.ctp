@@ -1,4 +1,6 @@
 <?php
+use Cake\Event\Event;
+
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
@@ -29,19 +31,47 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     ) ?>
 </section>
 <section class="content">
-    <?= $this->element('Articles/new', [
+    <?php
+    $element = $this->element('Articles/new', [
         'categories' => $categories,
         'site' => $article->site,
         'article' => $newArticle,
         'articleTypes' => $types
-    ]) ?>
+    ]);
+    $event = new Event('Cms.View.element.beforeRender', $this, [
+        'menu' => [
+            [
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$article->site->id]],
+                'html' => $element
+            ]
+        ],
+        'user' => $user
+    ]);
+    $this->eventManager()->dispatch($event);
+
+    echo $event->result ? $event->result . '<hr />' : '';
+    ?>
     <?= $this->element('Articles/single', [
         'article' => $article,
         'articleTypes' => $types
     ]) ?>
-    <?= $this->element('Articles/modal', [
+    <?php
+    $element = $this->element('Articles/modal', [
         'categories' => $categories,
         'articles' => [$article],
         'articleTypes' => $types
-    ]) ?>
+    ]);
+    $event = new Event('Cms.View.element.beforeRender', $this, [
+        'menu' => [
+            [
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$article->site->id]],
+                'html' => $element
+            ]
+        ],
+        'user' => $user
+    ]);
+    $this->eventManager()->dispatch($event);
+
+    echo $event->result;
+    ?>
 </section>

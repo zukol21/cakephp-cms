@@ -1,3 +1,4 @@
+<?php use Cake\Event\Event; ?>
 <?php $this->start('article-box-classes') ?>
 <?php $this->end() ?>
 <?php $this->start('article-header') ?>
@@ -16,28 +17,45 @@
     ) ?></h3>
 <?php $this->end() ?>
 <?php $this->start('article-action-buttons') ?>
-    <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
-        'title' => __('Edit'),
-        'class' => 'btn btn-box-tool',
-        'escape' => false,
-        'data-toggle' => 'modal',
-        'data-target' => '#' . $element['data']['article']->slug
-    ]) ?>
-    <?= $this->Form->postLink(
-        '<i class="fa fa-trash"></i>',
-        [
-            'controller' => 'Articles',
-            'action' => 'delete',
-            $element['data']['article']->site->slug,
-            $element['data']['article']->slug
-        ],
-        [
-            'confirm' => __('Are you sure you want to delete # {0}?', $element['data']['article']->title),
-            'title' => __('Delete'),
+    <?php
+    $buttons = [];
+    $buttons[] = [
+        'html' => $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
+            'title' => __('Edit'),
             'class' => 'btn btn-box-tool',
-            'escape' => false
-        ]
-    ) ?>
+            'escape' => false,
+            'data-toggle' => 'modal',
+            'data-target' => '#' . $element['data']['article']->slug
+        ]),
+        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
+    ];
+    $buttons[] = [
+        'html' => $this->Form->postLink(
+            '<i class="fa fa-trash"></i>',
+            [
+                'controller' => 'Articles',
+                'action' => 'delete',
+                $element['data']['article']->site->slug,
+                $element['data']['article']->slug
+            ],
+            [
+                'confirm' => __('Are you sure you want to delete # {0}?', $element['data']['article']->title),
+                'title' => __('Delete'),
+                'class' => 'btn btn-box-tool',
+                'escape' => false
+            ]
+        ),
+        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
+    ];
+
+    $event = new Event('Cms.View.element.beforeRender', $this, [
+        'menu' => $buttons,
+        'user' => $user
+    ]);
+    $this->eventManager()->dispatch($event);
+
+    echo $event->result;
+    ?>
 <?php $this->end() ?>
 <?php $this->start('article-body') ?>
 <?php $this->end() ?>

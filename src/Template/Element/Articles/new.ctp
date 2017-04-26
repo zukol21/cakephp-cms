@@ -10,8 +10,8 @@ $this->Html->scriptBlock(
     ['block' => 'scriptBotton']
 );
 ?>
-<div class="box box-solid">
-    <div class="box-body no-padding">
+<div class="box box-solid no-shadow">
+    <div class="box-body no-padding no-margin">
         <div class="nav-tabs-custom no-margin no-shadow">
             <ul class="nav nav-tabs">
             <?php foreach ($articleTypes as $type => $typeOptions) : ?>

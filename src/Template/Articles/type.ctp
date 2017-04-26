@@ -1,4 +1,6 @@
 <?php
+use Cake\Event\Event;
+
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
@@ -10,20 +12,33 @@ $this->Breadcrumbs->add($site->name, [
 $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h1><?= h($types[$type]['label']) ?> <small><?= __('Article Type') ?></small></h1>
+    <h1><?= h($types[$type]['label']) ?></h1>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
     ) ?>
 </section>
 <section class="content">
-    <?= $this->element('Articles/new', [
+    <?php
+    $element = $this->element('Articles/new', [
         'categories' => $categories,
         'site' => $site,
         'article' => $article,
         'articleTypes' => [$type => $types[$type]]
-    ]) ?>
-    <hr />
+    ]);
+    $event = new Event('Cms.View.element.beforeRender', $this, [
+        'menu' => [
+            [
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
+                'html' => $element
+            ]
+        ],
+        'user' => $user
+    ]);
+    $this->eventManager()->dispatch($event);
+
+    echo $event->result ? $event->result . '<hr />' : '';
+    ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
             <div class="row">
@@ -40,11 +55,25 @@ $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
                 'articles' => $articles,
                 'articleTypes' => $types
             ]) ?>
-            <?= $this->element('Articles/modal', [
+            <?php
+            $element = $this->element('Articles/modal', [
                 'categories' => $categories,
                 'articles' => $articles,
                 'articleTypes' => $types
-            ]) ?>
+            ]);
+            $event = new Event('Cms.View.element.beforeRender', $this, [
+                'menu' => [
+                    [
+                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
+                        'html' => $element
+                    ]
+                ],
+                'user' => $user
+            ]);
+            $this->eventManager()->dispatch($event);
+
+            echo $event->result;
+            ?>
         </div>
     </div>
 </section>
