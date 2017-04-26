@@ -142,6 +142,7 @@ class ArticlesTable extends BaseTable
         }
 
         $this->_types = Configure::read('CMS.Articles.types');
+        ksort($this->_types);
         foreach ($this->_types as $k => &$v) {
             if (!(bool)$v['enabled']) {
                 unset($this->_types[$k]);
