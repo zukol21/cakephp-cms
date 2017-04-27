@@ -35,6 +35,18 @@ class CategoriesController extends AppController
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
         ])->applyOptions(['accessCheck' => false]);
+
+        if ($site->categories) {
+            $tree = $categories->toArray();
+            // create node property in the entity object
+            foreach ($site->categories as $cat) {
+                if (!array_key_exists($category->id, $tree)) {
+                    continue;
+                }
+                $cat->node = $tree[$category->id];
+            }
+        }
+
         $article = $this->Categories->Articles->newEntity();
 
         $this->set('site', $site);
