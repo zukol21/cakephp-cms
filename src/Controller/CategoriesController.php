@@ -63,7 +63,7 @@ class CategoriesController extends AppController
      * Edit method
      *
      * @param string $siteId Site id or slug.
-     * @param string|null $id Category id.
+     * @param string|null $id Category id or slug.
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
