@@ -93,7 +93,7 @@ class ArticlesController extends AppController
                 $this->_upload($article->get('id'));
             }
 
-            return $this->redirect(['action' => 'type', $site->slug, $type]);
+            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
@@ -142,7 +142,7 @@ class ArticlesController extends AppController
             }
             $this->Flash->success(__('The article has been saved.'));
 
-            return $this->redirect(['action' => 'view', $site->slug, $type, $article->slug]);
+            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
