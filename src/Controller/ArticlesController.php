@@ -24,29 +24,14 @@ class ArticlesController extends AppController
      */
     public function view($siteId, $typeId, $id = null)
     {
-        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
-            'Sites',
-            'Categories' => function ($q) {
-                return $q->applyOptions(['accessCheck' => false]);
-            },
-            'ArticleFeaturedImages' => [
-                'sort' => [
-                    'created' => 'DESC'
-                ]
-            ]
-        ])->applyOptions(['accessCheck' => false]);
-        $article = $query->firstOrFail();
+        $site = $this->Articles->Sites->getSite($siteId);
 
-        $categories = $this->Articles->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $article->site->id],
-            'spacer' => self::TREE_SPACER
-        ])->applyOptions(['accessCheck' => false]);
-
+        $this->set('site', $site);
         $this->set('type', $typeId);
         $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
-        $this->set('article', $article);
+        $this->set('article', $this->Articles->getArticle($id, true));
         $this->set('newArticle', $this->Articles->newEntity());
-        $this->set('categories', $categories);
+        $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
         $this->set('_serialize', ['article']);
     }
 
@@ -60,27 +45,14 @@ class ArticlesController extends AppController
      */
     public function type($siteId, $typeId)
     {
-        $site = $this->Articles->getSite($siteId, true);
-        $articles = $this->Articles->find('all', [
-            'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
-            'contain' => [
-                'Sites',
-                'Categories' => function ($q) {
-                    return $q->applyOptions(['accessCheck' => false]);
-                },
-                'ArticleFeaturedImages'
-            ],
-            'order' => ['Articles.publish_date' => 'DESC']
-        ])->applyOptions(['accessCheck' => false]);
-        $categories = $this->Articles->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ])->applyOptions(['accessCheck' => false]);
+        $site = $this->Articles->Sites->getSite($siteId, true);
+
+        $articles = $this->Articles->getArticles($site->id, $typeId, true);
 
         $this->set('type', $typeId);
         $this->set('site', $site);
         $this->set('articles', $articles);
-        $this->set('categories', $categories);
+        $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
         $this->set('article', $this->Articles->newEntity());
         $this->set('_serialize', ['type']);
     }
@@ -103,36 +75,34 @@ class ArticlesController extends AppController
             throw new InvalidArgumentException('Unsupported Article type provided.');
         }
 
-        $site = $this->Articles->getSite($siteId);
+        $site = $this->Articles->Sites->getSite($siteId);
+
+        $data = [
+            'site_id' => $site->id,
+            'type' => $type,
+            'created_by' => $this->Auth->user('id'),
+            'modified_by' => $this->Auth->user('id')
+        ];
+        $data = array_merge($this->request->data, $data);
+
         $article = $this->Articles->newEntity();
-
-        if ($this->request->is('post')) {
-            $data = $this->request->data;
-            $data['site_id'] = $site->id;
-            $data['type'] = $type;
-            $data['created_by'] = $this->Auth->user('id');
-            $data['modified_by'] = $this->Auth->user('id');
-
-            $article = $this->Articles->patchEntity($article, $data);
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
-                //Upload the featured image when there is one.
-                if ($this->_isValidUpload($this->request->data)) {
-                    $this->_upload($article->get('id'));
-                }
-
-                return $this->redirect(['action' => 'type', $site->slug, $type]);
-            } else {
-                $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        $article = $this->Articles->patchEntity($article, $data);
+        if ($this->Articles->save($article)) {
+            $this->Flash->success(__('The article has been saved.'));
+            //Upload the featured image when there is one.
+            if ($this->_isValidUpload($this->request->data)) {
+                $this->_upload($article->get('id'));
             }
-        }
-        $categories = $this->Articles->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ]);
 
+            return $this->redirect(['action' => 'type', $site->slug, $type]);
+        } else {
+            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        }
+
+        $this->set('site', $site);
+        $this->set('article', $article);
         $this->set('typeOptions', $typeOptions);
-        $this->set(compact('article', 'categories', 'site'));
+        $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
         $this->set('_serialize', ['article']);
     }
 
@@ -155,43 +125,33 @@ class ArticlesController extends AppController
             throw new InvalidArgumentException('Unsupported Article type provided.');
         }
 
-        $site = $this->Articles->getSite($siteId);
-        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain([
-            'Categories',
-            'ArticleFeaturedImages' => [
-                'sort' => [
-                    'created' => 'DESC'
-                ]
-            ]
-        ]);
-        $article = $query->firstOrFail();
+        $site = $this->Articles->Sites->getSite($siteId);
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $data = $this->request->data;
-            $data['site_id'] = $site->id;
-            $data['type'] = $type;
-            $data['modified_by'] = $this->Auth->user('id');
-            $article = $this->Articles->patchEntity($article, $data);
-            if ($this->Articles->save($article)) {
-                //Upload the featured image when there is one.
-                if ($this->_isValidUpload($this->request->data)) {
-                    $this->_upload($article->get('id'));
-                }
-                $this->Flash->success(__('The article has been saved.'));
+        $data = [
+            'site_id' => $site->id,
+            'type' => $type,
+            'modified_by' => $this->Auth->user('id')
+        ];
+        $data = array_merge($this->request->data, $data);
 
-                return $this->redirect(['action' => 'view', $site->slug, $type, $article->slug]);
-            } else {
-                $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        $article = $this->Articles->getArticle($id);
+        $article = $this->Articles->patchEntity($article, $data);
+        if ($this->Articles->save($article)) {
+            //Upload the featured image when there is one.
+            if ($this->_isValidUpload($this->request->data)) {
+                $this->_upload($article->get('id'));
             }
+            $this->Flash->success(__('The article has been saved.'));
+
+            return $this->redirect(['action' => 'view', $site->slug, $type, $article->slug]);
+        } else {
+            $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
 
-        $categories = $this->Articles->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ]);
-
+        $this->set('site', $site);
+        $this->set('article', $article);
         $this->set('typeOptions', $typeOptions);
-        $this->set(compact('article', 'categories', 'site'));
+        $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
         $this->set('_serialize', ['article']);
     }
 
@@ -206,8 +166,8 @@ class ArticlesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $query = $this->Articles->findByIdOrSlug($id, $id)->limit(1)->contain('Sites');
-        $article = $query->firstOrFail();
+        $site = $this->Articles->Sites->getSite($siteId);
+        $article = $this->Articles->getArticle($id);
 
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));
@@ -215,7 +175,7 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'type', $article->site->slug, $article->type]);
+        return $this->redirect(['action' => 'type', $site->slug, $article->type]);
     }
 
     /**

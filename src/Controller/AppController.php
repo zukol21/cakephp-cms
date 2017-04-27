@@ -6,8 +6,6 @@ use Cake\Event\Event;
 
 class AppController extends BaseController
 {
-    const TREE_SPACER = '&nbsp;&nbsp;&nbsp;&nbsp;';
-
     /**
      * Initialization hook method.
      *

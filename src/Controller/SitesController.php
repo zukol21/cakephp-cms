@@ -32,47 +32,11 @@ class SitesController extends AppController
      */
     public function view($id = null)
     {
-        $query = $this->Sites->find('all', [
-            'conditions' => [
-                'OR' => [
-                    'id' => $id,
-                    'slug' => $id
-                ]
-            ],
-            'contain' => [
-                'Articles' => function ($q) {
-                    return $q->order(['Articles.publish_date' => 'DESC'])
-                        ->contain(['Sites', 'ArticleFeaturedImages'])->applyOptions(['accessCheck' => false]);
-                },
-                'Categories' => function ($q) {
-                    return $q->order(['Categories.lft' => 'ASC'])->applyOptions(['accessCheck' => false]);
-                }
-            ]
-        ]);
-
-        $site = $query->firstOrFail();
-
-        $categories = $this->Sites->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ])->applyOptions(['accessCheck' => false]);
-
-        if ($site->categories) {
-            $tree = $categories->toArray();
-            // create node property in the entity object
-            foreach ($site->categories as $category) {
-                if (!array_key_exists($category->id, $tree)) {
-                    continue;
-                }
-                $category->node = $tree[$category->id];
-            }
-        }
-
-        $article = $this->Sites->Articles->newEntity();
+        $site = $this->Sites->getSite($id, true, true);
 
         $this->set('site', $site);
-        $this->set('categories', $categories);
-        $this->set('article', $article);
+        $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
+        $this->set('article', $this->Sites->Articles->newEntity());
         $this->set('_serialize', ['site']);
     }
 
@@ -93,7 +57,8 @@ class SitesController extends AppController
             }
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
         }
-        $this->set(compact('site'));
+
+        $this->set('site', $site);
         $this->set('_serialize', ['site']);
     }
 
@@ -106,19 +71,18 @@ class SitesController extends AppController
      */
     public function edit($id = null)
     {
-        $site = $this->Sites->get($id, [
-            'contain' => []
-        ]);
+        $site = $this->Sites->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $site = $this->Sites->patchEntity($site, $this->request->data);
             if ($this->Sites->save($site)) {
                 $this->Flash->success(__('The site has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'view']);
             }
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
         }
-        $this->set(compact('site'));
+
+        $this->set('site', $site);
         $this->set('_serialize', ['site']);
     }
 

@@ -20,39 +20,12 @@ class CategoriesController extends AppController
      */
     public function view($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId, true);
-
-        $category = $this->Categories->getCategoryBySite($id, $site, [
-            'Sites',
-            'Articles' => function ($q) {
-                return $q->order(['Articles.publish_date' => 'DESC'])
-                    ->contain(['Sites', 'ArticleFeaturedImages'])
-                    ->applyOptions(['accessCheck' => false]);
-            }
-        ]);
-
-        $categories = $this->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ])->applyOptions(['accessCheck' => false]);
-
-        if ($site->categories) {
-            $tree = $categories->toArray();
-            // create node property in the entity object
-            foreach ($site->categories as $cat) {
-                if (!array_key_exists($category->id, $tree)) {
-                    continue;
-                }
-                $cat->node = $tree[$category->id];
-            }
-        }
-
-        $article = $this->Categories->Articles->newEntity();
+        $site = $this->Categories->Sites->getSite($siteId, true);
 
         $this->set('site', $site);
-        $this->set('category', $category);
-        $this->set('categories', $categories);
-        $this->set('article', $article);
+        $this->set('category', $this->Categories->getBySite($id, $site, true));
+        $this->set('categories', $this->Categories->getTreeList($site->id));
+        $this->set('article', $this->Categories->Articles->newEntity());
         $this->set('_serialize', ['category']);
     }
 
@@ -64,7 +37,7 @@ class CategoriesController extends AppController
      */
     public function add($siteId)
     {
-        $site = $this->Categories->getSite($siteId);
+        $site = $this->Categories->Sites->getSite($siteId);
         $category = $this->Categories->newEntity();
 
         if ($this->request->is('post')) {
@@ -80,12 +53,9 @@ class CategoriesController extends AppController
             }
         }
 
-        $categories = $this->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id],
-            'spacer' => self::TREE_SPACER
-        ]);
-
-        $this->set(compact('category', 'categories', 'site'));
+        $this->set('site', $site);
+        $this->set('category', $category);
+        $this->set('categories', $this->Categories->getTreeList($site->id));
         $this->set('_serialize', ['category']);
     }
 
@@ -99,8 +69,8 @@ class CategoriesController extends AppController
      */
     public function edit($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId);
-        $category = $this->Categories->getCategoryBySite($id, $site);
+        $site = $this->Categories->Sites->getSite($siteId);
+        $category = $this->Categories->getBySite($id, $site);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
@@ -109,18 +79,15 @@ class CategoriesController extends AppController
             if ($this->Categories->save($category)) {
                 $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
+                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->slug]);
             } else {
                 $this->Flash->error(__('The category could not be saved. Please, try again.'));
             }
         }
 
-        $categories = $this->Categories->find('treeList', [
-            'conditions' => ['Categories.site_id' => $site->id, 'Categories.id !=' => $category->id],
-            'spacer' => self::TREE_SPACER
-        ]);
-
-        $this->set(compact('category', 'categories', 'site'));
+        $this->set('site', $site);
+        $this->set('category', $category);
+        $this->set('categories', $this->Categories->getTreeList($site->id, $category->id));
         $this->set('_serialize', ['category']);
     }
 
@@ -136,8 +103,8 @@ class CategoriesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $site = $this->Categories->getSite($siteId);
-        $category = $this->Categories->getCategoryBySite($id, $site);
+        $site = $this->Categories->Sites->getSite($siteId);
+        $category = $this->Categories->getBySite($id, $site);
 
         if ($this->Categories->delete($category)) {
             $this->Flash->success(__('The category has been deleted.'));
@@ -145,7 +112,7 @@ class CategoriesController extends AppController
             $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->slug]);
     }
 
     /**
@@ -166,8 +133,8 @@ class CategoriesController extends AppController
             return $this->redirect(['controller' => 'Sites', 'action' => 'view', $siteId]);
         }
 
-        $site = $this->Categories->getSite($siteId);
-        $category = $this->Categories->getCategoryBySite($id, $site);
+        $site = $this->Categories->Sites->getSite($siteId);
+        $category = $this->Categories->getBySite($id, $site);
 
         $moveFunction = 'move' . $action;
         if ($this->Categories->{$moveFunction}($category)) {
@@ -176,6 +143,6 @@ class CategoriesController extends AppController
             $this->Flash->error(__('Fail to move {0} {1}.', $category->name, $action));
         }
 
-        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
+        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->slug]);
     }
 }
