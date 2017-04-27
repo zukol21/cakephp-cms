@@ -112,7 +112,12 @@ class CategoriesController extends AppController
             $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->slug]);
+        $redirect = $this->referer();
+        if (false !== strpos($redirect, $category->slug)) {
+            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->slug];
+        }
+
+        return $this->redirect($redirect);
     }
 
     /**

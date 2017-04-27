@@ -174,7 +174,12 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'type', $site->slug, $article->type]);
+        $redirect = $this->referer();
+        if (false !== strpos($redirect, $article->slug)) {
+            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->slug];
+        }
+
+        return $this->redirect($redirect);
     }
 
     /**
