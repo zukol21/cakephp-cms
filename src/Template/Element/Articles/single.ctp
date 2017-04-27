@@ -1,4 +1,5 @@
 <?php
+use Cake\I18n\Time;
 use Cake\Utility\Inflector;
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
@@ -14,6 +15,8 @@ if (!$this->elementExists($element)) {
 }
 
 $data = ['article' => $article];
+
+$isPublished = $article->publish_date <= Time::now();
 ?>
 <div class="row">
     <div class="col-xs-12">
@@ -58,11 +61,15 @@ $data = ['article' => $article];
                     $article->category->slug
                 ]) ?>
                 |
-                <?= __('Published') ?>
-                <?= $article->publish_date->timeAgoInWords([
-                    'format' => 'MMM d, YYY | HH:mm',
-                    'end' => '1 month'
-                ]) ?>
+                <?php if ($isPublished) : ?>
+                    <?= __('Published') ?>
+                    <?= $article->publish_date->timeAgoInWords([
+                        'format' => 'MMM d, YYY | HH:mm',
+                        'end' => '1 month'
+                    ]) ?>
+                <?php else : ?>
+                    <?= __('Unpublished') ?> <i class="fa fa-eye-slash text-danger"></i>
+                <?php endif; ?>
                 </div>
             </div>
         </div>

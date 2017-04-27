@@ -1,4 +1,9 @@
-<?php use Cake\Event\Event; ?>
+<?php
+use Cake\Event\Event;
+use Cake\I18n\Time;
+
+$isPublished = $article->publish_date <= Time::now();
+?>
 <?php $this->start('article-box-classes') ?>
 <?php $this->end() ?>
 <?php $this->start('article-header') ?>
@@ -80,10 +85,14 @@
     ?>
     <?= $assocUrl ?>
     |
-    <?= __('Published') ?>
-    <?= $article->publish_date->timeAgoInWords([
-        'format' => 'MMM d, YYY',
-        'end' => '1 month'
-    ]) ?>
+    <?php if ($isPublished) : ?>
+        <?= __('Published') ?>
+        <?= $article->publish_date->timeAgoInWords([
+            'format' => 'MMM d, YYY',
+            'end' => '1 month'
+        ]) ?>
+    <?php else : ?>
+        <?= __('Unpublished') ?> <i class="fa fa-eye-slash text-danger"></i>
+    <?php endif; ?>
     </div>
 <?php $this->end() ?>
