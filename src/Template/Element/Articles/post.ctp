@@ -1,4 +1,6 @@
 <?php
+use Cake\I18n\Time;
+
 echo $this->Html->css(
     [
         'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
@@ -25,6 +27,10 @@ $formOptions = ['type' => 'file'];
 if (!empty($url)) {
     $formOptions['url'] = $url;
 }
+
+$publishDate = $article->publish_date ?
+    $article->publish_date->i18nFormat('yyyy-MM-dd HH:mm') :
+    Time::now()->i18nFormat('yyyy-MM-dd HH:mm');
 ?>
 <?= $this->Form->create($article, $formOptions) ?>
 <div class="row">
@@ -40,7 +46,7 @@ if (!empty($url)) {
             'required' => true,
             'class' => 'datetimepicker',
             'autocomplete' => 'off',
-            'value' => $article->publish_date ? $article->publish_date->i18nFormat('yyyy-MM-dd HH:mm') : '',
+            'value' => $publishDate,
             'templates' => [
                 'input' => '<div class="input-group">
                     <div class="input-group-addon">
