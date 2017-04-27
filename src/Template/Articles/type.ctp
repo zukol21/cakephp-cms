@@ -24,7 +24,7 @@ $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
         'articles' => $articles,
         'categories' => $categories,
         'site' => $site,
-        'article' => $article,
+        'article' => null,
         'types' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [

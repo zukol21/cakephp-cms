@@ -25,7 +25,6 @@ class CategoriesController extends AppController
         $this->set('site', $site);
         $this->set('category', $this->Categories->getBySite($id, $site, true));
         $this->set('categories', $this->Categories->getTreeList($site->id));
-        $this->set('article', $this->Categories->Articles->newEntity());
         $this->set('_serialize', ['category']);
     }
 

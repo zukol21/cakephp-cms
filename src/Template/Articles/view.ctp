@@ -36,7 +36,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
         'articles' => [$article],
         'categories' => $categories,
         'site' => $site,
-        'article' => $newArticle,
+        'article' => null,
         'types' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [

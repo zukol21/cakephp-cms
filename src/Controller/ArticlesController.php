@@ -29,7 +29,6 @@ class ArticlesController extends AppController
         $this->set('site', $site);
         $this->set('type', $typeId);
         $this->set('article', $this->Articles->getArticle($id, true));
-        $this->set('newArticle', $this->Articles->newEntity());
         $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
         $this->set('_serialize', ['article']);
     }
@@ -52,7 +51,6 @@ class ArticlesController extends AppController
         $this->set('site', $site);
         $this->set('articles', $articles);
         $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
-        $this->set('article', $this->Articles->newEntity());
         $this->set('_serialize', ['type']);
     }
 

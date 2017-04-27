@@ -36,7 +36,6 @@ class SitesController extends AppController
 
         $this->set('site', $site);
         $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
-        $this->set('article', $this->Sites->Articles->newEntity());
         $this->set('_serialize', ['site']);
     }
 

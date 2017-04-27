@@ -28,7 +28,7 @@ if (!empty($url)) {
     $formOptions['url'] = $url;
 }
 
-$publishDate = $article->publish_date ?
+$publishDate = $article && $article->publish_date ?
     $article->publish_date->i18nFormat('yyyy-MM-dd HH:mm') :
     Time::now()->i18nFormat('yyyy-MM-dd HH:mm');
 ?>

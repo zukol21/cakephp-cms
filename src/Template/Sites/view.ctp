@@ -27,7 +27,7 @@
         'articles' => $site->articles,
         'categories' => $categories,
         'site' => $site,
-        'article' => $article,
+        'article' => null,
         'types' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [
