@@ -24,11 +24,10 @@ class ArticlesController extends AppController
      */
     public function view($siteId, $typeId, $id = null)
     {
-        $site = $this->Articles->Sites->getSite($siteId);
+        $site = $this->Articles->Sites->getSite($siteId, true);
 
         $this->set('site', $site);
         $this->set('type', $typeId);
-        $this->set('types', [$typeId => $this->Articles->getTypeOptions($typeId)]);
         $this->set('article', $this->Articles->getArticle($id, true));
         $this->set('newArticle', $this->Articles->newEntity());
         $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
