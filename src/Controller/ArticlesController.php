@@ -60,11 +60,7 @@ class ArticlesController extends AppController
      */
     public function type($siteId, $typeId)
     {
-        $site = $this->Articles->getSite($siteId, [
-            'Categories' => function ($q) {
-                return $q->applyOptions(['accessCheck' => false]);
-            }
-        ]);
+        $site = $this->Articles->getSite($siteId, true);
         $articles = $this->Articles->find('all', [
             'conditions' => ['Articles.site_id' => $site->id, 'Articles.type' => $typeId],
             'contain' => [

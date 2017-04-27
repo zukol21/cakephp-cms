@@ -20,11 +20,8 @@ class CategoriesController extends AppController
      */
     public function view($siteId, $id = null)
     {
-        $site = $this->Categories->getSite($siteId, [
-            'Categories' => function ($q) {
-                return $q->applyOptions(['accessCheck' => false]);
-            }
-        ]);
+        $site = $this->Categories->getSite($siteId, true);
+
         $category = $this->Categories->getCategoryBySite($id, $site, [
             'Sites',
             'Articles' => function ($q) {
@@ -33,6 +30,7 @@ class CategoriesController extends AppController
                     ->applyOptions(['accessCheck' => false]);
             }
         ]);
+
         $categories = $this->Categories->find('treeList', [
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER

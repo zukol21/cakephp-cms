@@ -14,15 +14,23 @@ class BaseTable extends Table
      * Fetch and return Site by id or slug.
      *
      * @param string $id Site id or slug.
-     * @param array $contain Related records to contain.
+     * @param bool $associated Contain associated categories.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getSite($id, array $contain = [])
+    public function getSite($id, $associated = false)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Site id or slug cannot be empty.');
+        }
+
+        $contain = [];
+        if ($associated) {
+            $contain['Categories'] = function ($q) {
+                return $q->order(['Categories.lft' => 'ASC'])
+                    ->applyOptions(['accessCheck' => false]);
+            };
         }
 
         $query = $this->Sites->find('all', [

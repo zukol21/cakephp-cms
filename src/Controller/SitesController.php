@@ -56,7 +56,6 @@ class SitesController extends AppController
             'conditions' => ['Categories.site_id' => $site->id],
             'spacer' => self::TREE_SPACER
         ])->applyOptions(['accessCheck' => false]);
-        $article = $this->Sites->Articles->newEntity();
 
         if ($site->categories) {
             $tree = $categories->toArray();
@@ -68,6 +67,8 @@ class SitesController extends AppController
                 $category->node = $tree[$category->id];
             }
         }
+
+        $article = $this->Sites->Articles->newEntity();
 
         $this->set('site', $site);
         $this->set('categories', $categories);
