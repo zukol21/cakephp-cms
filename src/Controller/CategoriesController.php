@@ -33,7 +33,7 @@ class CategoriesController extends AppController
      * Add method
      *
      * @param string $siteId Site id or slug.
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response
      */
     public function add($siteId)
     {
@@ -42,21 +42,17 @@ class CategoriesController extends AppController
         $site = $this->Categories->Sites->getSite($siteId);
         $category = $this->Categories->newEntity();
 
-        $data = $this->request->data;
-        $data['site_id'] = $site->id;
+        $data = ['site_id' => $site->id];
+        $data = array_merge($this->request->data, $data);
+
         $category = $this->Categories->patchEntity($category, $data);
         if ($this->Categories->save($category)) {
             $this->Flash->success(__('The category has been saved.'));
-
-            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The category could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('category', $category);
-        $this->set('categories', $this->Categories->getTreeList($site->id));
-        $this->set('_serialize', ['category']);
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -64,7 +60,7 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id or slug.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Network\Response
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($siteId, $id = null)
@@ -74,21 +70,17 @@ class CategoriesController extends AppController
         $site = $this->Categories->Sites->getSite($siteId);
         $category = $this->Categories->getBySite($id, $site);
 
-        $data = $this->request->data;
-        $data['site_id'] = $site->id;
+        $data = ['site_id' => $site->id];
+        $data = array_merge($this->request->data, $data);
+
         $category = $this->Categories->patchEntity($category, $data);
         if ($this->Categories->save($category)) {
             $this->Flash->success(__('The category has been saved.'));
-
-            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The category could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('category', $category);
-        $this->set('categories', $this->Categories->getTreeList($site->id, $category->id));
-        $this->set('_serialize', ['category']);
+         return $this->redirect($this->referer());
     }
 
     /**
@@ -96,7 +88,7 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id.
-     * @return \Cake\Network\Response|null Redirects to index.
+     * @return \Cake\Network\Response
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($siteId, $id = null)
@@ -126,8 +118,8 @@ class CategoriesController extends AppController
      * @param string $siteId Site id or slug
      * @param  string $id category id
      * @param  string $action move action
+     * @return \Cake\Network\Response
      * @throws InvalidPrimaryKeyException When provided id is invalid.
-     * @return \Cake\Network\Response|null
      */
     public function moveNode($siteId, $id = null, $action = '')
     {

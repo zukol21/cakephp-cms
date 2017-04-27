@@ -61,7 +61,7 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug
      * @param string $type Site type
-     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response
      * @throws \InvalidArgumentException
      */
     public function add($siteId, $type)
@@ -92,17 +92,11 @@ class ArticlesController extends AppController
             if ($this->_isValidUpload($this->request->data)) {
                 $this->_upload($article->get('id'));
             }
-
-            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('article', $article);
-        $this->set('typeOptions', $typeOptions);
-        $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
-        $this->set('_serialize', ['article']);
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -111,7 +105,7 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug.
      * @param string $type Site type.
      * @param string|null $id Article id.
-     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Network\Response
      * @throws \InvalidArgumentException
      */
     public function edit($siteId, $type, $id = null)
@@ -141,17 +135,11 @@ class ArticlesController extends AppController
                 $this->_upload($article->get('id'));
             }
             $this->Flash->success(__('The article has been saved.'));
-
-            return $this->redirect($this->referer());
         } else {
             $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('article', $article);
-        $this->set('typeOptions', $typeOptions);
-        $this->set('categories', $this->Sites->Categories->getTreeList($site->id));
-        $this->set('_serialize', ['article']);
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -159,7 +147,7 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
-     * @return \Cake\Network\Response|null Redirects to index.
+     * @return \Cake\Network\Response
      */
     public function delete($siteId, $id = null)
     {
@@ -211,7 +199,7 @@ class ArticlesController extends AppController
      * Deletes the association and not the record or the physical file.
      *
      * @param  string $id FileStorage Id
-     * @return \Cake\Network\Response Redirecting to the referer.
+     * @return \Cake\Network\Response
      */
     public function softDeleteFeaturedImage($id = null)
     {
