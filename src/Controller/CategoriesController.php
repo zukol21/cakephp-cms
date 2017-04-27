@@ -37,20 +37,20 @@ class CategoriesController extends AppController
      */
     public function add($siteId)
     {
+        $this->request->allowMethod(['post']);
+
         $site = $this->Categories->Sites->getSite($siteId);
         $category = $this->Categories->newEntity();
 
-        if ($this->request->is('post')) {
-            $data = $this->request->data;
-            $data['site_id'] = $site->id;
-            $category = $this->Categories->patchEntity($category, $data);
-            if ($this->Categories->save($category)) {
-                $this->Flash->success(__('The category has been saved.'));
+        $data = $this->request->data;
+        $data['site_id'] = $site->id;
+        $category = $this->Categories->patchEntity($category, $data);
+        if ($this->Categories->save($category)) {
+            $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->id]);
-            } else {
-                $this->Flash->error(__('The category could not be saved. Please, try again.'));
-            }
+            return $this->redirect($this->referer());
+        } else {
+            $this->Flash->error(__('The category could not be saved. Please, try again.'));
         }
 
         $this->set('site', $site);
@@ -69,20 +69,20 @@ class CategoriesController extends AppController
      */
     public function edit($siteId, $id = null)
     {
+        $this->request->allowMethod(['patch', 'post', 'put']);
+
         $site = $this->Categories->Sites->getSite($siteId);
         $category = $this->Categories->getBySite($id, $site);
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $data = $this->request->data;
-            $data['site_id'] = $site->id;
-            $category = $this->Categories->patchEntity($category, $data);
-            if ($this->Categories->save($category)) {
-                $this->Flash->success(__('The category has been saved.'));
+        $data = $this->request->data;
+        $data['site_id'] = $site->id;
+        $category = $this->Categories->patchEntity($category, $data);
+        if ($this->Categories->save($category)) {
+            $this->Flash->success(__('The category has been saved.'));
 
-                return $this->redirect(['controller' => 'Sites', 'action' => 'view', $site->slug]);
-            } else {
-                $this->Flash->error(__('The category could not be saved. Please, try again.'));
-            }
+            return $this->redirect($this->referer());
+        } else {
+            $this->Flash->error(__('The category could not be saved. Please, try again.'));
         }
 
         $this->set('site', $site);

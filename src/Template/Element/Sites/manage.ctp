@@ -4,6 +4,11 @@
     'types' => $types,
     'categories' => $categories
 ]) ?>
+<?= $this->element('Categories/modal', [
+    'site' => $site,
+    'categories' => $site->categories,
+    'categoriesTree' => $categories
+]) ?>
 <div class="nav-tabs-custom">
     <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
         <li role="presentation">
@@ -44,11 +49,13 @@
                         <td class="actions">
                             <div class="btn-toolbar" role="toolbar">
                                 <div class="btn-group btn-group-xs" role="group">
-                                <?= $this->Html->link(
-                                    '<i class="fa fa-pencil"></i>',
-                                    ['controller' => 'Categories', 'action' => 'edit', $site->slug, $category->slug],
-                                    ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
-                                ) ?>
+                                <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
+                                    'title' => __('Edit'),
+                                    'class' => 'btn btn-default',
+                                    'escape' => false,
+                                    'data-toggle' => 'modal',
+                                    'data-target' => '#' . $category->id
+                                ]) ?>
                                 <?= $this->Form->postLink(
                                     '<i class="fa fa-trash"></i>',
                                     ['controller' => 'Categories', 'action' => 'delete', $site->slug, $category->slug],
@@ -80,11 +87,13 @@
             </table>
             <?php endif; ?>
             <div class="btn-group btn-group-sm" role="group">
-            <?= $this->Html->link(
-                '<i class="fa fa-plus"></i> ' . __('Add'),
-                ['controller' => 'Categories', 'action' => 'add', $site->slug],
-                ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
-            ) ?>
+            <?= $this->Html->link('<i class="fa fa-plus"></i> ' . __('Add'), '#', [
+                'title' => __('Create Category'),
+                'class' => 'btn btn-default',
+                'data-toggle' => 'modal',
+                'data-target' => '#add-new-category',
+                'escape' => false
+            ]) ?>
             </div>
         </div>
     </div>
