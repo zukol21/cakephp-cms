@@ -1,8 +1,8 @@
 <div class="nav-tabs-custom">
     <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
+        <li role="presentation">
             <a href="#manage-content" aria-controls="manage-content" role="tab" data-toggle="tab">
-                <?= __('Manage Content'); ?>
+                <?= __('Add Content'); ?>
             </a>
         </li>
         <li role="presentation">
@@ -12,7 +12,7 @@
         </li>
     </ul>
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="manage-content">
+        <div role="tabpanel" class="tab-pane" id="manage-content">
             <?= $this->element('Articles/new', [
                 'categories' => $categories,
                 'site' => $site,

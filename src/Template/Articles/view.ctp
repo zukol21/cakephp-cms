@@ -24,7 +24,7 @@ $this->Breadcrumbs->add($types[$article->type]['label'], [
 $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h1><?= h($article->title) ?></h1>
+    <h4><?= h($article->title) ?></h4>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
@@ -32,11 +32,11 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 </section>
 <section class="content">
     <?php
-    $element = $this->element('Articles/new', [
+    $element = $this->element('Sites/manage', [
         'categories' => $categories,
         'site' => $site,
         'article' => $newArticle,
-        'articleTypes' => $types
+        'types' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [
         'menu' => [
@@ -49,7 +49,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     ]);
     $this->eventManager()->dispatch($event);
 
-    echo $event->result ? $event->result . '<hr />' : '';
+    echo $event->result;
     ?>
     <?= $this->element('Articles/single', [
         'site' => $site,

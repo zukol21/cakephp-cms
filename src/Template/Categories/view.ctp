@@ -12,7 +12,7 @@ $this->Breadcrumbs->add($site->name, [
 $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h1><?= h($category->name) ?> <small><?= __('Category') ?></small></h1>
+    <h4><?= h($category->name) ?></h4>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
@@ -20,11 +20,11 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
 </section>
 <section class="content">
     <?php
-    $element = $this->element('Articles/new', [
+    $element = $this->element('Sites/manage', [
         'categories' => $categories,
         'site' => $site,
         'article' => $article,
-        'articleTypes' => $types
+        'types' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [
         'menu' => [
@@ -37,7 +37,7 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
     ]);
     $this->eventManager()->dispatch($event);
 
-    echo $event->result ? $event->result . '<hr />' : '';
+    echo $event->result;
     ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
