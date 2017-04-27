@@ -13,7 +13,7 @@
                         'url' => [
                             'controller' => 'Articles',
                             'action' => 'edit',
-                            $article->site->slug,
+                            $site->slug,
                             $article->type,
                             $article->slug
                         ],

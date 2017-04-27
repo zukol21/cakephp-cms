@@ -52,11 +52,13 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
             <?= $this->element('Articles/list', [
+                'site' => $site,
                 'articles' => $category->articles,
                 'articleTypes' => $types
             ]) ?>
             <?php
             $element = $this->element('Articles/modal', [
+                'site' => $site,
                 'articles' => $category->articles,
                 'articleTypes' => $types,
                 'categories' => $categories

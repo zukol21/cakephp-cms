@@ -4,21 +4,21 @@ use Cake\Event\Event;
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
-$this->Breadcrumbs->add($article->site->name, [
+$this->Breadcrumbs->add($site->name, [
     'controller' => 'Sites',
     'action' => 'view',
-    $article->site->slug
+    $site->slug
 ]);
 $this->Breadcrumbs->add($article->category->name, [
     'controller' => 'Categories',
     'action' => 'view',
-    $article->site->slug,
+    $site->slug,
     $article->category->slug
 ]);
 $this->Breadcrumbs->add($types[$article->type]['label'], [
     'controller' => 'Articles',
     'action' => 'type',
-    $article->site->slug,
+    $site->slug,
     $article->type
 ]);
 $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
@@ -34,14 +34,14 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     <?php
     $element = $this->element('Articles/new', [
         'categories' => $categories,
-        'site' => $article->site,
+        'site' => $site,
         'article' => $newArticle,
         'articleTypes' => $types
     ]);
     $event = new Event('Cms.View.element.beforeRender', $this, [
         'menu' => [
             [
-                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$article->site->id]],
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
                 'html' => $element
             ]
         ],
@@ -52,6 +52,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     echo $event->result ? $event->result . '<hr />' : '';
     ?>
     <?= $this->element('Articles/single', [
+        'site' => $site,
         'article' => $article,
         'articleTypes' => $types
     ]) ?>
@@ -64,7 +65,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     $event = new Event('Cms.View.element.beforeRender', $this, [
         'menu' => [
             [
-                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$article->site->id]],
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
                 'html' => $element
             ]
         ],

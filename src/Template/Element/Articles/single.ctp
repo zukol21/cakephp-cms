@@ -34,7 +34,7 @@ $data = ['article' => $article];
                         [
                             'controller' => 'Articles',
                             'action' => 'delete',
-                            $article->site->slug,
+                            $site->slug,
                             $article->slug
                         ],
                         [
@@ -54,7 +54,7 @@ $data = ['article' => $article];
                 <?= $this->Html->link($article->category->name, [
                     'controller' => 'Categories',
                     'action' => 'view',
-                    $article->site->slug,
+                    $site->slug,
                     $article->category->slug
                 ]) ?>
                 |
