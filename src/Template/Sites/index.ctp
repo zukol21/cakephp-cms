@@ -66,13 +66,6 @@ echo $this->Html->script(
                                         ]
                                     ) ?>
                                 </div>
-                                <div class="btn-group btn-group-xs" role="group">
-                                <?= $this->Html->link(
-                                    '<i class="fa fa-tag"></i>',
-                                    ['controller' => 'Categories', 'action' => 'add', $site->slug],
-                                    ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
-                                ) ?>
-                                </div>
                             </div>
                         </td>
                     </tr>

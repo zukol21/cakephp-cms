@@ -73,6 +73,13 @@
                 </tbody>
             </table>
             <?php endif; ?>
+            <div class="btn-group btn-group-sm" role="group">
+            <?= $this->Html->link(
+                '<i class="fa fa-plus"></i> ' . __('Add'),
+                ['controller' => 'Categories', 'action' => 'add', $site->slug],
+                ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
+            ) ?>
+            </div>
         </div>
     </div>
 </div>
