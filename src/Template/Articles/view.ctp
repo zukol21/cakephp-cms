@@ -51,28 +51,42 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 
     echo $event->result;
     ?>
-    <?= $this->element('Articles/single', [
-        'site' => $site,
-        'article' => $article,
-        'articleTypes' => $types
-    ]) ?>
-    <?php
-    $element = $this->element('Articles/modal', [
-        'categories' => $categories,
-        'articles' => [$article],
-        'articleTypes' => $types
-    ]);
-    $event = new Event('Cms.View.element.beforeRender', $this, [
-        'menu' => [
-            [
-                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
-                'html' => $element
-            ]
-        ],
-        'user' => $user
-    ]);
-    $this->eventManager()->dispatch($event);
+    <div class="row">
+        <div class="col-xs-12 col-md-3 col-md-push-9">
+            <div class="row">
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Categories/list', ['categories' => $site->categories, 'site' => $site]) ?>
+                </div>
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Types/list', ['types' => $types, 'site' => $site]) ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
+            <?= $this->element('Articles/single', [
+                'site' => $site,
+                'article' => $article,
+                'articleTypes' => $types
+            ]) ?>
+            <?php
+            $element = $this->element('Articles/modal', [
+                'site' => $site,
+                'articles' => [$article],
+                'articleTypes' => $types,
+                'categories' => $categories
+            ]);
+            $event = new Event('Cms.View.element.beforeRender', $this, [
+                'menu' => [
+                    [
+                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
+                        'html' => $element
+                    ]
+                ],
+                'user' => $user
+            ]);
+            $this->eventManager()->dispatch($event);
 
-    echo $event->result;
-    ?>
+            echo $event->result;
+            ?>
+        </div>
 </section>
