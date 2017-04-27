@@ -54,7 +54,6 @@
                                     ]
                                 ) ?>
                                 </div>
-                                <?php if ($category->parent_id) : ?>
                                 <div class="btn-group btn-group-xs" role="group">
                                     <?= $this->Form->postLink(
                                         '<i class="fa fa-arrow-up"></i>',
@@ -67,7 +66,6 @@
                                         ['title' => __('Move down'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
                                 </div>
-                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
