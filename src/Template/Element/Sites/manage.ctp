@@ -1,3 +1,9 @@
+<?= $this->element('Articles/modal', [
+    'site' => $site,
+    'articles' => $articles,
+    'types' => $types,
+    'categories' => $categories
+]) ?>
 <div class="nav-tabs-custom">
     <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
         <li role="presentation">

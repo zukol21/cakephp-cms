@@ -33,6 +33,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 <section class="content">
     <?php
     $element = $this->element('Sites/manage', [
+        'articles' => [$article],
         'categories' => $categories,
         'site' => $site,
         'article' => $newArticle,
@@ -68,25 +69,5 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
                 'article' => $article,
                 'articleTypes' => $types
             ]) ?>
-            <?php
-            $element = $this->element('Articles/modal', [
-                'site' => $site,
-                'articles' => [$article],
-                'articleTypes' => $types,
-                'categories' => $categories
-            ]);
-            $event = new Event('Cms.View.element.beforeRender', $this, [
-                'menu' => [
-                    [
-                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
-                        'html' => $element
-                    ]
-                ],
-                'user' => $user
-            ]);
-            $this->eventManager()->dispatch($event);
-
-            echo $event->result;
-            ?>
         </div>
 </section>

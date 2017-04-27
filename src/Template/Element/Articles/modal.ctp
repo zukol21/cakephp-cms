@@ -19,7 +19,7 @@
                         ],
                         'categories' => $categories,
                         'article' => $article,
-                        'typeOptions' => $articleTypes[$article->type]
+                        'typeOptions' => $types[$article->type]
                     ]); ?>
                 </div>
             </div>

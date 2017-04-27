@@ -24,6 +24,7 @@
 <section class="content">
     <?php
     $element = $this->element('Sites/manage', [
+        'articles' => $site->articles,
         'categories' => $categories,
         'site' => $site,
         'article' => $article,
@@ -59,26 +60,6 @@
                 'articles' => $site->articles,
                 'articleTypes' => $types
             ]) ?>
-            <?php
-            $element = $this->element('Articles/modal', [
-                'site' => $site,
-                'articles' => $site->articles,
-                'articleTypes' => $types,
-                'categories' => $categories
-            ]);
-            $event = new Event('Cms.View.element.beforeRender', $this, [
-                'menu' => [
-                    [
-                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
-                        'html' => $element
-                    ]
-                ],
-                'user' => $user
-            ]);
-            $this->eventManager()->dispatch($event);
-
-            echo $event->result;
-            ?>
         </div>
     </div>
 </section>
