@@ -39,11 +39,6 @@
                             <div class="btn-toolbar" role="toolbar">
                                 <div class="btn-group btn-group-xs" role="group">
                                 <?= $this->Html->link(
-                                    '<i class="fa fa-eye"></i>',
-                                    ['controller' => 'Categories', 'action' => 'view', $site->slug, $category->slug],
-                                    ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
-                                ) ?>
-                                <?= $this->Html->link(
                                     '<i class="fa fa-pencil"></i>',
                                     ['controller' => 'Categories', 'action' => 'edit', $site->slug, $category->slug],
                                     ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
