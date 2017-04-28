@@ -85,41 +85,41 @@ class CategoriesTableTest extends TestCase
     }
 
     /**
-     * Test getCategoryBySite method
+     * Test getBySite method
      *
      * @return void
      */
-    public function testGetCategoryBySite()
+    public function testGetBySite()
     {
-        $site = $this->CategoriesTable->getSite('00000000-0000-0000-0000-000000000001');
-        $result = $this->CategoriesTable->getCategoryBySite('general', $site);
+        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $result = $this->CategoriesTable->getBySite('general', $site);
         $this->assertNotEmpty($result);
         $this->assertInternalType('object', $result);
         $this->assertInstanceOf(\Cms\Model\Entity\Category::class, $result);
     }
 
     /**
-     * Test getCategoryBySite method
+     * Test getBySite method
      *
      * @return void
      * @expectedException \InvalidArgumentException
      */
-    public function testGetCategoryBySiteWithoutId()
+    public function testGetBySiteWithoutId()
     {
-        $site = $this->CategoriesTable->getSite('00000000-0000-0000-0000-000000000001');
-        $result = $this->CategoriesTable->getCategoryBySite('', $site);
+        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $result = $this->CategoriesTable->getBySite('', $site);
     }
 
     /**
-     * Test getCategoryBySite method
+     * Test getBySite method
      *
      * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      * @return void
      */
-    public function testGetCategoryBySiteWithWrongId()
+    public function testGetBySiteWithWrongId()
     {
-        $site = $this->CategoriesTable->getSite('00000000-0000-0000-0000-000000000001');
-        $result = $this->CategoriesTable->getCategoryBySite('non-existing-id', $site);
+        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $result = $this->CategoriesTable->getBySite('non-existing-id', $site);
     }
 
     /**
@@ -149,7 +149,7 @@ class CategoriesTableTest extends TestCase
      */
     public function testGetSiteById()
     {
-        $entity = $this->CategoriesTable->getSite('00000000-0000-0000-0000-000000000001');
+        $entity = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
 
         $this->assertInstanceOf(\Cake\ORM\Entity::class, $entity);
         $this->assertNotEmpty($entity->id);
@@ -162,7 +162,7 @@ class CategoriesTableTest extends TestCase
      */
     public function testGetSiteBySlug()
     {
-        $entity = $this->CategoriesTable->getSite('blog');
+        $entity = $this->CategoriesTable->Sites->getSite('blog');
 
         $this->assertInstanceOf(\Cake\ORM\Entity::class, $entity);
         $this->assertNotEmpty($entity->slug);
@@ -176,7 +176,7 @@ class CategoriesTableTest extends TestCase
      */
     public function testGetSiteWithoutId()
     {
-        $entity = $this->CategoriesTable->getSite(null);
+        $entity = $this->CategoriesTable->Sites->getSite(null);
     }
 
     /**
@@ -187,6 +187,6 @@ class CategoriesTableTest extends TestCase
      */
     public function testGetSiteWithNonExistingId()
     {
-        $entity = $this->CategoriesTable->getSite('non-existing-id');
+        $entity = $this->CategoriesTable->Sites->getSite('non-existing-id');
     }
 }
