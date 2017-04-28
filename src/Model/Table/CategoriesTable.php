@@ -137,7 +137,6 @@ class CategoriesTable extends Table
             ->andWhere(['Categories.site_id' => $site->id])
             ->contain($contain);
 
-
         return $query->firstOrFail();
     }
 
