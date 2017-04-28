@@ -42,47 +42,49 @@ class SitesController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response
      */
     public function add()
     {
-        $site = $this->Sites->newEntity();
-        if ($this->request->is('post')) {
-            $site = $this->Sites->patchEntity($site, $this->request->data);
-            if ($this->Sites->save($site)) {
-                $this->Flash->success(__('The site has been saved.'));
+        $this->request->allowMethod(['post']);
 
-                return $this->redirect(['action' => 'index']);
-            }
+        $site = $this->Sites->newEntity();
+        $site = $this->Sites->patchEntity($site, $this->request->data);
+        if ($this->Sites->save($site)) {
+            $this->Flash->success(__('The site has been saved.'));
+        } else {
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('_serialize', ['site']);
+        return $this->redirect(['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug]);
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Site id.
-     * @return \Cake\Network\Response|null Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Network\Response
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $site = $this->Sites->get($id);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $site = $this->Sites->patchEntity($site, $this->request->data);
-            if ($this->Sites->save($site)) {
-                $this->Flash->success(__('The site has been saved.'));
+        $this->request->allowMethod(['patch', 'post', 'put']);
 
-                return $this->redirect(['action' => 'view']);
-            }
+        $site = $this->Sites->get($id);
+        $site = $this->Sites->patchEntity($site, $this->request->data);
+        if ($this->Sites->save($site)) {
+            $this->Flash->success(__('The site has been saved.'));
+        } else {
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
         }
 
-        $this->set('site', $site);
-        $this->set('_serialize', ['site']);
+        $redirect = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
+        if ($site->active) {
+            $redirect['action'] = 'view';
+            $redirect[] = $site->slug;
+        }
+
+        return $this->redirect($redirect);
     }
 
     /**
@@ -102,6 +104,6 @@ class SitesController extends AppController
             $this->Flash->error(__('The site could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect($this->referer());
+        return $this->redirect(['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index']);
     }
 }

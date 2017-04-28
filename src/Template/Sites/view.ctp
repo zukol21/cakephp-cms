@@ -1,24 +1,8 @@
 <?php use Cake\Event\Event; ?>
 <section class="content-header">
-    <div class="row">
-        <div class="col-xs-12 col-md-6">
-            <h4><?= h($site->name) ?></h4>
-        </div>
-        <div class="col-xs-12 col-md-6">
-            <div class="pull-right">
-                <div class="btn-group btn-group-sm" role="group">
-                <?php
-                $event = new Event('Cms.View.topMenu.beforeRender', $this, [
-                    'menu' => [],
-                    'user' => $user
-                ]);
-                $this->eventManager()->dispatch($event);
-
-                echo $event->result;
-                ?>
-                </div>
-            </div>
-        </div>
+    <h1><?= h($site->name) ?></h1>
+    <div class="btn-group btn-group-sm toolbox pull-right" role="group">
+        <?= $this->element('Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
     </div>
 </section>
 <section class="content">

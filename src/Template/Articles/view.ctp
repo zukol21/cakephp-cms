@@ -24,7 +24,7 @@ $this->Breadcrumbs->add($types[$article->type]['label'], [
 $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h4><?= h($article->title) ?></h4>
+    <h1><?= h($article->title) ?></h1>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
