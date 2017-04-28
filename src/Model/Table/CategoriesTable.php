@@ -1,16 +1,10 @@
 <?php
 namespace Cms\Model\Table;
 
-use ArrayObject;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Event\Event;
 use Cake\ORM\Entity;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cms\Model\Entity\Category;
-use Cms\Model\Table\BaseTable;
-use DateTime;
 use InvalidArgumentException;
 
 /**
@@ -20,8 +14,16 @@ use InvalidArgumentException;
  * @property \Cake\ORM\Association\HasMany $ChildCategories
  * @property \Cake\ORM\Association\BelongsToMany $Articles
  */
-class CategoriesTable extends BaseTable
+class CategoriesTable extends Table
 {
+    const TREE_SPACER = '&nbsp;&nbsp;&nbsp;&nbsp;';
+
+    /**
+     * Categories in a tree list structure, grouped by site.
+     *
+     * @var array
+     */
+    protected $_treeList = [];
 
     /**
      * Initialize method
@@ -56,8 +58,7 @@ class CategoriesTable extends BaseTable
             'foreignKey' => 'parent_id'
         ]);
         $this->hasMany('Cms.Articles', [
-            'sort' => ['Articles.publish_date' => 'DESC'],
-            'conditions' => ['Articles.publish_date <=' => new DateTime('now')]
+            'sort' => ['Articles.publish_date' => 'DESC']
         ]);
     }
 
@@ -104,38 +105,71 @@ class CategoriesTable extends BaseTable
     /**
      * Fetch and return Category by id or slug and associated Site id.
      *
-     * @param string $id Site id or slug.
+     * @param string $id Category id or slug.
      * @param \Cake\ORM\Entity $site Site entity.
-     * @param array $contain Contain associations list (optional).
+     * @param bool $associated Contain associated articles.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getCategoryBySite($id, Entity $site, array $contain = [])
+    public function getBySite($id, Entity $site, $associated = false)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Category id or slug cannot be empty.');
         }
 
-        $query = $this->find('all', [
-            'limit' => 1,
-            'conditions' => [
-                'OR' => [
-                    'Categories.id' => $id,
-                    'Categories.slug' => $id
-                ],
-                'Categories.site_id' => $site->id
-            ],
-            'contain' => $contain
-        ]);
-
-        $result = $query->first();
-
-        if (empty($result)) {
-            throw new RecordNotFoundException('Category not found.');
+        if (!is_string($id)) {
+            throw new InvalidArgumentException('Category id or slug must be a string.');
         }
 
-        return $result;
+        $contain = [];
+        if ((bool)$associated) {
+            $contain['Articles'] = function ($q) use ($site) {
+                return $q->contain(['ArticleFeaturedImages'])
+                    ->applyOptions(['site_id' => $site->id]);
+            };
+        }
+
+        $query = $this->find('all')
+            ->limit(1)
+            ->where(['Categories.id' => $id])
+            ->orWhere(['Categories.slug' => $id])
+            ->andWhere(['Categories.site_id' => $site->id])
+            ->contain($contain);
+
+        return $query->firstOrFail();
+    }
+
+    /**
+     * Get tree list structure of site's categories.
+     *
+     * @param string $siteId Site Id.
+     * @param string $categoryId Site Id.
+     *
+     * @return array
+     */
+    public function getTreeList($siteId = '', $categoryId = '')
+    {
+        $key = $siteId . $categoryId;
+
+        if (!empty($this->_treeList[$key])) {
+            return $this->_treeList[$key];
+        }
+
+        $conditions = [];
+        if ($siteId) {
+            $conditions['Categories.site_id'] = $siteId;
+        }
+        if ($categoryId) {
+            $conditions['Categories.id !='] = $categoryId;
+        }
+
+        $this->_treeList[$key] = $this->find('treeList', [
+                'conditions' => $conditions,
+                'spacer' => static::TREE_SPACER
+            ])->toArray();
+
+        return $this->_treeList[$key];
     }
 
     /**

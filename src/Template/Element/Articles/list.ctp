@@ -1,4 +1,5 @@
 <?php
+use Cake\I18n\Time;
 use Cake\Utility\Inflector;
 
 $elements = [];
@@ -17,19 +18,25 @@ foreach ($articles as $article) {
 
     $elements[] = [
         'name' => $element,
-        'data' => [
-            'types' => $types,
-            'article' => $article
-        ]
+        'article' => $article
     ];
 }
 ?>
 <div class ="row masonry-container">
 <?php foreach ($elements as $element) : ?>
-    <?= $this->element('Articles/blocks', ['element' => $element, 'types' => $types]) ?>
-    <?= $this->element($element['name'], $element['data']) ?>
+    <?php $isPublished = $element['article']->publish_date <= Time::now() ?>
+    <?= $this->element('Articles/blocks', [
+        'site' => $site,
+        'article' => $element['article'],
+        'types' => $types
+    ]) ?>
+    <?= $this->element($element['name'], [
+        'site' => $site,
+        'article' => $element['article'],
+        'types' => $types
+    ]) ?>
     <div class="col-xs-12 item">
-        <div class="box box-solid <?= $this->fetch('article-box-classes') ?>">
+        <div class="box box-<?= !$isPublished ? 'danger' : 'solid' ?> <?= $this->fetch('article-box-classes') ?>">
             <div class="box-header with-border">
                 <?= $this->fetch('article-header') ?>
                 <div class="box-tools pull-right">

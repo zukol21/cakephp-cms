@@ -15,11 +15,13 @@ echo $this->Html->script(
     <h1>Sites
         <div class="pull-right">
             <div class="btn-group btn-group-sm" role="group">
-                <?= $this->Html->link(
-                    '<i class="fa fa-plus"></i> ' . __('Add'),
-                    ['plugin' => $this->plugin, 'controller' => $this->name, 'action' => 'add'],
-                    ['escape' => false, 'title' => __('Add'), 'class' => 'btn btn-default']
-                ) ?>
+                <?= $this->Html->link('<i class="fa fa-plus"></i> ' . __('Add'), '#', [
+                    'title' => __('Add'),
+                    'class' => 'btn btn-default',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#cms-site-add',
+                    'escape' => false
+                ]) ?>
             </div>
         </div>
     </h1>
@@ -50,28 +52,15 @@ echo $this->Html->script(
                                         ['action' => 'view', $site->slug],
                                         ['title' => __('View'), 'class' => 'btn btn-default', 'escape' => false]
                                     ) ?>
-                                    <?= $this->Html->link(
-                                        '<i class="fa fa-pencil"></i>',
-                                        ['action' => 'edit', $site->id],
-                                        ['title' => __('Edit'), 'class' => 'btn btn-default', 'escape' => false]
-                                    ) ?>
-                                    <?= $this->Form->postLink(
-                                        '<i class="fa fa-trash"></i>',
-                                        ['action' => 'delete', $site->id],
-                                        [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $site->name),
-                                            'title' => __('Delete'),
+                                    <?php if (!$site->active) : ?>
+                                        <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
+                                            'title' => __('Edit'),
                                             'class' => 'btn btn-default',
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#cms-site-edit' . $site->id,
                                             'escape' => false
-                                        ]
-                                    ) ?>
-                                </div>
-                                <div class="btn-group btn-group-xs" role="group">
-                                <?= $this->Html->link(
-                                    '<i class="fa fa-tag"></i>',
-                                    ['controller' => 'Categories', 'action' => 'add', $site->slug],
-                                    ['title' => __('Create Category'), 'class' => 'btn btn-default', 'escape' => false]
-                                ) ?>
+                                        ]) ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </td>
@@ -82,3 +71,12 @@ echo $this->Html->script(
         </div>
     </div>
 </section>
+<?= $this->element('Sites/modal', ['site' => null]) ?>
+<?php
+foreach ($sites as $site) {
+    if ($site->active) {
+        continue;
+    }
+
+    echo $this->element('Sites/modal', ['site' => $site]);
+}

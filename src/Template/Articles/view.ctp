@@ -1,22 +1,24 @@
 <?php
+use Cake\Event\Event;
+
 $this->Breadcrumbs->templates([
     'separator' => '',
 ]);
-$this->Breadcrumbs->add($article->site->name, [
+$this->Breadcrumbs->add($site->name, [
     'controller' => 'Sites',
     'action' => 'view',
-    $article->site->slug
+    $site->slug
 ]);
 $this->Breadcrumbs->add($article->category->name, [
     'controller' => 'Categories',
     'action' => 'view',
-    $article->site->slug,
+    $site->slug,
     $article->category->slug
 ]);
 $this->Breadcrumbs->add($types[$article->type]['label'], [
     'controller' => 'Articles',
     'action' => 'type',
-    $article->site->slug,
+    $site->slug,
     $article->type
 ]);
 $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
@@ -29,19 +31,43 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     ) ?>
 </section>
 <section class="content">
-    <?= $this->element('Articles/new', [
-        'categories' => $categories,
-        'site' => $article->site,
-        'article' => $newArticle,
-        'articleTypes' => $types
-    ]) ?>
-    <?= $this->element('Articles/single', [
-        'article' => $article,
-        'articleTypes' => $types
-    ]) ?>
-    <?= $this->element('Articles/modal', [
-        'categories' => $categories,
+    <?php
+    $element = $this->element('Sites/manage', [
         'articles' => [$article],
-        'articleTypes' => $types
-    ]) ?>
+        'categories' => $categories,
+        'site' => $site,
+        'article' => null,
+        'types' => $types
+    ]);
+    $event = new Event('Cms.View.element.beforeRender', $this, [
+        'menu' => [
+            [
+                'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],
+                'html' => $element
+            ]
+        ],
+        'user' => $user
+    ]);
+    $this->eventManager()->dispatch($event);
+
+    echo $event->result;
+    ?>
+    <div class="row">
+        <div class="col-xs-12 col-md-3 col-md-push-9">
+            <div class="row">
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Categories/sidebar', ['categories' => $site->categories, 'site' => $site]) ?>
+                </div>
+                <div class="col-xs-6 col-md-12">
+                    <?= $this->element('Types/sidebar', ['types' => $types, 'site' => $site]) ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
+            <?= $this->element('Articles/single', [
+                'site' => $site,
+                'article' => $article,
+                'articleTypes' => $types
+            ]) ?>
+        </div>
 </section>

@@ -13,13 +13,13 @@
                         'url' => [
                             'controller' => 'Articles',
                             'action' => 'edit',
-                            $article->site->slug,
+                            $site->slug,
                             $article->type,
                             $article->slug
                         ],
                         'categories' => $categories,
                         'article' => $article,
-                        'typeOptions' => $articleTypes[$article->type]
+                        'typeOptions' => $types[$article->type]
                     ]); ?>
                 </div>
             </div>

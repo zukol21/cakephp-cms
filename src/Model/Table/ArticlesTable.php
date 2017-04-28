@@ -3,16 +3,19 @@ namespace Cms\Model\Table;
 
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
-use Cms\Model\Table\BaseTable;
+use InvalidArgumentException;
 
 /**
  * Articles Model
  *
  */
-class ArticlesTable extends BaseTable
+class ArticlesTable extends Table
 {
     /**
      * Article types list.
@@ -130,6 +133,104 @@ class ArticlesTable extends BaseTable
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function beforeFind(Event $event, Query $query, $options)
+    {
+        $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
+
+        $event = new Event('Cms.Articles.showUnpublished', $this, ['siteId' => $siteId]);
+        $this->eventManager()->dispatch($event);
+
+        $query->order(['Articles.publish_date' => 'DESC']);
+        if (!(bool)$event->result) {
+            $query->where(['Articles.publish_date <=' => Time::now()]);
+        }
+    }
+
+    /**
+     * Fetch and return Article by id or slug.
+     *
+     * @param string $id Article id or slug.
+     * @param string $siteId Site id.
+     * @param bool $associated Contain associated articles and images.
+     * @return \Cake\ORM\Entity
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     * @throws \InvalidArgumentException
+     */
+    public function getArticle($id, $siteId = null, $associated = false)
+    {
+        if (empty($id)) {
+            throw new InvalidArgumentException('Article id or slug cannot be empty.');
+        }
+
+        if (!is_string($id)) {
+            throw new InvalidArgumentException('Article id or slug must be a string.');
+        }
+
+        $contain = [];
+        if ($associated) {
+            $contain = [
+                'Categories',
+                'ArticleFeaturedImages'
+            ];
+        }
+
+        $query = $this->find('all')
+            ->limit(1)
+            ->where(['Articles.id' => $id])
+            ->orWhere(['Articles.slug' => $id])
+            ->contain($contain)
+            ->applyOptions(['site_id' => $siteId]);
+
+        return $query->firstOrFail();
+    }
+
+    /**
+     * Fetch and return all Articles, or Articles by site, or Articles by type, or Articles by site and type.
+     *
+     * @param string $siteId Site id.
+     * @param string $type Type name.
+     * @param bool $associated Contain associated categories and images.
+     * @return \Cake\ORM\Entity
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     * @throws \InvalidArgumentException
+     */
+    public function getArticles($siteId, $type, $associated = false)
+    {
+        if (!is_string($siteId)) {
+            throw new InvalidArgumentException('Site id or slug must be a string.');
+        }
+
+        if (!is_string($type)) {
+            throw new InvalidArgumentException('Article type id or slug must be a string.');
+        }
+
+        $contain = [];
+        if ((bool)$associated) {
+            $contain = [
+                'Categories',
+                'ArticleFeaturedImages'
+            ];
+        }
+
+        $conditions = [];
+        if ($siteId) {
+            $conditions['Articles.site_id'] = $siteId;
+        }
+        if ($type) {
+            $conditions['Articles.type'] = $type;
+        }
+
+        $query = $this->find('all')
+            ->where($conditions)
+            ->contain($contain)
+            ->applyOptions(['site_id' => $siteId]);
+
+        return $query->all();
+    }
+
+    /**
      * Returns supported types.
      *
      * @param bool $withOptions Flag for including type options
@@ -142,6 +243,7 @@ class ArticlesTable extends BaseTable
         }
 
         $this->_types = Configure::read('CMS.Articles.types');
+        ksort($this->_types);
         foreach ($this->_types as $k => &$v) {
             if (!(bool)$v['enabled']) {
                 unset($this->_types[$k]);

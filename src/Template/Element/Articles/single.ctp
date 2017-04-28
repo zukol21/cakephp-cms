@@ -1,23 +1,26 @@
 <?php
+use Cake\I18n\Time;
 use Cake\Utility\Inflector;
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
 // fallback to plugin's element
 if (!$this->elementExists($element)) {
-    $element = Inflector::camelize($article->type) . '/single';
+    $element = 'Types/' . Inflector::camelize($article->type) . '/single';
 }
 
 // fallback to default element
 if (!$this->elementExists($element)) {
-    $element = 'Common/single';
+    $element = 'Types/Common/single';
 }
 
 $data = ['article' => $article];
+
+$isPublished = $article->publish_date <= Time::now();
 ?>
 <div class="row">
     <div class="col-xs-12">
-        <div class="box box-solid">
+        <div class="box box-<?= $isPublished ? 'solid' : 'danger' ?>">
             <div class="box-header with-border">
                 <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>
@@ -34,7 +37,7 @@ $data = ['article' => $article];
                         [
                             'controller' => 'Articles',
                             'action' => 'delete',
-                            $article->site->slug,
+                            $site->slug,
                             $article->slug
                         ],
                         [
@@ -54,15 +57,19 @@ $data = ['article' => $article];
                 <?= $this->Html->link($article->category->name, [
                     'controller' => 'Categories',
                     'action' => 'view',
-                    $article->site->slug,
+                    $site->slug,
                     $article->category->slug
                 ]) ?>
                 |
-                <?= __('Published') ?>
-                <?= $article->publish_date->timeAgoInWords([
-                    'format' => 'MMM d, YYY | HH:mm',
-                    'end' => '1 month'
-                ]) ?>
+                <?php if ($isPublished) : ?>
+                    <?= __('Published') ?>
+                    <?= $article->publish_date->timeAgoInWords([
+                        'format' => 'MMM d, YYY | HH:mm',
+                        'end' => '1 month'
+                    ]) ?>
+                <?php else : ?>
+                    <?= __('Unpublished') ?> <i class="fa fa-eye-slash text-danger"></i>
+                <?php endif; ?>
                 </div>
             </div>
         </div>
