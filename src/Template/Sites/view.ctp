@@ -47,10 +47,10 @@
         <div class="col-xs-12 col-md-3 col-md-push-9">
             <div class="row">
                 <div class="col-xs-6 col-md-12">
-                    <?= $this->element('Categories/list', ['categories' => $site->categories, 'site' => $site]) ?>
+                    <?= $this->element('Categories/sidebar', ['categories' => $site->categories, 'site' => $site]) ?>
                 </div>
                 <div class="col-xs-6 col-md-12">
-                    <?= $this->element('Types/list', ['types' => $types, 'site' => $site]) ?>
+                    <?= $this->element('Types/sidebar', ['types' => $types, 'site' => $site]) ?>
                 </div>
             </div>
         </div>
