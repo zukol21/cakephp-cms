@@ -31,7 +31,9 @@ class SitesTable extends Table
         $this->addBehavior('Muffin/Trash.Trash');
 
         $this->hasMany('Cms.Categories');
-        $this->hasMany('Cms.Articles');
+        $this->hasMany('Cms.Articles', [
+            'sort' => ['Articles.publish_date' => 'DESC']
+        ]);
     }
 
     /**
@@ -98,7 +100,7 @@ class SitesTable extends Table
             throw new InvalidArgumentException('Site id or slug must be a string.');
         }
 
-        $contain = $this->_getContainAssociations($categories, $articles);
+        $contain = $this->_getContainAssociations($id, $categories, $articles);
 
         $query = $this->find('all')
             ->limit(1)
@@ -125,11 +127,12 @@ class SitesTable extends Table
      * Categories are included by default, and if accessed
      * table is SitesTable, include associated articles.
      *
+     * @param string $id Site id or slug.
      * @param bool $categories Flag for containing associated categories.
      * @param bool $articles Flag for containing associated articles.
      * @return array
      */
-    protected function _getContainAssociations($categories = false, $articles = false)
+    protected function _getContainAssociations($id, $categories = false, $articles = false)
     {
         $result = [];
 
@@ -140,9 +143,9 @@ class SitesTable extends Table
         }
 
         if ((bool)$articles) {
-            $result['Articles'] = function ($q) {
-                return $q->order(['Articles.publish_date' => 'DESC'])
-                    ->contain(['ArticleFeaturedImages']);
+            $result['Articles'] = function ($q) use ($id) {
+                return $q->contain(['ArticleFeaturedImages'])
+                    ->applyOptions(['site_id' => $id]);
             };
         }
 

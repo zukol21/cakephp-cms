@@ -28,7 +28,7 @@ class ArticlesController extends AppController
 
         $this->set('site', $site);
         $this->set('type', $typeId);
-        $this->set('article', $this->Articles->getArticle($id, true));
+        $this->set('article', $this->Articles->getArticle($id, $site->id, true));
         $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
         $this->set('_serialize', ['article']);
     }
@@ -125,7 +125,7 @@ class ArticlesController extends AppController
         ];
         $data = array_merge($this->request->data, $data);
 
-        $article = $this->Articles->getArticle($id);
+        $article = $this->Articles->getArticle($id, $site->id);
         $article = $this->Articles->patchEntity($article, $data);
         if ($this->Articles->save($article)) {
             //Upload the featured image when there is one.
@@ -152,7 +152,7 @@ class ArticlesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
 
         $site = $this->Articles->Sites->getSite($siteId);
-        $article = $this->Articles->getArticle($id);
+        $article = $this->Articles->getArticle($id, $site->id);
 
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));

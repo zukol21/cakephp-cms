@@ -2,6 +2,9 @@
 namespace Cms\Model\Table;
 
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -130,15 +133,32 @@ class ArticlesTable extends Table
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function beforeFind(Event $event, Query $query, $options)
+    {
+        $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
+
+        $event = new Event('Cms.Articles.showUnpublished', $this, ['siteId' => $siteId]);
+        $this->eventManager()->dispatch($event);
+
+        $query->order(['Articles.publish_date' => 'DESC']);
+        if (!(bool)$event->result) {
+            $query->where(['Articles.publish_date <=' => Time::now()]);
+        }
+    }
+
+    /**
      * Fetch and return Article by id or slug.
      *
      * @param string $id Article id or slug.
+     * @param string $siteId Site id.
      * @param bool $associated Contain associated articles and images.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getArticle($id, $associated = false)
+    public function getArticle($id, $siteId = null, $associated = false)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Article id or slug cannot be empty.');
@@ -160,7 +180,8 @@ class ArticlesTable extends Table
             ->limit(1)
             ->where(['Articles.id' => $id])
             ->orWhere(['Articles.slug' => $id])
-            ->contain($contain);
+            ->contain($contain)
+            ->applyOptions(['site_id' => $siteId]);
 
         return $query->firstOrFail();
     }
@@ -204,7 +225,7 @@ class ArticlesTable extends Table
         $query = $this->find('all')
             ->where($conditions)
             ->contain($contain)
-            ->order(['Articles.publish_date' => 'DESC']);
+            ->applyOptions(['site_id' => $siteId]);
 
         return $query->all();
     }

@@ -5,7 +5,6 @@ use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use DateTime;
 use InvalidArgumentException;
 
 /**
@@ -59,8 +58,7 @@ class CategoriesTable extends Table
             'foreignKey' => 'parent_id'
         ]);
         $this->hasMany('Cms.Articles', [
-            'sort' => ['Articles.publish_date' => 'DESC'],
-            'conditions' => ['Articles.publish_date <=' => new DateTime('now')]
+            'sort' => ['Articles.publish_date' => 'DESC']
         ]);
     }
 
@@ -126,9 +124,9 @@ class CategoriesTable extends Table
 
         $contain = [];
         if ((bool)$associated) {
-            $contain['Articles'] = function ($q) {
-                return $q->order(['Articles.publish_date' => 'DESC'])
-                    ->contain(['ArticleFeaturedImages']);
+            $contain['Articles'] = function ($q) use ($site) {
+                return $q->contain(['ArticleFeaturedImages'])
+                    ->applyOptions(['site_id' => $site->id]);
             };
         }
 
