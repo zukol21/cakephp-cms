@@ -128,7 +128,7 @@ class CategoriesTable extends Table
         if ((bool)$associated) {
             $contain['Articles'] = function ($q) {
                 return $q->order(['Articles.publish_date' => 'DESC'])
-                    ->contain(['Sites', 'ArticleFeaturedImages']);
+                    ->contain(['ArticleFeaturedImages']);
             };
         }
 
