@@ -38,6 +38,8 @@ $publishDate = $article && $article->publish_date ?
         <?= $this->Form->input('category_id', [
             'type' => 'select',
             'options' => $categories,
+            'empty' => true,
+            'value' => isset($category) ? $category->get('id') : null,
             'class' => 'select2',
             'required' => true
         ]); ?>
