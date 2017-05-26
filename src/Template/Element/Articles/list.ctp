@@ -37,9 +37,14 @@ foreach ($articles as $article) {
     ]) ?>
     <div class="col-xs-12 item">
         <div class="box box-<?= !$isPublished ? 'danger' : 'solid' ?> <?= $this->fetch('article-box-classes') ?>">
-            <?= $this->fetch('article-header') ?>
+            <?= $this->fetch('article-header-start') ?>
+                <?= $this->fetch('article-header') ?>
+                <?= $this->fetch('article-action-buttons-start') ?>
+                    <?= $this->fetch('article-action-buttons') ?>
+                <?= $this->fetch('article-action-buttons-end') ?>
+            <?= $this->fetch('article-header-end') ?>
             <div class="box-body">
-            <?= $this->fetch('article-body') ?>
+                <?= $this->fetch('article-body') ?>
             </div>
             <?= $this->fetch('article-footer') ?>
         </div>
