@@ -43,33 +43,57 @@ $this->eventManager()->dispatch($event);
 $actionButtons = $event->result;
 
 /**
+ * BLOCK: Article action buttons start
+ */
+$this->start('article-action-buttons-start') ?>
+    <div class="box-tools pull-right">
+<?php $this->end();
+
+/**
  * BLOCK: Article action buttons
  */
-$this->start('article-action-buttons');
-    echo $actionButtons;
+$this->start('article-action-buttons'); ?>
+    <?= $actionButtons ?>
+<?php
 $this->end();
+
+/**
+ * BLOCK: Article action buttons end
+ */
+$this->start('article-action-buttons-end') ?>
+    </div>
+<?php $this->end();
+
+/**
+ * BLOCK: Article header start
+ */
+$this->start('article-header-start') ?>
+    <div class="box-header with-border">
+<?php $this->end();
 
 /**
  * BLOCK: Article header
  */
 $this->start('article-header') ?>
-    <div class="box-header with-border">
-        <i class="fa fa-<?= $types[$article->type]['icon'] ?> text-muted"></i>
-        <h3 class="box-title">
-        <?= $this->Html->link(
-            $this->Text->truncate($article->title, 35, ['exact' => false]),
-            [
-                'controller' => 'Articles',
-                'action' => 'view',
-                $site->slug,
-                $article->type,
-                $article->slug
-            ],
-            ['title' => h($article->title)]
-        ) ?></h3>
-        <div class="box-tools pull-right">
-            <?= $this->fetch('article-action-buttons') ?>
-        </div>
+    <i class="fa fa-<?= $types[$article->type]['icon'] ?> text-muted"></i>
+    <h3 class="box-title">
+    <?= $this->Html->link(
+        $this->Text->truncate($article->title, 35, ['exact' => false]),
+        [
+            'controller' => 'Articles',
+            'action' => 'view',
+            $site->slug,
+            $article->type,
+            $article->slug
+        ],
+        ['title' => h($article->title)]
+    ) ?></h3>
+<?php $this->end();
+
+/**
+ * BLOCK: Article header end
+ */
+$this->start('article-header-end') ?>
     </div>
 <?php $this->end();
 
