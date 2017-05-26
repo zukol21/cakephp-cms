@@ -43,6 +43,13 @@ $this->eventManager()->dispatch($event);
 $actionButtons = $event->result;
 
 /**
+ * BLOCK: Article action buttons
+ */
+$this->start('article-action-buttons');
+    echo $actionButtons;
+$this->end();
+
+/**
  * BLOCK: Article header
  */
 $this->start('article-header') ?>
@@ -69,8 +76,7 @@ $this->start('article-header') ?>
 /**
  * BLOCK: Article body
  */
-$this->start('article-body') ?>
-<?php
+$this->start('article-body');
 $this->end();
 
 /**
@@ -117,11 +123,4 @@ $this->end();
  * BLOCK: Article box classes
  */
 $this->start('article-box-classes');
-$this->end();
-
-/**
- * BLOCK: Article action buttons
- */
-$this->start('article-action-buttons');
-    echo $actionButtons;
 $this->end();
