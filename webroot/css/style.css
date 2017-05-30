@@ -29,6 +29,7 @@ div.mce-fullscreen {
 
 .single-item img,
 .list-item img {
-    width: 100%;
+    display: block;
+    max-width: 100%;
     height: auto;
 }
