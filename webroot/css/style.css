@@ -26,3 +26,10 @@
 div.mce-fullscreen {
     z-index: 1050;
 }
+
+.single-item img,
+.list-item img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
