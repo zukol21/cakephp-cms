@@ -4,6 +4,7 @@ namespace Cms\Model\Table;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\I18n\Time;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -50,8 +51,12 @@ class ArticlesTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Muffin/Slug.Slug');
         $this->addBehavior('Muffin/Trash.Trash');
+        $this->addBehavior('Muffin/Slug.Slug', [
+            'unique' => function (Entity $entity, $slug, $separator) {
+                return $this->_uniqueSlug($entity, $slug, $separator);
+            }
+        ]);
 
         $this->hasMany('ArticleFeaturedImages', [
             'className' => 'Cms.ArticleFeaturedImages',
@@ -293,5 +298,42 @@ class ArticlesTable extends Table
         $result = $types[$type];
 
         return $result;
+    }
+
+    /**
+     * Returns a unique slug.
+     *
+     * @param \Cake\ORM\Entity $entity Entity.
+     * @param string $slug Slug.
+     * @param string $separator Separator.
+     * @return string Unique slug.
+     */
+    protected function _uniqueSlug(Entity $entity, $slug, $separator)
+    {
+        $behavior = $this->behaviors()->Slug;
+
+        $primaryKey = $this->primaryKey();
+        $field = $this->aliasField($behavior->config('field'));
+
+        $conditions = [$field => $slug];
+        $conditions += $behavior->config('scope');
+        if ($id = $entity->{$primaryKey}) {
+            $conditions['NOT'][$this->_table->aliasField($primaryKey)] = $id;
+        }
+
+        $i = 0;
+        $suffix = '';
+        $length = $behavior->config('length');
+
+        while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
+            $i++;
+            $suffix = $separator . $i;
+            if ($length && $length < mb_strlen($slug . $suffix)) {
+                $slug = mb_substr($slug, 0, $length - mb_strlen($suffix));
+            }
+            $conditions[$field] = $slug . $suffix;
+        }
+
+        return $slug . $suffix;
     }
 }
