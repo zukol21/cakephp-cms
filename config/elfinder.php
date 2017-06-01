@@ -33,7 +33,9 @@ return [
                             'hidden' => true
                         ],
                     ],
+                    'tmbPathMode' => 0755,
                     'tmbPath' => 'thumbnails',
+                    'tmbSize' => 256,
                     'uploadOverwrite' => false,
                     'checkSubfolders' => false,
                     'disabled' => []
