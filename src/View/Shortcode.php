@@ -95,7 +95,11 @@ class Shortcode
             $thumbPath = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
 
             $image = $view->Html->image($thumbPath, ['class' => 'thumbnail']);
-            $result .= '<div class="col-xs-4 col-md-3 col-lg-2">' . $image . '</div>';
+            $link = $view->Html->link($image, $options['roots'][0]['URL'] . '/' . $file->getFilename(), [
+                'data-lightbox' => 'gallery',
+                'escape' => false
+            ]);
+            $result .= '<div class="col-xs-4 col-md-3 col-lg-2">' . $link . '</div>';
         }
         $result .= '</div>';
 
