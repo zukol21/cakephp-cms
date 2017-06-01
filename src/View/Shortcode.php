@@ -1,9 +1,11 @@
 <?php
 namespace Cms\View;
 
+use Cake\Core\Configure;
 use Cake\View\View;
 use Cms\Model\Entity\Article;
 use DirectoryIterator;
+use elFinder;
 use Exception;
 
 class Shortcode
@@ -80,8 +82,20 @@ class Shortcode
                 continue;
             }
 
-            $image = $view->Html->image('/uploads/' . $path . '/' . $file->getFilename(), ['class' => 'thumbnail']);
-            $result .= '<div class="col-xs-6 col-md-3">' . $image . '</div>';
+            $options = Configure::read('TinymceElfinder.options');
+
+            $elFinder = new elFinder($options);
+            $volume = $elFinder->getVolume('l' . $options['roots'][0]['id'] . '_');
+
+            $hash = $volume->getHash(dirname($file->getPathname()), $file->getFilename());
+            $stat = $volume->file($hash);
+
+            $tmbname = $stat['hash'] . $stat['ts'] . '.png';
+
+            $thumbPath = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
+
+            $image = $view->Html->image($thumbPath, ['class' => 'thumbnail']);
+            $result .= '<div class="col-xs-4 col-md-3 col-lg-2">' . $image . '</div>';
         }
         $result .= '</div>';
 
