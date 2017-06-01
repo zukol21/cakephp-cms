@@ -33,3 +33,9 @@ div.mce-fullscreen {
     max-width: 100%;
     height: auto;
 }
+
+.single-item iframe, object, embed,
+.list-item iframe, object, embed {
+    max-width: 100%;
+    max-height: 100%;
+}
