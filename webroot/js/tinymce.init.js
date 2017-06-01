@@ -9,6 +9,16 @@
         }
 
         config.file_browser_callback = elFinderBrowser;
+        config.setup = function (editor) {
+            editor.addButton('gallery', {
+                tooltip: 'Insert gallery',
+                icon: 'image',
+                onclick: function () {
+                    editor.insertContent('[gallery path=""]');
+                }
+            });
+        };
+
         tinyMCE.init(config);
     });
 
