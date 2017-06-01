@@ -24,6 +24,7 @@ return [
             'debug' => true,
             'roots' => [
                 [
+                    'id' => 'cms_uploads',
                     'driver' => 'LocalFileSystem', // driver for accessing file system (REQUIRED]
                     'URL' => Router::fullBaseUrl() . '/uploads/cms', // upload main folder
                     'path' => WWW_ROOT . 'uploads/cms', // path to files (REQUIRED]
