@@ -1,6 +1,7 @@
 <?php
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
+use Cms\View\Shortcode;
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
@@ -12,6 +13,10 @@ if (!$this->elementExists($element)) {
 // fallback to default element
 if (!$this->elementExists($element)) {
     $element = 'Types/Common/single';
+}
+
+if (!empty($types[$article->type]['fields'])) {
+    $article = Shortcode::parse($article, $types[$article->type]['fields'], $this);
 }
 
 $data = ['article' => $article];
