@@ -7,12 +7,11 @@
         <ul class="nav nav-stacked">
             <?php foreach ($categories as $category) : ?>
             <li>
-                <?= $this->Html->link($category->name, [
-                    'controller' => 'Categories',
-                    'action' => 'view',
-                    $site->slug,
-                    $category->slug
-                ]) ?>
+                <?= $this->Html->link(
+                    $category->node,
+                    ['controller' => 'Categories', 'action' => 'view', $site->slug, $category->slug],
+                    ['escape' => false]
+                ) ?>
             </li>
             <?php endforeach; ?>
         </ul>
