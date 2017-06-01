@@ -12,7 +12,7 @@
         config.setup = function (editor) {
             editor.addButton('gallery', {
                 tooltip: 'Insert gallery',
-                icon: 'image',
+                icon: 'preview',
                 onclick: function () {
                     editor.insertContent('[gallery path=""]');
                 }
