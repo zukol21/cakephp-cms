@@ -95,7 +95,7 @@ class Shortcode
             $thumbPath = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
 
             $image = $view->Html->image($thumbPath, ['class' => 'thumbnail']);
-            $link = $view->Html->link($image, $options['roots'][0]['URL'] . '/' . $file->getFilename(), [
+            $link = $view->Html->link($image, '/' . $path . '/' . $file->getFilename(), [
                 'data-lightbox' => 'gallery',
                 'escape' => false
             ]);
