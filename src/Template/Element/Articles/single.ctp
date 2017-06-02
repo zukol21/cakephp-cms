@@ -1,6 +1,11 @@
 <?php
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
+use Cms\View\Shortcode;
+
+// load lightbox library
+$this->Html->css('Qobo/Utils./plugins/lightbox2/css/lightbox.min', ['block' => 'css']);
+$this->Html->script('Qobo/Utils./plugins/lightbox2/js/lightbox.min', ['block' => 'scriptBotton']);
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
@@ -12,6 +17,10 @@ if (!$this->elementExists($element)) {
 // fallback to default element
 if (!$this->elementExists($element)) {
     $element = 'Types/Common/single';
+}
+
+if (!empty($types[$article->type]['fields'])) {
+    $article = Shortcode::parse($article, $types[$article->type]['fields'], $this);
 }
 
 $data = ['article' => $article];
