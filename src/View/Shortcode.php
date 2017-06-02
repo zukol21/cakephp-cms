@@ -67,7 +67,7 @@ class Shortcode
         $path = trim($path, DIRECTORY_SEPARATOR);
 
         try {
-            $it = new DirectoryIterator(WWW_ROOT . 'uploads' . DIRECTORY_SEPARATOR . $path);
+            $it = new DirectoryIterator(WWW_ROOT . $path);
         } catch (Exception $e) {
             return '<div class="alert alert-danger" role="alert">Failed to find files in: ' . $path . '</div>';
         }
