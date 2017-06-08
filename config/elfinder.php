@@ -37,7 +37,7 @@ return [
                     'tmbPathMode' => 0755,
                     'tmbPath' => 'thumbnails',
                     'tmbSize' => 150,
-                    'uploadOverwrite' => false,
+                    'uploadOverwrite' => true,
                     'checkSubfolders' => false,
                     'disabled' => []
                 ]
