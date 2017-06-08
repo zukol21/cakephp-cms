@@ -107,12 +107,11 @@ class CategoriesTable extends Table
      *
      * @param string $id Category id or slug.
      * @param \Cake\ORM\Entity $site Site entity.
-     * @param bool $associated Contain associated articles.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getBySite($id, Entity $site, $associated = false)
+    public function getBySite($id, Entity $site)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Category id or slug cannot be empty.');
@@ -122,20 +121,11 @@ class CategoriesTable extends Table
             throw new InvalidArgumentException('Category id or slug must be a string.');
         }
 
-        $contain = [];
-        if ((bool)$associated) {
-            $contain['Articles'] = function ($q) use ($site) {
-                return $q->contain(['ArticleFeaturedImages'])
-                    ->applyOptions(['site_id' => $site->id]);
-            };
-        }
-
         $query = $this->find('all')
             ->limit(1)
             ->where(['Categories.id' => $id])
             ->orWhere(['Categories.slug' => $id])
-            ->andWhere(['Categories.site_id' => $site->id])
-            ->contain($contain);
+            ->andWhere(['Categories.site_id' => $site->id]);
 
         return $query->firstOrFail();
     }
