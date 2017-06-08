@@ -5,6 +5,7 @@ return [
     'TinymceElfinder' => [
         'title' => 'File Manager',
         'client_options' => [
+            'requestType' => 'post',
             'width' => 900,
             'height' => 500,
             'resizable' => 'yes',
@@ -37,7 +38,8 @@ return [
                     'tmbPathMode' => 0755,
                     'tmbPath' => 'thumbnails',
                     'tmbSize' => 150,
-                    'uploadOverwrite' => false,
+                    'uploadOverwrite' => true,
+                    'uploadMaxSize' => (string)ini_get('upload_max_filesize'),
                     'checkSubfolders' => false,
                     'disabled' => []
                 ]
