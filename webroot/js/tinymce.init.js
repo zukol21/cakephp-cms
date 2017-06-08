@@ -26,6 +26,7 @@
                             // trimming out base url and trailing filename.
                             source = source.match(/.*\//).toString();
                             source = source.replace(window.location.origin, '');
+                            source = decodeURI(source);
 
                             editor.selection.setContent('[gallery path="' + source + '"]');
                         }
