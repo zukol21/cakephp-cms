@@ -5,6 +5,7 @@ return [
     'TinymceElfinder' => [
         'title' => 'File Manager',
         'client_options' => [
+            'requestType' => 'post',
             'width' => 900,
             'height' => 500,
             'resizable' => 'yes',
