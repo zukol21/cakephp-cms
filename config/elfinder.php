@@ -38,6 +38,7 @@ return [
                     'tmbPath' => 'thumbnails',
                     'tmbSize' => 150,
                     'uploadOverwrite' => true,
+                    'uploadMaxSize' => (string)ini_get('upload_max_filesize'),
                     'checkSubfolders' => false,
                     'disabled' => []
                 ]
