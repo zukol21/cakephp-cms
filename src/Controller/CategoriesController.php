@@ -37,6 +37,7 @@ class CategoriesController extends AppController
         $this->set('site', $site);
         $this->set('category', $category);
         $this->set('categories', $categories);
+        $this->set(compact('site', 'category', 'categories'));
         $this->set('_serialize', ['category']);
     }
 
