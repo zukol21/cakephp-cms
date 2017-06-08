@@ -34,9 +34,6 @@ class CategoriesController extends AppController
         $articles = $this->Categories->Articles->getArticlesByCategory($categoryIds);
         $category->articles = $articles->toArray();
 
-        $this->set('site', $site);
-        $this->set('category', $category);
-        $this->set('categories', $categories);
         $this->set(compact('site', 'category', 'categories'));
         $this->set('_serialize', ['category']);
     }
