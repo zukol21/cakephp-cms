@@ -21,10 +21,20 @@ class CategoriesController extends AppController
     public function view($siteId, $id = null)
     {
         $site = $this->Categories->Sites->getSite($siteId, true);
+        $category = $this->Categories->getBySite($id, $site);
+        $categories = $this->Categories->getTreeList($site->id);
 
-        $this->set('site', $site);
-        $this->set('category', $this->Categories->getBySite($id, $site, true));
-        $this->set('categories', $this->Categories->getTreeList($site->id));
+        $categoryIds = [];
+        $query = $this->Categories->find('list')->where(['Categories.parent_id' => $category->id]);
+        if (!$query->isEmpty()) {
+            $categoryIds = array_keys($query->toArray());
+        }
+        $categoryIds[] = $category->id;
+
+        $articles = $this->Categories->Articles->getArticlesByCategory($categoryIds);
+        $category->articles = $articles->toArray();
+
+        $this->set(compact('site', 'category', 'categories'));
         $this->set('_serialize', ['category']);
     }
 

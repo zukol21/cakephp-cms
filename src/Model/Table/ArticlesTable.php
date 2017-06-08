@@ -6,6 +6,7 @@ use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Cake\ORM\ResultSet;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -298,6 +299,21 @@ class ArticlesTable extends Table
         $result = $types[$type];
 
         return $result;
+    }
+
+    /**
+     * Returns specified category(ies) articles.
+     *
+     * @param array $ids Category(ies) ID(s)
+     * @return \Cake\ORM\ResultSet
+     */
+    public function getArticlesByCategory(array $ids)
+    {
+        $query = $this->find('all')
+            ->where(['Articles.category_id IN' => $ids])
+            ->contain(['ArticleFeaturedImages']);
+
+        return $query->all();
     }
 
     /**
