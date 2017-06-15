@@ -34,10 +34,16 @@ class AppController extends BaseController
             return;
         }
 
-        // pass article types to all views
+        // pass article types to all Views
         $this->set('types', $table->getTypes());
 
+        $searchQuery = $this->request->query('q') ?: '';
+
+        $searchTitle = $searchQuery ? __('Search Results for') . ' \'' . $searchQuery . '\'' : '';
+        // pass search title to all Views
+        $this->set('searchTitle', $searchTitle);
+
         // set search query on Articles table
-        $table->setSearchQuery($this->request->query('q') ?: '');
+        $table->setSearchQuery($searchQuery);
     }
 }
