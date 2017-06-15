@@ -38,6 +38,20 @@ class ArticlesTable extends Table
     ];
 
     /**
+     * Search query string.
+     *
+     * @var string
+     */
+    protected $_searchQuery = '';
+
+    /**
+     * Article searchable fields.
+     *
+     * @var string
+     */
+    protected $_searchableFields = ['title', 'excerpt', 'content'];
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -152,6 +166,58 @@ class ArticlesTable extends Table
         if (!(bool)$event->result) {
             $query->where(['Articles.publish_date <=' => Time::now()]);
         }
+
+        $searchQuery = $this->getSearchQuery();
+
+        if (!empty($searchQuery)) {
+            $this->applySearch($query, $searchQuery);
+        }
+    }
+
+    /**
+     * Search query getter.
+     *
+     * @return string
+     */
+    public function getSearchQuery()
+    {
+        return $this->_searchQuery;
+    }
+
+    /**
+     * Search query setter.
+     *
+     * @param string $searchQuery Search query string
+     * @return void
+     */
+    public function setSearchQuery($searchQuery)
+    {
+        if (!is_string($searchQuery)) {
+            throw new InvalidArgumentException('Search query must be a string.');
+        }
+
+        $this->_searchQuery = $searchQuery;
+    }
+
+    /**
+     * Apply search query value to the provided Query instance.
+     *
+     * @param \Cake\ORM\Query $query Query instance
+     * @param string $searchQuery Search query value
+     * @return void
+     */
+    public function applySearch(Query $query, $searchQuery)
+    {
+        if (empty($searchQuery)) {
+            return;
+        }
+
+        $conditions = [];
+        foreach ($this->_searchableFields as $field) {
+            $conditions[$this->aliasField($field) . ' LIKE'] = '%' . $searchQuery . '%';
+        }
+
+        $query->where(['OR' => $conditions]);
     }
 
     /**
