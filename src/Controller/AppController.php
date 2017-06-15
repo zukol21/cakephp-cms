@@ -3,6 +3,7 @@ namespace Cms\Controller;
 
 use App\Controller\AppController as BaseController;
 use Cake\Event\Event;
+use Cms\Model\Table\ArticlesTable;
 
 class AppController extends BaseController
 {
@@ -26,13 +27,14 @@ class AppController extends BaseController
     {
         parent::beforeFilter($event);
 
-        if ($this->{$this->name}->association('Articles')) {
-            // pass article types to all views
-            $this->set('types', $this->{$this->name}->Articles->getTypes());
+        $table = $this->{$this->name};
+        $table = $table->association('Articles') ? $this->{$this->name}->Articles->target() : $table;
+
+        if (!$table instanceof ArticlesTable) {
+            return;
         }
 
-        if ('Articles' === $this->name) {
-            $this->set('types', $this->Articles->getTypes());
-        }
+        // pass article types to all views
+        $this->set('types', $table->getTypes());
     }
 }
