@@ -166,6 +166,12 @@ class ArticlesTable extends Table
         if (!(bool)$event->result) {
             $query->where(['Articles.publish_date <=' => Time::now()]);
         }
+
+        $searchQuery = $this->getSearchQuery();
+
+        if (!empty($searchQuery)) {
+            $this->applySearch($query, $searchQuery);
+        }
     }
 
     /**
@@ -191,6 +197,27 @@ class ArticlesTable extends Table
         }
 
         $this->_searchQuery = $searchQuery;
+    }
+
+    /**
+     * Apply search query value to the provided Query instance.
+     *
+     * @param \Cake\ORM\Query $query Query instance
+     * @param string $searchQuery Search query value
+     * @return void
+     */
+    public function applySearch(Query $query, $searchQuery)
+    {
+        if (empty($searchQuery)) {
+            return;
+        }
+
+        $conditions = [];
+        foreach ($this->_searchableFields as $field) {
+            $conditions[$this->aliasField($field) . ' LIKE'] = '%' . $searchQuery . '%';
+        }
+
+        $query->where(['OR' => $conditions]);
     }
 
     /**
