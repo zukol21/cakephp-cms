@@ -12,7 +12,7 @@ $this->Breadcrumbs->add($site->name, [
 $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
 ?>
 <section class="content-header">
-    <h1><?= h($types[$type]['label']) ?></h1>
+    <h1><?= h($types[$type]['label']) ?> <small><?= $searchTitle ?></small></h1>
     <?= $this->Breadcrumbs->render(
         ['class' => 'breadcrumb'],
         ['separator' => false]
