@@ -45,6 +45,13 @@ class ArticlesTable extends Table
     protected $_searchQuery = '';
 
     /**
+     * Article searchable fields.
+     *
+     * @var string
+     */
+    protected $_searchableFields = ['title', 'excerpt', 'content'];
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
