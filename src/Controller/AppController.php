@@ -36,5 +36,8 @@ class AppController extends BaseController
 
         // pass article types to all views
         $this->set('types', $table->getTypes());
+
+        // set search query on Articles table
+        $table->setSearchQuery($this->request->query('q') ?: '');
     }
 }

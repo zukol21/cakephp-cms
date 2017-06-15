@@ -38,6 +38,13 @@ class ArticlesTable extends Table
     ];
 
     /**
+     * Search query string.
+     *
+     * @var string
+     */
+    protected $_searchQuery = '';
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -152,6 +159,21 @@ class ArticlesTable extends Table
         if (!(bool)$event->result) {
             $query->where(['Articles.publish_date <=' => Time::now()]);
         }
+    }
+
+    /**
+     * Search query setter.
+     *
+     * @param string $searchQuery Search query string
+     * @return void
+     */
+    public function setSearchQuery($searchQuery)
+    {
+        if (!is_string($searchQuery)) {
+            throw new InvalidArgumentException('Search query must be a string.');
+        }
+
+        $this->_searchQuery = $searchQuery;
     }
 
     /**
