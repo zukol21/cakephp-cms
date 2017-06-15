@@ -169,6 +169,16 @@ class ArticlesTable extends Table
     }
 
     /**
+     * Search query getter.
+     *
+     * @return string
+     */
+    public function getSearchQuery()
+    {
+        return $this->_searchQuery;
+    }
+
+    /**
      * Search query setter.
      *
      * @param string $searchQuery Search query string
