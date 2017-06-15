@@ -1,6 +1,6 @@
 <?php use Cake\Event\Event; ?>
 <section class="content-header">
-    <h1><?= h($site->name) ?></h1>
+    <h1><?= h($site->name) ?> <small><?= $searchTitle ?></small></h1>
     <div class="btn-group btn-group-sm toolbox pull-right" role="group">
         <?= $this->element('Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
     </div>
