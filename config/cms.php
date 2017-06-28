@@ -26,6 +26,21 @@ return [
                         ],
                     ]
                 ],
+                'document' => [
+                    'enabled' => true,
+                    'label' => 'Document',
+                    'icon' => 'file-text',
+                    'fields' => [
+                        'Name' => [
+                            'field' => 'title'
+                        ],
+                        'Description' => [
+                            'field' => 'content',
+                            'renderAs' => 'textarea',
+                            'editor' => true
+                        ]
+                    ]
+                ],
                 'gallery' => [
                     'enabled' => true,
                     'label' => 'Gallery',
