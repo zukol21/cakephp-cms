@@ -1,0 +1,1 @@
+<?= $this->Text->autoParagraph($article->content) ?>
