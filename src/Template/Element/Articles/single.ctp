@@ -1,4 +1,5 @@
 <?php
+use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
 use Cms\View\Shortcode;
@@ -34,28 +35,45 @@ $isPublished = $article->publish_date <= Time::now();
                 <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>
                 <div class="box-tools pull-right">
-                    <?= $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
-                        'title' => __('Edit'),
-                        'class' => 'btn btn-box-tool',
-                        'escape' => false,
-                        'data-toggle' => 'modal',
-                        'data-target' => '#' . $article->slug
-                    ]) ?>
-                    <?= $this->Form->postLink(
-                        '<i class="fa fa-trash"></i>',
-                        [
-                            'controller' => 'Articles',
-                            'action' => 'delete',
-                            $site->slug,
-                            $article->slug
-                        ],
-                        [
-                            'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
-                            'title' => __('Delete'),
+                    <?php
+                    $buttons = [];
+                    $buttons[] = [
+                        'html' => $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
+                            'title' => __('Edit'),
                             'class' => 'btn btn-box-tool',
-                            'escape' => false
-                        ]
-                    ) ?>
+                            'escape' => false,
+                            'data-toggle' => 'modal',
+                            'data-target' => '#' . $article->slug
+                        ]),
+                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
+                    ];
+                    $buttons[] = [
+                        'html' => $this->Form->postLink(
+                            '<i class="fa fa-trash"></i>',
+                            [
+                                'controller' => 'Articles',
+                                'action' => 'delete',
+                                $site->slug,
+                                $article->slug
+                            ],
+                            [
+                                'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
+                                'title' => __('Delete'),
+                                'class' => 'btn btn-box-tool',
+                                'escape' => false
+                            ]
+                        ),
+                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
+                    ];
+
+                    $event = new Event('Cms.View.element.beforeRender', $this, [
+                        'menu' => $buttons,
+                        'user' => $user
+                    ]);
+                    $this->eventManager()->dispatch($event);
+
+                    echo $event->result;
+                    ?>
                 </div>
             </div>
             <div class="box-body">
