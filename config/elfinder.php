@@ -22,7 +22,8 @@ return [
             ]
         ],
         'options' => [
-            'debug' => true,
+            // enabling debug modifies output buffering which causes rendering issues (task #4084)
+            'debug' => false,
             'roots' => [
                 [
                     'id' => 'cms_uploads',
