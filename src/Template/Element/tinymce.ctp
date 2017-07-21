@@ -1,9 +1,18 @@
 <?php
 use Cake\Core\Configure;
 
+// get elFinder script
+$elFinderHtml = $this->TinymceElfinder->defineElfinderBrowser(true);
+
+// strip out < script > tags
+$dom = new DOMDocument();
+$dom->loadHtml($elFinderHtml);
+$script = $dom->getElementsByTagName('script');
+$elFinderHtml = trim($script->item(0)->nodeValue);
+
 // load tinyMCE editor and elFinder file manager
 echo $this->Html->script('Cms./plugins/tinymce/tinymce.min', ['block' => 'scriptBotton']);
-echo $this->TinymceElfinder->defineElfinderBrowser(true);
+echo $this->Html->scriptBlock($elFinderHtml, ['block' => 'scriptBotton']);
 
 // initialize tinyMCE
 echo $this->Html->scriptBlock(
