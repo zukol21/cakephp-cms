@@ -2,6 +2,12 @@
 // CMS plugin configuration
 return [
     'CMS' => [
+        'Sidebar' => [
+            'display' => [
+                'categories' => true,
+                'types' => true
+            ]
+        ],
         'Articles' => [
             'types' => [
                 'article' => [

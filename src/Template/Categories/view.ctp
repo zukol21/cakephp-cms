@@ -42,14 +42,7 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
     ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
-            <div class="row">
-                <div class="col-xs-6 col-md-12">
-                    <?= $this->element('Categories/sidebar', ['categories' => $site->categories, 'site' => $site]) ?>
-                </div>
-                <div class="col-xs-6 col-md-12">
-                    <?= $this->element('Types/sidebar', ['types' => $types, 'site' => $site]) ?>
-                </div>
-            </div>
+            <?= $this->element('Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
             <?= $this->element('Articles/list', [
