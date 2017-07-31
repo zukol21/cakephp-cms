@@ -21,21 +21,36 @@ You can install this plugin into your CakePHP application using [composer](http:
 The recommended way to install composer packages is:
 
 Install plugin
+
 ```
 composer require qobo/cakephp-cms
 ```
 
-Load plugin
-```
-bin/cake plugin load Cms
-```
+Load required plugins
 
-Load required plugin(s)
 ```
+bin/cake plugin load Qobo/Utils --bootstrap
 bin/cake plugin load Muffin/Trash
 bin/cake plugin load Muffin/Slug
 bin/cake plugin load CakephpTinymceElfinder --routes
+bin/cake plugin load Burzum/FileStorage
 ```
+
+Load plugin
+
+```
+bin/cake plugin load Cms --routes --bootstrap
+
+```
+
+Run migrations
+
+```
+bin/cake migrations migrate -p Burzum/FileStorage
+bin/cake migrations migrate -p Cms
+```
+
+Navigate to `/cms/sites/` to get started.
 
 ## WYSIWYG editor
 
