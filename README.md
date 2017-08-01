@@ -32,7 +32,6 @@ Load required plugins
 bin/cake plugin load Qobo/Utils --bootstrap
 bin/cake plugin load Muffin/Trash
 bin/cake plugin load Muffin/Slug
-bin/cake plugin load CakephpTinymceElfinder --routes
 bin/cake plugin load Burzum/FileStorage
 bin/cake plugin load CakephpTinymceElfinder --routes
 ```
