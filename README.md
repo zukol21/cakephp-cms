@@ -63,6 +63,14 @@ public function initialize()
 }
 ```
 
+To load site management UI component add below lines to your application's bootstrap file.
+
+```php
+// config/bootstrap.php
+use Cms\Event\View\SitesManageListener;
+EventManager::instance()->on(new SitesManageListener());
+```
+
 Navigate to `/cms/sites/` to get started.
 
 ## WYSIWYG editor
