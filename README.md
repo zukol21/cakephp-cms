@@ -67,11 +67,16 @@ To load site management UI component add below lines to your application's boots
 
 ```php
 // config/bootstrap.php
+use Cake\Event\EventManager;
 use Cms\Event\View\SitesManageListener;
 EventManager::instance()->on(new SitesManageListener());
 ```
 
-Navigate to `/cms/sites/` to get started.
+Note, that some of the plugin functionality relies on user authentication being implemented.
+You can either follow the instructions [here](https://book.cakephp.org/3.0/en/tutorials-and-examples/blog-auth-example/auth.html)
+or update the references to the Auth component in relevant controllers, models, and template.
+
+Once all is done, navigate to `/cms/sites/` to get started with the content management.
 
 ## WYSIWYG editor
 
