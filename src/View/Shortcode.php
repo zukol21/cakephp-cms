@@ -92,7 +92,13 @@ class Shortcode
 
             $tmbname = $stat['hash'] . $stat['ts'] . '.png';
 
+            $thumbPath = $options['roots'][0]['path'] . DS . $options['roots'][0]['tmbPath'] . DS . $tmbname;
             $thumbUrl = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
+
+            // generate non-existing thumbnail
+            if (!file_exists($thumbPath)) {
+                $volume->tmb($hash);
+            }
 
             $image = $view->Html->image($thumbUrl, ['class' => 'thumbnail']);
             $link = $view->Html->link($image, '/' . $path . '/' . $file->getFilename(), [
