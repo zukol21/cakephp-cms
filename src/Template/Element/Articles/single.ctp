@@ -2,6 +2,7 @@
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
+use Cms\Event\EventName;
 use Cms\View\Shortcode;
 
 // load lightbox library
@@ -66,7 +67,7 @@ $isPublished = $article->publish_date <= Time::now();
                         'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
                     ];
 
-                    $event = new Event('Cms.View.element.beforeRender', $this, [
+                    $event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
                         'menu' => $buttons,
                         'user' => $user
                     ]);

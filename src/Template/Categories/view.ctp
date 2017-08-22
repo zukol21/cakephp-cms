@@ -1,5 +1,6 @@
 <?php
 use Cake\Event\Event;
+use Cms\Event\EventName;
 
 $this->Breadcrumbs->templates([
     'separator' => '',
@@ -27,7 +28,7 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
         'article' => null,
         'types' => $types
     ]);
-    $event = new Event('Cms.View.element.beforeRender', $this, [
+    $event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
         'menu' => [
             [
                 'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]],

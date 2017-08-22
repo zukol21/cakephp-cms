@@ -1,5 +1,6 @@
 <?php
 use Cake\Event\Event;
+use Cms\Event\EventName;
 
 $menu = [];
 
@@ -40,7 +41,7 @@ $menu[] = [
     )
 ];
 
-$event = new Event('Cms.Sites.toolbar.beforeRender', $this, [
+$event = new Event((string)EventName::VIEW_TOOLBAR_BEFORE_RENDER(), $this, [
     'menu' => $menu,
     'user' => $user
 ]);

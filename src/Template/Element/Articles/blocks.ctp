@@ -1,6 +1,7 @@
 <?php
 use Cake\Event\Event;
 use Cake\I18n\Time;
+use Cms\Event\EventName;
 
 $isPublished = $article->publish_date <= Time::now();
 
@@ -34,7 +35,7 @@ $buttons[] = [
     'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
 ];
 
-$event = new Event('Cms.View.element.beforeRender', $this, [
+$event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
     'menu' => $buttons,
     'user' => $user
 ]);
