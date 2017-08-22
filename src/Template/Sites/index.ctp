@@ -7,7 +7,7 @@ echo $this->Html->script(
         'Cms.datatables.init'
     ],
     [
-        'block' => 'scriptBotton'
+        'block' => 'scriptBottom'
     ]
 );
 ?>

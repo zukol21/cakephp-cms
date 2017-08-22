@@ -20,7 +20,7 @@ echo $this->Html->script(
         'Cms.select2.init',
         'Cms.datetimepicker.init',
     ],
-    ['block' => 'scriptBotton']
+    ['block' => 'scriptBottom']
 );
 
 $formOptions = ['type' => 'file'];

@@ -6,7 +6,7 @@ use Cms\View\Shortcode;
 
 // load lightbox library
 $this->Html->css('Qobo/Utils./plugins/lightbox2/css/lightbox.min', ['block' => 'css']);
-$this->Html->script('Qobo/Utils./plugins/lightbox2/js/lightbox.min', ['block' => 'scriptBotton']);
+$this->Html->script('Qobo/Utils./plugins/lightbox2/js/lightbox.min', ['block' => 'scriptBottom']);
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
