@@ -4,8 +4,11 @@
         showDropdowns: true,
         timePicker: true,
         drops: 'down',
-        timePicker12Hour: false,
+        timePicker24Hour: true,
         timePickerIncrement: 5,
-        format: 'YYYY-MM-DD HH:mm'
+        locale: {
+            format: 'YYYY-MM-DD HH:mm',
+            firstDay: 1
+        }
     });
 })(jQuery);
