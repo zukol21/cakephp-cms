@@ -3,10 +3,11 @@ use Cake\I18n\Time;
 
 echo $this->Html->css(
     [
-        'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
+        'AdminLTE./plugins/daterangepicker/daterangepicker',
         'AdminLTE./plugins/select2/select2.min',
-        'Cms.select2-bootstrap.min',
-        'Cms.style'
+        'Cms.style',
+        'Qobo/Utils.select2-bootstrap.min',
+        'Qobo/Utils.select2-style'
     ],
     [
         'block' => 'css'
@@ -20,7 +21,7 @@ echo $this->Html->script(
         'Cms.select2.init',
         'Cms.datetimepicker.init',
     ],
-    ['block' => 'scriptBotton']
+    ['block' => 'scriptBottom']
 );
 
 $formOptions = ['type' => 'file'];
@@ -46,7 +47,7 @@ $publishDate = $article && $article->publish_date ?
         <?= $this->Form->input('publish_date', [
             'type' => 'text',
             'required' => true,
-            'class' => 'datetimepicker',
+            'class' => 'form-control datetimepicker',
             'autocomplete' => 'off',
             'value' => $publishDate,
             'templates' => [

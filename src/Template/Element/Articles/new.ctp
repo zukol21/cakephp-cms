@@ -7,7 +7,7 @@ $this->Html->scriptBlock(
         tabName = $(this).attr("href");
         $(tabName).removeClass("active in");
     });',
-    ['block' => 'scriptBotton']
+    ['block' => 'scriptBottom']
 );
 ?>
 <div class="box box-solid no-shadow">

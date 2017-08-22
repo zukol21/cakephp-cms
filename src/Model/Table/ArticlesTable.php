@@ -11,6 +11,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
+use Cms\Event\EventName;
 use InvalidArgumentException;
 
 /**
@@ -159,7 +160,7 @@ class ArticlesTable extends Table
     {
         $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
 
-        $event = new Event('Cms.Articles.showUnpublished', $this, ['siteId' => $siteId]);
+        $event = new Event((string)EventName::ARTICLES_SHOW_UNPUBLISHED(), $this, ['siteId' => $siteId]);
         $this->eventManager()->dispatch($event);
 
         $query->order(['Articles.publish_date' => 'DESC']);

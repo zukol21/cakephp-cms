@@ -2,11 +2,12 @@
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
+use Cms\Event\EventName;
 use Cms\View\Shortcode;
 
 // load lightbox library
 $this->Html->css('Qobo/Utils./plugins/lightbox2/css/lightbox.min', ['block' => 'css']);
-$this->Html->script('Qobo/Utils./plugins/lightbox2/js/lightbox.min', ['block' => 'scriptBotton']);
+$this->Html->script('Qobo/Utils./plugins/lightbox2/js/lightbox.min', ['block' => 'scriptBottom']);
 
 $element = 'Plugin/Cms/' . Inflector::camelize($article->type) . '/single';
 
@@ -66,7 +67,7 @@ $isPublished = $article->publish_date <= Time::now();
                         'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
                     ];
 
-                    $event = new Event('Cms.View.element.beforeRender', $this, [
+                    $event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
                         'menu' => $buttons,
                         'user' => $user
                     ]);
