@@ -92,9 +92,9 @@ class Shortcode
 
             $tmbname = $stat['hash'] . $stat['ts'] . '.png';
 
-            $thumbPath = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
+            $thumbUrl = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
 
-            $image = $view->Html->image($thumbPath, ['class' => 'thumbnail']);
+            $image = $view->Html->image($thumbUrl, ['class' => 'thumbnail']);
             $link = $view->Html->link($image, '/' . $path . '/' . $file->getFilename(), [
                 'data-lightbox' => 'gallery',
                 'escape' => false
