@@ -5,8 +5,9 @@ echo $this->Html->css(
     [
         'AdminLTE./plugins/daterangepicker/daterangepicker-bs3',
         'AdminLTE./plugins/select2/select2.min',
-        'Cms.select2-bootstrap.min',
-        'Cms.style'
+        'Cms.style',
+        'Qobo/Utils.select2-bootstrap.min',
+        'Qobo/Utils.select2-style'
     ],
     [
         'block' => 'css'
