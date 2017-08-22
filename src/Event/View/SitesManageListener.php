@@ -3,6 +3,7 @@ namespace Cms\Event\View;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cms\Event\EventName;
 
 class SitesManageListener implements EventListenerInterface
 {
@@ -14,7 +15,7 @@ class SitesManageListener implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Cms.View.element.beforeRender' => 'sitesManageElement',
+            (string)EventName::VIEW_MANAGE_BEFORE_RENDER() => 'sitesManageElement',
         ];
     }
 
