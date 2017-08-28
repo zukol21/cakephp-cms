@@ -4,7 +4,6 @@
     "type": "cakephp-plugin",
     "license": "GPL-2.0",
     "require": {
-        "cakedc/users": "^4.0",
         "hashmode/cakephp-tinymce-elfinder": "^1.0",
         "muffin/slug": "^1.0",
         "qobo/cakephp-utils": "^5.0"
