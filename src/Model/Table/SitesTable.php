@@ -161,7 +161,7 @@ class SitesTable extends Table
      */
     protected function _addNodeToCategories(Entity $site)
     {
-        $tree = $this->Categories->getTreeListBasedOnArticles($site->id);
+        $tree = $this->Categories->getTreeList($site->id);
 
         //dd($tree);
 
