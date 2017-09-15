@@ -163,8 +163,6 @@ class SitesTable extends Table
     {
         $tree = $this->Categories->getTreeList($site->id);
 
-        //dd($tree);
-
         if (empty($tree)) {
             return;
         }
