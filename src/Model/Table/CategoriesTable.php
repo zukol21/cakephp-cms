@@ -4,9 +4,7 @@ namespace Cms\Model\Table;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
-use function GuzzleHttp\Promise\is_fulfilled;
 use InvalidArgumentException;
 
 /**
@@ -26,13 +24,6 @@ class CategoriesTable extends Table
      * @var array
      */
     protected $_treeList = [];
-
-    /**
-     * Categories in a tree list structure, grouped by site.
-     *
-     * @var array
-     */
-    protected $_group = [];
 
     /**
      * Initialize method
