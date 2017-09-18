@@ -152,13 +152,9 @@ class CategoriesTable extends Table
     {
         $key = $siteId . $categoryId;
 
-        debug($filteredArticles);
-        debug($key);
-
-        if ($filteredArticles){
+        if ($filteredArticles) {
             $key = $key . '_filtered';
         }
-
 
         if (!empty($this->_treeList[$key])) {
             return $this->_treeList[$key];
@@ -177,13 +173,14 @@ class CategoriesTable extends Table
                 'spacer' => static::TREE_SPACER
             ]);
 
-        if ($filteredArticles){
+        if ($filteredArticles) {
             $query->innerJoinWith('Articles', function ($q) {
                 return $q;
             });
         }
 
         $this->_treeList[$key] = $query->toArray();
+
         return $this->_treeList[$key];
     }
 
