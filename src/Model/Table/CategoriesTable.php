@@ -144,12 +144,17 @@ class CategoriesTable extends Table
      *
      * @param string $siteId Site Id.
      * @param string $categoryId Site Id.
+     * @param bool $filteredArticles flag in order to display a category if there is at least one article under this category.
      *
      * @return array
      */
-    public function getTreeList($siteId = '', $categoryId = '')
+    public function getTreeList($siteId = '', $categoryId = '', $filteredArticles = false)
     {
         $key = $siteId . $categoryId;
+
+        if ($filteredArticles) {
+            $key = $key . '_filtered';
+        }
 
         if (!empty($this->_treeList[$key])) {
             return $this->_treeList[$key];
@@ -163,131 +168,20 @@ class CategoriesTable extends Table
             $conditions['Categories.id !='] = $categoryId;
         }
 
-        $this->_treeList[$key] = $this->find('treeList', [
+        $query = $this->find('treeList', [
                 'conditions' => $conditions,
                 'spacer' => static::TREE_SPACER
-            ])->toArray();
+            ]);
+
+        if ($filteredArticles) {
+            $query->innerJoinWith('Articles', function ($q) {
+                return $q;
+            });
+        }
+
+        $this->_treeList[$key] = $query->toArray();
 
         return $this->_treeList[$key];
-    }
-
-    /**
-     * Get tree list structure of site's categories.
-     * Category will be added to the tree if there is at least one article under the root categories.
-     *
-     * @param string $siteId Site Id.
-     * @param string $categoryId Site Id.
-     *
-     * @return array
-     */
-    public function getTreeListBasedOnArticles($siteId = '', $categoryId = '')
-    {
-        $key = $siteId . $categoryId;
-
-        if (!empty($this->_treeList[$key])) {
-            return $this->_treeList[$key];
-        }
-
-        $conditions = [];
-        if ($siteId) {
-            $conditions['Categories.site_id'] = $siteId;
-        }
-        if ($categoryId) {
-            $conditions['Categories.id !='] = $categoryId;
-        }
-
-        //find articles.
-        $treeListCopy = $this->find('treeList', [
-            'conditions' => $conditions,
-            'valuePath' => 'parent_id',
-            'spacer' => static::TREE_SPACER
-        ])->toArray();
-
-        $articlesTable = TableRegistry::get('Articles');
-        foreach ($treeListCopy as $category_id => $value) {
-            $treeListCopy[$key][$category_id] = $this->generateCategoryData($articlesTable, $category_id, $value);
-        }
-
-        $this->_treeList[$key] = $this->find('treeList', [
-            'conditions' => $conditions,
-            'spacer' => static::TREE_SPACER
-        ])->toArray();
-
-        //debug($this->_treeList[$key]);
-        $this->groupCategoriesByParent($treeListCopy[$key]);
-        $this->countArticlesUnderCategory(0, $key);
-
-        return $this->_treeList[$key];
-    }
-
-    /**
-     * Organize the info for a Category
-     *
-     * @param Table $table articlesTable.
-     * @param string $categoryId category ID.
-     * @param array $value value.
-     * @return array
-     */
-    protected function generateCategoryData(Table $table, $categoryId, $value)
-    {
-        $articles = $table->find('all')->where(['category_id' => $categoryId])->toArray();
-        $articlesCount = count($articles);
-
-        $parent_id = 0;
-        if (!empty($value)) {
-            $parent_id = str_replace(static::TREE_SPACER, "", $value);
-        }
-
-        $data = [
-            'value' => $value,
-            'articles' => $articlesCount,
-            'category_id' => $categoryId,
-            'parent_id' => $parent_id
-        ];
-
-        return $data;
-    }
-
-    /**
-     * Group Categories by Parent Id.
-     *
-     * @param array $treeList treeList.
-     */
-    protected function groupCategoriesByParent($treeList)
-    {
-        foreach ($treeList as $categoryId => $value) {
-            $this->_group[$value['parent_id']][] = $value;
-        }
-    }
-
-    /**
-     * Counts the total articles hierarchicaly per level.
-     * Removes the categories from _treeList[$treeListKey] that have not any articles.
-     *
-     * @param int $startKey start key level for the group.
-     * @param array $treeListKey treeListKey.
-     * @return int
-     */
-    protected function countArticlesUnderCategory($startKey = 0, $treeListKey = '')
-    {
-        $levelCount = 0;
-
-        if (empty($this->_group[$startKey])) {
-            return $levelCount;
-        }
-
-        foreach ($this->_group[$startKey] as $key => $categoryData) {
-            $categoryData['articles'] += $this->countArticlesUnderCategory($categoryData['category_id'], $treeListKey);
-            $levelCount += $categoryData['articles'];
-            $this->_group[$startKey][$key] = $categoryData;
-
-            //Remove Categories that have not Articles
-            if (0 === $categoryData['articles']) {
-                unset($this->_treeList[$treeListKey][$categoryData['category_id']]);
-            }
-        }
-
-        return $levelCount;
     }
 
     /**
