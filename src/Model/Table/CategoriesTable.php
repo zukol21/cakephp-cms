@@ -144,45 +144,21 @@ class CategoriesTable extends Table
      *
      * @param string $siteId Site Id.
      * @param string $categoryId Site Id.
+     * @param bool $filteredArticles flag in order to display a category if there is at least one article under this category.
      *
      * @return array
      */
-    public function getTreeList($siteId = '', $categoryId = '')
+    public function getTreeList($siteId = '', $categoryId = '', $filteredArticles = false)
     {
         $key = $siteId . $categoryId;
 
-        if (!empty($this->_treeList[$key])) {
-            return $this->_treeList[$key];
+        debug($filteredArticles);
+        debug($key);
+
+        if ($filteredArticles){
+            $key = $key . '_filtered';
         }
 
-        $conditions = [];
-        if ($siteId) {
-            $conditions['Categories.site_id'] = $siteId;
-        }
-        if ($categoryId) {
-            $conditions['Categories.id !='] = $categoryId;
-        }
-
-        $this->_treeList[$key] = $this->find('treeList', [
-                'conditions' => $conditions,
-                'spacer' => static::TREE_SPACER
-            ])->toArray();
-
-        return $this->_treeList[$key];
-    }
-
-    /**
-     * Get tree list structure of site's categories.
-     * Category will be added to the tree if there is at least one article under the root categories.
-     *
-     * @param string $siteId Site Id.
-     * @param string $categoryId Site Id.
-     *
-     * @return array
-     */
-    public function getTreeListBasedOnArticles($siteId = '', $categoryId = '')
-    {
-        $key = $siteId . $categoryId . '_filtered';
 
         if (!empty($this->_treeList[$key])) {
             return $this->_treeList[$key];
@@ -197,16 +173,17 @@ class CategoriesTable extends Table
         }
 
         $query = $this->find('treeList', [
-            'conditions' => $conditions,
-            'spacer' => static::TREE_SPACER
-        ]);
+                'conditions' => $conditions,
+                'spacer' => static::TREE_SPACER
+            ]);
 
-        $query->innerJoinWith('Articles', function ($q) {
-            return $q;
-        });
+        if ($filteredArticles){
+            $query->innerJoinWith('Articles', function ($q) {
+                return $q;
+            });
+        }
 
         $this->_treeList[$key] = $query->toArray();
-
         return $this->_treeList[$key];
     }
 
