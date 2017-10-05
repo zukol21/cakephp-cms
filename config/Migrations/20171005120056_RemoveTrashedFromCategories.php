@@ -13,7 +13,14 @@ class RemoveTrashedFromCategories extends AbstractMigration
     public function change()
     {
         $table = $this->table('categories');
-        $table->removeColumn('trashed');
-        $table->update();
+
+        // permanently delete trashed records, before trashed column is dropped
+        $result = $this->execute('DELETE FROM categories WHERE trashed IS NOT NULL');
+
+        // check against boolean false, as $result might be 0 if no rows have been affected
+        if (false !== $result) {
+            $table->removeColumn('trashed');
+            $table->update();
+        }
     }
 }
