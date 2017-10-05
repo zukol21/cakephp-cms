@@ -200,4 +200,39 @@ class CategoriesTableTest extends TestCase
     {
         $entity = $this->CategoriesTable->Sites->getSite('non-existing-id');
     }
+
+    public function testGetTreeList()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000001' => 'General',
+            '00000000-0000-0000-0000-000000000002' => '&nbsp;&nbsp;&nbsp;&nbsp;News'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId));
+    }
+
+    public function testGetTreeListWithCategoryId()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+        $categoryId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000002' => 'News'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, $categoryId));
+    }
+
+    public function testGetTreeListWithArticles()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000001' => 'General'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, '', true));
+    }
 }
