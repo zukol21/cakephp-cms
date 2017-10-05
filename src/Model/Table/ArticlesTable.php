@@ -401,12 +401,12 @@ class ArticlesTable extends Table
         $conditions = [$field => $slug];
         $conditions += $behavior->config('scope');
         if ($id = $entity->{$primaryKey}) {
-            $conditions['NOT'][$this->_table->aliasField($primaryKey)] = $id;
+            $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('length');
+        $length = $behavior->config('maxLength');
 
         while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
             $i++;
