@@ -41,7 +41,6 @@ class CategoriesTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
-        $this->addBehavior('Muffin/Trash.Trash');
         $this->addBehavior('Muffin/Slug.Slug', [
             'unique' => function (Entity $entity, $slug, $separator) {
                 return $this->_uniqueSlug($entity, $slug, $separator);
@@ -190,20 +189,19 @@ class CategoriesTable extends Table
         $primaryKey = $this->primaryKey();
         $field = $this->aliasField($behavior->config('field'));
 
-        $conditions = [
-            $field => $slug,
-            'Categories.site_id' => $entity->site_id
-        ];
+        $conditions = [$field => $slug];
+        // add site id to conditions
+        $conditions['Categories.site_id'] = $entity->site_id;
         $conditions += $behavior->config('scope');
         if ($id = $entity->{$primaryKey}) {
-            $conditions['NOT'][$this->_table->aliasField($primaryKey)] = $id;
+            $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('length');
+        $length = $behavior->config('maxLength');
 
-        while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
+        while ($this->exists($conditions)) {
             $i++;
             $suffix = $separator . $i;
             if ($length && $length < mb_strlen($slug . $suffix)) {

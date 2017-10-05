@@ -2,8 +2,15 @@
 namespace Cms\Test\TestCase\Model\Table;
 
 use Cake\Core\Configure;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\ResultSet;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Validation\Validator;
+use Cms\Model\Entity\Article;
+use Cms\Model\Entity\Category;
 use Cms\Model\Table\ArticlesTable;
 
 /**
@@ -25,7 +32,10 @@ class ArticlesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.articles'
+        'plugin.cms.articles',
+        'plugin.cms.categories',
+        'plugin.cms.sites',
+        'plugin.Burzum/FileStorage.file_storage'
     ];
 
     /**
@@ -62,30 +72,22 @@ class ArticlesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        //Table name
-        $result = $this->Articles->table();
-        $expected = 'articles';
-        $this->assertEquals($expected, $result);
-        //Display field
-        $result = $this->Articles->displayField();
-        $expected = 'title';
-        $this->assertEquals($expected, $result);
-        //Primary key
-        $result = $this->Articles->primaryKey();
-        $expected = 'id';
-        $this->assertEquals($expected, $result);
-        //Behaviors
-        $behaviors = $this->Articles->behaviors()->loaded();
-        $this->assertTrue(in_array('Timestamp', $behaviors));
-        $this->assertTrue(in_array('Slug', $behaviors));
-        //Associations
-        $associations = $this->Articles->associations();
-        $result = [];
-        foreach ($associations as $assocObj) {
-            $result[] = $assocObj->name();
-        }
-        $this->assertTrue(in_array('ArticleFeaturedImages', $result));
-        $this->assertTrue(in_array('Categories', $result));
+        $this->assertEquals('articles', $this->Articles->table());
+
+        $this->assertEquals('title', $this->Articles->displayField());
+        $this->assertEquals('id', $this->Articles->primaryKey());
+
+        $this->assertTrue($this->Articles->hasBehavior('Timestamp'));
+        $this->assertTrue($this->Articles->hasBehavior('Trash'));
+        $this->assertTrue($this->Articles->hasBehavior('Slug'));
+
+        $this->assertInstanceOf(HasMany::class, $this->Articles->association('ArticleFeaturedImages'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Categories'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Author'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Editor'));
+
+        $this->assertInstanceOf(ArticlesTable::class, $this->Articles);
     }
 
     /**
@@ -113,6 +115,8 @@ class ArticlesTableTest extends TestCase
 
         $this->assertNotEmpty($entity->id);
         $this->assertEquals('foo-bar', $entity->slug);
+
+        $this->assertInstanceOf(Validator::class, $this->Articles->validationDefault(new Validator()));
     }
 
     /**
@@ -122,7 +126,7 @@ class ArticlesTableTest extends TestCase
      */
     public function testBuildRules()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(RulesChecker::class, $this->Articles->buildRules(new RulesChecker()));
     }
 
     public function testGetTypes()
@@ -175,5 +179,168 @@ class ArticlesTableTest extends TestCase
         $result = $this->Articles->getTypeOptions('foobar');
 
         $this->assertEmpty($result);
+    }
+
+    public function testSetSearchQuery()
+    {
+        $this->assertEquals('', $this->Articles->getSearchQuery());
+
+        $this->Articles->setSearchQuery('foo');
+        $this->assertEquals('foo', $this->Articles->getSearchQuery());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetSearchQueryWrongParameter()
+    {
+        $this->Articles->setSearchQuery([]);
+    }
+
+    public function testApplySearch()
+    {
+        $query = $this->Articles->find();
+        $expected = clone $query;
+
+        $this->Articles->applySearch($query, 'foo');
+
+        $this->assertNotEquals($expected, $query);
+    }
+
+    public function testApplySearchWithoutQuery()
+    {
+        $query = $this->Articles->find();
+        $expected = clone $query;
+
+        $this->Articles->applySearch($query, '');
+
+        $this->assertEquals($expected, $query);
+    }
+
+    public function testGetArticle()
+    {
+        $id = '00000000-0000-0000-0000-000000000001';
+
+        $entity = $this->Articles->getArticle($id);
+
+        $this->assertInstanceOf(Article::class, $entity);
+        $this->assertNull($entity->get('category'));
+        $this->assertNull($entity->get('article_featured_images'));
+    }
+
+    public function testGetArticleWithAssociated()
+    {
+        $id = '00000000-0000-0000-0000-000000000001';
+
+        $entity = $this->Articles->getArticle($id, null, true);
+
+        $this->assertInstanceOf(Article::class, $entity);
+        $this->assertInstanceOf(Category::class, $entity->get('category'));
+        $this->assertInternalType('array', $entity->get('article_featured_images'));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetArticleEmptyParameter()
+    {
+        $this->Articles->getArticle('');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetArticleWrongParameter()
+    {
+        $this->Articles->getArticle(['foo']);
+    }
+
+    public function testGetArticles()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+        $type = 'article';
+
+        $entities = $this->Articles->getArticles($siteId, $type);
+
+        $this->assertInstanceOf(ResultSet::class, $entities);
+        $this->assertFalse($entities->isEmpty());
+
+        foreach ($entities as $entity) {
+            $this->assertInstanceOf(Article::class, $entity);
+            $this->assertNull($entity->get('category'));
+            $this->assertNull($entity->get('article_featured_images'));
+        }
+    }
+
+    public function testGetArticlesWithAssociated()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+        $type = 'article';
+
+        $entities = $this->Articles->getArticles($siteId, $type, true);
+
+        $this->assertInstanceOf(ResultSet::class, $entities);
+        $this->assertFalse($entities->isEmpty());
+
+        foreach ($entities as $entity) {
+            $this->assertInstanceOf(Article::class, $entity);
+            $this->assertInstanceOf(Category::class, $entity->get('category'));
+            $this->assertInternalType('array', $entity->get('article_featured_images'));
+        }
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetArticlesInvalidFirstParameter()
+    {
+        $this->Articles->getArticles([], '00000000-0000-0000-0000-000000000001');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetArticlesInvalidSecondParameter()
+    {
+        $this->Articles->getArticles('00000000-0000-0000-0000-000000000001', []);
+    }
+
+    public function testGetArticlesByCategory()
+    {
+        $ids = [
+            '00000000-0000-0000-0000-000000000001',
+            '00000000-0000-0000-0000-000000000002'
+        ];
+
+        $entities = $this->Articles->getArticlesByCategory($ids);
+
+        $this->assertInstanceOf(ResultSet::class, $entities);
+        $this->assertFalse($entities->isEmpty());
+
+        foreach ($entities as $entity) {
+            $this->assertInstanceOf(Article::class, $entity);
+        }
+    }
+
+    public function testUniqueSlug()
+    {
+        $data = [
+            'title' => 'First Article',
+            'excerpt' => 'Lorem ipsum',
+            'content' => 'Lorem ipsum dolor sit amet',
+            'site_id' => '00000000-0000-0000-0000-000000000001',
+            'category_id' => '00000000-0000-0000-0000-000000000001',
+            'type' => 'article',
+            'publish_date' => '2017-10-05 18:30:00',
+            'created_by' => '00000000-0000-0000-0000-000000000001',
+            'modified_by' => '00000000-0000-0000-0000-000000000001'
+        ];
+
+        $entity = $this->Articles->newEntity();
+        $entity = $this->Articles->patchEntity($entity, $data);
+
+        $this->Articles->save($entity);
+
+        $this->assertEquals('first-article-1', $entity->get('slug'));
     }
 }

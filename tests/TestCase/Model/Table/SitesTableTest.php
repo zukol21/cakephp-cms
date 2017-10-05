@@ -1,8 +1,12 @@
 <?php
 namespace Cms\Test\TestCase\Model\Table;
 
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Validation\Validator;
+use Cms\Model\Entity\Site;
 use Cms\Model\Table\SitesTable;
 
 /**
@@ -24,7 +28,10 @@ class SitesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.sites'
+        'plugin.cms.articles',
+        'plugin.cms.categories',
+        'plugin.cms.sites',
+        'plugin.Burzum/FileStorage.file_storage'
     ];
 
     /**
@@ -58,7 +65,12 @@ class SitesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Sites->hasBehavior('Timestamp'));
+        $this->assertTrue($this->Sites->hasBehavior('Slug'));
+        $this->assertTrue($this->Sites->hasBehavior('Trash'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Categories'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Articles'));
+        $this->assertInstanceOf(SitesTable::class, $this->Sites);
     }
 
     /**
@@ -76,6 +88,8 @@ class SitesTableTest extends TestCase
 
         $this->assertNotEmpty($entity->id);
         $this->assertEquals('foo-bar', $entity->slug);
+
+        $this->assertInstanceOf(Validator::class, $this->Sites->validationDefault(new Validator()));
     }
 
     /**
@@ -85,6 +99,57 @@ class SitesTableTest extends TestCase
      */
     public function testBuildRules()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(RulesChecker::class, $this->Sites->buildRules(new RulesChecker()));
+    }
+
+    public function testGetSite()
+    {
+        $id = '00000000-0000-0000-0000-000000000001';
+
+        $entity = $this->Sites->getSite($id);
+        $this->assertInstanceOf(Site::class, $entity);
+        $this->assertEquals($id, $entity->get('id'));
+        $this->assertNull($entity->get('articles'));
+        $this->assertNull($entity->get('categories'));
+    }
+
+    public function testGetSiteWithCategories()
+    {
+        $id = '00000000-0000-0000-0000-000000000001';
+
+        $entity = $this->Sites->getSite($id, true);
+        $this->assertNull($entity->get('articles'));
+
+        $categories = $entity->get('categories');
+        $this->assertInternalType('array', $categories);
+        $this->assertNotEmpty($categories);
+    }
+
+    public function testGetSiteWithArticles()
+    {
+        $id = '00000000-0000-0000-0000-000000000001';
+
+        $entity = $this->Sites->getSite($id, false, true);
+        $this->assertNull($entity->get('categories'));
+
+        $articles = $entity->get('articles');
+        $this->assertInternalType('array', $articles);
+        $this->assertNotEmpty($articles);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetSiteEmptyParameter()
+    {
+        $this->Sites->getSite('');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetSiteWrongParameter()
+    {
+        $this->Sites->getSite(['foo']);
     }
 }

@@ -1,8 +1,12 @@
 <?php
 namespace Cms\Test\TestCase\Model\Table;
 
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Validation\Validator;
 use Cms\Model\Table\CategoriesTable;
 
 /**
@@ -61,7 +65,14 @@ class CategoriesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->CategoriesTable->hasBehavior('Timestamp'));
+        $this->assertTrue($this->CategoriesTable->hasBehavior('Tree'));
+        $this->assertTrue($this->CategoriesTable->hasBehavior('Slug'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('ParentCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('ChildCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('Articles'));
+        $this->assertInstanceOf(CategoriesTable::class, $this->CategoriesTable);
     }
 
     /**
@@ -71,7 +82,7 @@ class CategoriesTableTest extends TestCase
      */
     public function testValidationDefault()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(Validator::class, $this->CategoriesTable->validationDefault(new Validator()));
     }
 
     /**
@@ -81,7 +92,7 @@ class CategoriesTableTest extends TestCase
      */
     public function testBuildRules()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf(RulesChecker::class, $this->CategoriesTable->buildRules(new RulesChecker()));
     }
 
     /**
@@ -188,5 +199,40 @@ class CategoriesTableTest extends TestCase
     public function testGetSiteWithNonExistingId()
     {
         $entity = $this->CategoriesTable->Sites->getSite('non-existing-id');
+    }
+
+    public function testGetTreeList()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000001' => 'General',
+            '00000000-0000-0000-0000-000000000002' => '&nbsp;&nbsp;&nbsp;&nbsp;News'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId));
+    }
+
+    public function testGetTreeListWithCategoryId()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+        $categoryId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000002' => 'News'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, $categoryId));
+    }
+
+    public function testGetTreeListWithArticles()
+    {
+        $siteId = '00000000-0000-0000-0000-000000000001';
+
+        $expected = [
+            '00000000-0000-0000-0000-000000000001' => 'General'
+        ];
+
+        $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, '', true));
     }
 }
