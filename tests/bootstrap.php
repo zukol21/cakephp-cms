@@ -110,7 +110,11 @@ class_alias($pluginName . '\Test\App\Controller\AppController', 'App\Controller\
 // If plugin has routes.php/bootstrap.php then load them, otherwise don't.
 $loadPluginRoutes = file_exists(dirname(__FILE__) . DS . 'config' . DS . 'routes.php');
 $loadPluginBootstrap = file_exists(dirname(__FILE__) . DS . 'config' . DS . 'bootstrap.php');
+Cake\Core\Plugin::load('CakephpTinymceElfinder', ['routes' => true]);
 Cake\Core\Plugin::load($pluginName, ['path' => ROOT . DS, 'autoload' => true, 'routes' => $loadPluginRoutes, 'bootstrap' => $loadPluginBootstrap]);
 
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
+
+Configure::load('Cms.cms');
+Configure::load('Cms.elfinder');
