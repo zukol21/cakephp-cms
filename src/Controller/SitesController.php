@@ -53,11 +53,13 @@ class SitesController extends AppController
         $site = $this->Sites->patchEntity($site, $this->request->data);
         if ($this->Sites->save($site)) {
             $this->Flash->success(__('The site has been saved.'));
+            $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug];
         } else {
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
+            $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
         }
 
-        return $this->redirect(['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug]);
+        return $this->redirect($redirectUrl);
     }
 
     /**
