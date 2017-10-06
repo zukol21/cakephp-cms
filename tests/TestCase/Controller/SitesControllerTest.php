@@ -4,7 +4,6 @@ namespace Cms\Test\TestCase\Controller;
 use Cake\ORM\ResultSet;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
-use Cms\Controller\SitesController;
 use Cms\Model\Entity\Site;
 
 class SitesControllerTest extends IntegrationTestCase
@@ -59,9 +58,12 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertInstanceOf(ResultSet::class, $this->viewVariable('sites'));
     }
 
-    public function testView()
+    /**
+     * @dataProvider idsProvider
+     */
+    public function testView($id)
     {
-        $this->get('/cms/sites/view/blog');
+        $this->get('/cms/sites/view/' . $id);
         $this->assertResponseOk();
 
         $this->assertInstanceOf(Site::class, $this->viewVariable('site'));
@@ -135,5 +137,13 @@ class SitesControllerTest extends IntegrationTestCase
 
         $this->assertResponseError();
         $this->assertResponseCode(404);
+    }
+
+    public function idsProvider()
+    {
+        return [
+            ['00000000-0000-0000-0000-000000000001'],
+            ['blog']
+        ];
     }
 }
