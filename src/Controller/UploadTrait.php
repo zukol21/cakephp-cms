@@ -23,8 +23,9 @@ trait UploadTrait
         }
 
         if ($fileUpload['error']) {
-            if (4 !== $fileUpload['error']) {
-                $this->Flash->error($this->_codeToMessage($fileUpload['error']));
+            $errorMessage = $this->_codeToMessage($fileUpload['error']);
+            if (UPLOAD_ERR_NO_FILE !== $fileUpload['error']) {
+                $this->Flash->error($errorMessage);
             }
 
             return false;
