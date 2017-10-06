@@ -207,7 +207,7 @@ class CategoriesTableTest extends TestCase
 
         $expected = [
             '00000000-0000-0000-0000-000000000001' => 'General',
-            '00000000-0000-0000-0000-000000000002' => '&nbsp;&nbsp;&nbsp;&nbsp;News'
+            '00000000-0000-0000-0000-000000000002' => 'News'
         ];
 
         $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId));

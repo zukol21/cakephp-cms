@@ -46,4 +46,15 @@ class AppController extends BaseController
         // set search query on Articles table
         $table->setSearchQuery($searchQuery);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function beforeRender(Event $event)
+    {
+        parent::beforeRender($event);
+
+        $this->viewBuilder()->setHelpers(['CakephpTinymceElfinder.TinymceElfinder']);
+        $this->set('user', $this->Auth->user());
+    }
 }
