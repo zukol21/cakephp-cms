@@ -10,10 +10,8 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
-use Cms\Event\EventName;
 use Cms\View\Shortcode;
 
 // load lightbox library
@@ -47,45 +45,7 @@ $isPublished = $article->publish_date <= Time::now();
                 <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>
                 <div class="box-tools pull-right">
-                    <?php
-                    $buttons = [];
-                    $buttons[] = [
-                        'html' => $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
-                            'title' => __('Edit'),
-                            'class' => 'btn btn-box-tool',
-                            'escape' => false,
-                            'data-toggle' => 'modal',
-                            'data-target' => '#' . $article->slug
-                        ]),
-                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
-                    ];
-                    $buttons[] = [
-                        'html' => $this->Form->postLink(
-                            '<i class="fa fa-trash"></i>',
-                            [
-                                'controller' => 'Articles',
-                                'action' => 'delete',
-                                $site->slug,
-                                $article->slug
-                            ],
-                            [
-                                'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
-                                'title' => __('Delete'),
-                                'class' => 'btn btn-box-tool',
-                                'escape' => false
-                            ]
-                        ),
-                        'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
-                    ];
-
-                    $event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
-                        'menu' => $buttons,
-                        'user' => $user
-                    ]);
-                    $this->eventManager()->dispatch($event);
-
-                    echo $event->result;
-                    ?>
+                    <?= $this->element('Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
                 </div>
             </div>
             <div class="box-body">

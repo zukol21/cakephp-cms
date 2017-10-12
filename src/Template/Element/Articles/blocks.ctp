@@ -10,49 +10,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Event\Event;
 use Cake\I18n\Time;
-use Cms\Event\EventName;
 
 $isPublished = $article->publish_date <= Time::now();
-
-$buttons = [];
-$buttons[] = [
-    'html' => $this->Html->link('<i class="fa fa-pencil"></i>', '#', [
-        'title' => __('Edit'),
-        'class' => 'btn btn-box-tool',
-        'escape' => false,
-        'data-toggle' => 'modal',
-        'data-target' => '#' . $article->slug
-    ]),
-    'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
-];
-$buttons[] = [
-    'html' => $this->Form->postLink(
-        '<i class="fa fa-trash"></i>',
-        [
-            'controller' => 'Articles',
-            'action' => 'delete',
-            $site->slug,
-            $article->slug
-        ],
-        [
-            'confirm' => __('Are you sure you want to delete # {0}?', $article->title),
-            'title' => __('Delete'),
-            'class' => 'btn btn-box-tool',
-            'escape' => false
-        ]
-    ),
-    'url' => ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'edit', 'pass' => [$site->id]]
-];
-
-$event = new Event((string)EventName::VIEW_MANAGE_BEFORE_RENDER(), $this, [
-    'menu' => $buttons,
-    'user' => $user
-]);
-$this->eventManager()->dispatch($event);
-
-$actionButtons = $event->result;
 
 /**
  * BLOCK: Article action buttons start
@@ -65,7 +25,7 @@ $this->start('article-action-buttons-start') ?>
  * BLOCK: Article action buttons
  */
 $this->start('article-action-buttons'); ?>
-    <?= $actionButtons ?>
+    <?= $this->element('Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
 <?php
 $this->end();
 

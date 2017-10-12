@@ -36,7 +36,7 @@ foreach ($articles as $article) {
 <div class ="row masonry-container">
 <?php foreach ($elements as $element) : ?>
     <?php $isPublished = $element['article']->publish_date <= Time::now() ?>
-    <?= $this->element('Articles/blocks', [
+    <?= $this->element('Cms.Articles/blocks', [
         'site' => $site,
         'article' => $element['article'],
         'types' => $types
