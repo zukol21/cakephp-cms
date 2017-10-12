@@ -44,7 +44,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
 </section>
 <section class="content">
     <?php
-    $element = $this->element('Sites/manage', [
+    $element = $this->element('Cms.Sites/manage', [
         'articles' => [$article],
         'categories' => $categories,
         'site' => $site,
@@ -69,7 +69,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
             <?= $this->element('Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Articles/single', [
+            <?= $this->element('Cms.Articles/single', [
                 'site' => $site,
                 'article' => $article,
                 'articleTypes' => $types

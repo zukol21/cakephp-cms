@@ -16,12 +16,12 @@ use Cms\Event\EventName;
 <section class="content-header">
     <h1><?= h($site->name) ?> <small><?= $searchTitle ?></small></h1>
     <div class="btn-group btn-group-sm toolbox pull-right" role="group">
-        <?= $this->element('Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
+        <?= $this->element('Cms.Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
     </div>
 </section>
 <section class="content">
     <?php
-    $element = $this->element('Sites/manage', [
+    $element = $this->element('Cms.Sites/manage', [
         'articles' => $site->articles,
         'categories' => $categories,
         'site' => $site,
@@ -46,7 +46,7 @@ use Cms\Event\EventName;
             <?= $this->element('Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Articles/list', [
+            <?= $this->element('Cms.Articles/list', [
                 'site' => $site,
                 'articles' => $site->articles,
                 'articleTypes' => $types

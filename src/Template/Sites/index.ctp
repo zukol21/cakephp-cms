@@ -82,12 +82,12 @@ echo $this->Html->script(
         </div>
     </div>
 </section>
-<?= $this->element('Sites/modal', ['site' => null]) ?>
+<?= $this->element('Cms.Sites/modal', ['site' => null]) ?>
 <?php
 foreach ($sites as $site) {
     if ($site->active) {
         continue;
     }
 
-    echo $this->element('Sites/modal', ['site' => $site]);
+    echo $this->element('Cms.Sites/modal', ['site' => $site]);
 }

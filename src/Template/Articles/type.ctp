@@ -32,7 +32,7 @@ $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
 </section>
 <section class="content">
     <?php
-    $element = $this->element('Sites/manage', [
+    $element = $this->element('Cms.Sites/manage', [
         'articles' => $articles,
         'categories' => $categories,
         'site' => $site,
@@ -57,7 +57,7 @@ $this->Breadcrumbs->add($types[$type]['label'], null, ['class' => 'active']);
             <?= $this->element('Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Articles/list', [
+            <?= $this->element('Cms.Articles/list', [
                 'site' => $site,
                 'articles' => $articles,
                 'articleTypes' => $types

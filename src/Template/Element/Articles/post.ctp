@@ -72,7 +72,7 @@ $publishDate = $article && $article->publish_date ?
         ]) ?>
     </div>
     <div class="col-lg-8 col-lg-pull-4">
-        <?= $this->element('Articles/field', [
+        <?= $this->element('Cms.Articles/field', [
             'typeOptions' => $typeOptions,
             'article' => $article
         ]) ?>
