@@ -18,6 +18,5 @@ use MyCLabs\Enum\Enum;
  */
 class EventName extends Enum
 {
-    const VIEW_MANAGE_BEFORE_RENDER = 'Cms.View.element.beforeRender';
     const ARTICLES_SHOW_UNPUBLISHED = 'Cms.Articles.showUnpublished';
 }
