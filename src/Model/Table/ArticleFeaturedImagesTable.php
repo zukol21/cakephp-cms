@@ -20,7 +20,7 @@ class ArticleFeaturedImagesTable extends ImageStorageTable
      * Please note this is a child of the ImageStorageTable.
      *
      * @see ImageStorageTable class
-     * @param  uuid $articleId the id of the article
+     * @param  string|int $articleId the id of the article
      * @param  object $entity  Entity object
      * @return bool         Flag whether the record has got stored or not
      */
