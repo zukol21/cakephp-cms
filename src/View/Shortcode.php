@@ -11,6 +11,7 @@
  */
 namespace Cms\View;
 
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\View\View;
 use Cms\Model\Entity\Article;
@@ -49,20 +50,95 @@ class Shortcode
                 continue;
             }
 
-            $result = $article->get($fieldName);
-            preg_match_all('/\[gallery path="(.*?)"\]/', $result, $matches);
+            $content = $article->get($fieldName);
 
-            if (empty($matches[1])) {
+            $shortcodes = static::get($content);
+
+            if (empty($shortcodes)) {
                 continue;
             }
 
-            foreach ($matches[1] as $path) {
-                $result = str_replace($matches[0], static::renderGallery($path, $view), $result);
-                $article->set($fieldName, $result);
+            foreach ($shortcodes as $shortcode) {
+                $params = static::getParams($shortcode);
+
+                // skip if path is not defined
+                if (empty($params['path'])) {
+                    continue;
+                }
+
+                $key = static::getKey($shortcode);
+                $cached = Cache::read($key);
+
+                $content = $cached ?
+                    $cached :
+                    str_replace($shortcode, static::renderGallery($params['path'], $view), $content);
+
+                Cache::write($key, $content);
+
             }
+
+            $article->set($fieldName, $content);
         }
 
         return $article;
+    }
+
+    /**
+     * Shortcodes getter.
+     *
+     * @param string $content Content to look for shortcodes
+     * @return array
+     */
+    public static function get($content)
+    {
+        if (!is_string($content)) {
+            return [];
+        }
+
+        preg_match_all('/\[gallery.*?\]/', $content, $matches);
+
+        return !empty($matches[0]) ? $matches[0] : [];
+    }
+
+    /**
+     * Shortcodes getter.
+     *
+     * @param string $shortcode Shortcode
+     * @return array
+     */
+    public static function getParams($shortcode)
+    {
+        if (!is_string($shortcode)) {
+            return [];
+        }
+
+        preg_match_all('/\s(\w+)=["|\'](.*?)["|\']/', $shortcode, $matches);
+
+        if (empty($matches[1])) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($matches[1] as $k => $v) {
+            $result[$v] = $matches[2][$k];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Shortcode key getter.
+     *
+     * @param string $shortcode Shortcode
+     * @return string
+     */
+    public static function getKey($shortcode)
+    {
+        if (!is_string($shortcode)) {
+            return '';
+        }
+
+        return 'shortcode_gallery_' . md5($shortcode);
     }
 
     /**
