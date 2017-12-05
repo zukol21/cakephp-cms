@@ -36,7 +36,7 @@ echo $this->Html->script(
     </h1>
 </section>
 <section class="content">
-    <div class="box">
+    <div class="box box-solid">
         <div class="box-body">
             <table class="table table-hover table-condensed table-vertical-align table-datatable" width="100%">
                 <thead>
