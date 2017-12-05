@@ -103,7 +103,7 @@ class ArticlesTableTest extends TestCase
             'category_id' => '00000000-0000-0000-0000-000000000001',
             'publish_date' => '2017-04-11 10:00:38',
             'site_id' => '00000000-0000-0000-0000-000000000001',
-            'type' => 'foo',
+            'type' => 'article',
             'excerpt' => '',
             'created_by' => '00000000-0000-0000-0000-000000000001',
             'modified_by' => '00000000-0000-0000-0000-000000000002'
