@@ -9,17 +9,24 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+use Cake\Core\Configure;
 
-echo $this->Html->css('AdminLTE./plugins/datatables/dataTables.bootstrap', ['block' => 'css']);
+echo $this->Html->css('Qobo/Utils./plugins/datatables/css/dataTables.bootstrap.min', ['block' => 'css']);
 echo $this->Html->script(
     [
-        'AdminLTE./plugins/datatables/jquery.dataTables.min',
-        'AdminLTE./plugins/datatables/dataTables.bootstrap.min',
-        'Cms.datatables.init'
+        'Qobo/Utils./plugins/datatables/datatables.min',
+        'Qobo/Utils./plugins/datatables/js/dataTables.bootstrap.min',
     ],
-    [
-        'block' => 'scriptBottom'
-    ]
+    ['block' => 'scriptBottom']
+);
+echo $this->Html->scriptBlock(
+    ';(function ($) {
+        $(".table-datatable").DataTable({
+            stateSave: true,
+            stateDuration: ' . (int)(Configure::read('Session.timeout') * 60) . '
+        });
+    })(jQuery);',
+    ['block' => 'scriptBottom']
 );
 ?>
 <section class="content-header">
@@ -38,7 +45,7 @@ echo $this->Html->script(
     </h1>
 </section>
 <section class="content">
-    <div class="box">
+    <div class="box box-solid">
         <div class="box-body">
             <table class="table table-hover table-condensed table-vertical-align table-datatable" width="100%">
                 <thead>
