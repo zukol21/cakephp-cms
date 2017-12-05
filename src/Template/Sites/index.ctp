@@ -9,14 +9,23 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+use Cake\Core\Configure;
 
 echo $this->Html->css('Qobo/Utils./plugins/datatables/css/dataTables.bootstrap.min', ['block' => 'css']);
 echo $this->Html->script(
     [
-        'Cms.datatables.init'
         'Qobo/Utils./plugins/datatables/datatables.min',
         'Qobo/Utils./plugins/datatables/js/dataTables.bootstrap.min',
     ],
+    ['block' => 'scriptBottom']
+);
+echo $this->Html->scriptBlock(
+    ';(function ($) {
+        $(".table-datatable").DataTable({
+            stateSave: true,
+            stateDuration: ' . (int)(Configure::read('Session.timeout') * 60) . '
+        });
+    })(jQuery);',
     ['block' => 'scriptBottom']
 );
 ?>
