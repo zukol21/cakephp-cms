@@ -10,16 +10,14 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-echo $this->Html->css('AdminLTE./plugins/datatables/dataTables.bootstrap', ['block' => 'css']);
+echo $this->Html->css('Qobo/Utils./plugins/datatables/css/dataTables.bootstrap.min', ['block' => 'css']);
 echo $this->Html->script(
     [
-        'AdminLTE./plugins/datatables/jquery.dataTables.min',
-        'AdminLTE./plugins/datatables/dataTables.bootstrap.min',
         'Cms.datatables.init'
+        'Qobo/Utils./plugins/datatables/datatables.min',
+        'Qobo/Utils./plugins/datatables/js/dataTables.bootstrap.min',
     ],
-    [
-        'block' => 'scriptBottom'
-    ]
+    ['block' => 'scriptBottom']
 );
 ?>
 <section class="content-header">
