@@ -11,7 +11,10 @@
  */
 namespace Cms\Model\Table;
 
+use ArrayObject;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
@@ -22,6 +25,7 @@ use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cms\Event\EventName;
+use Cms\View\Shortcode;
 use InvalidArgumentException;
 
 /**
@@ -182,6 +186,33 @@ class ArticlesTable extends Table
 
         if (!empty($searchQuery)) {
             $this->applySearch($query, $searchQuery);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $types = $this->getTypes($entity->get('type'));
+        $fields = $types[$entity->get('type')]['fields'];
+
+        foreach ($fields as $info) {
+            // skip non-editor fields
+            if (!$info['editor']) {
+                continue;
+            }
+
+            $shortcodes = Shortcode::get($entity->get($info['field']));
+            if (empty($shortcodes)) {
+                continue;
+            }
+
+            foreach ($shortcodes as $shortcode) {
+                $key = Shortcode::getKey($shortcode);
+                // delete shortcode cache
+                Cache::delete($key);
+            }
         }
     }
 

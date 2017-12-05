@@ -73,8 +73,8 @@ class Shortcode
                     $cached :
                     str_replace($shortcode, static::renderGallery($params['path'], $view), $content);
 
+                // always re-write the cache
                 Cache::write($key, $content);
-
             }
 
             $article->set($fieldName, $content);
