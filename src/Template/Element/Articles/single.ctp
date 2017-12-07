@@ -10,6 +10,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Cache\Cache;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
 use Cms\View\Shortcode;
@@ -30,8 +31,38 @@ if (!$this->elementExists($element)) {
     $element = 'Types/Common/single';
 }
 
+// render shortcodes
 if (!empty($types[$article->type]['fields'])) {
-    $article = Shortcode::parse($article, $types[$article->type]['fields'], $this);
+    foreach ($types[$article->type]['fields'] as $info) {
+        // skip empty values
+        if (!$article->get($info['field'])) {
+            continue;
+        }
+
+        // skip non-editor fields
+        if (!$info['editor']) {
+            continue;
+        }
+
+        $shortcodes = Shortcode::get($article->get($info['field']));
+        if (empty($shortcodes)) {
+            continue;
+        }
+
+        $content = $article->get($info['field']);
+        foreach ($shortcodes as $shortcode) {
+            $cacheKey = 'shortcode_' . md5(json_encode($shortcode));
+            $parsed = Cache::read($cacheKey);
+            if (!$parsed) {
+                $parsed = Shortcode::parse($shortcode);
+                Cache::write($cacheKey, $parsed);
+            }
+
+            $content = str_replace($shortcode['full'], $parsed, $content);
+        }
+
+        $article->set($info['field'], $content);
+    }
 }
 
 $data = ['article' => $article];
