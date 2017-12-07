@@ -108,7 +108,7 @@ class Shortcode
         ];
 
         $path = !empty($params['path']) ? $params['path'] : '';
-        $path = trim($params['path'], DIRECTORY_SEPARATOR);
+        $path = trim($path, DIRECTORY_SEPARATOR);
 
         // skip if path is not defined
         if (empty($path)) {
