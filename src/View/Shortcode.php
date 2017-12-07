@@ -25,17 +25,17 @@ class Shortcode
             return [];
         }
 
-        preg_match_all('/\[(.*?)\s+(.*?)\]/', $content, $matches);
-        if (empty($matches)) {
+        preg_match_all('/\[([A-Za-z_]+)\s?(.*?)\]/', $content, $matches);
+        if (empty($matches[0])) {
             return [];
         }
 
         $result = [];
-        foreach ($matches[1] as $k => $match) {
+        foreach ($matches[0] as $k => $match) {
             $result[] = [
-                'full' => $matches[0][$k],
-                'name' => $match,
-                'params' => static::getParams($matches[0][$k])
+                'full' => $match,
+                'name' => $matches[1][$k],
+                'params' => static::getParams($match)
             ];
         }
 
