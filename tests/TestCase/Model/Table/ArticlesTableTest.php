@@ -129,6 +129,27 @@ class ArticlesTableTest extends TestCase
         $this->assertInstanceOf(RulesChecker::class, $this->Articles->buildRules(new RulesChecker()));
     }
 
+    public function testSaveWithShortcode()
+    {
+        $data = [
+            'title' => 'An Article with a Shortcode',
+            'content' => 'Some content with a [shortcode]',
+            'publish_date' => '2017-04-11 10:00:38',
+            'category_id' => '00000000-0000-0000-0000-000000000001',
+            'site_id' => '00000000-0000-0000-0000-000000000001',
+            'excerpt' => '',
+            'created_by' => '162deb54-dc40-4967-b6d2-451c371fdb2d',
+            'modified_by' => '63be1f3e-3628-49c7-9f6b-1a7013e154f4',
+            'type' => 'article'
+        ];
+
+        $entity = $this->Articles->newEntity();
+        $entity = $this->Articles->patchEntity($entity, $data);
+
+        $saved = $this->Articles->save($entity);
+        $this->assertInstanceOf(Article::class, $saved);
+    }
+
     public function testGetTypes()
     {
         $result = $this->Articles->getTypes();
