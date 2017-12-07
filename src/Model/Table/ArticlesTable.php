@@ -198,6 +198,11 @@ class ArticlesTable extends Table
         $fields = $types[$entity->get('type')]['fields'];
 
         foreach ($fields as $info) {
+            // skip empty values
+            if (!$entity->get($info['field'])) {
+                continue;
+            }
+
             // skip non-editor fields
             if (!$info['editor']) {
                 continue;
@@ -209,9 +214,9 @@ class ArticlesTable extends Table
             }
 
             foreach ($shortcodes as $shortcode) {
-                $key = Shortcode::getKey($shortcode);
+                $cacheKey = 'shortcode_' . md5(json_encode($shortcode));
                 // delete shortcode cache
-                Cache::delete($key);
+                Cache::delete($cacheKey);
             }
         }
     }

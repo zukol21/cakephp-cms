@@ -11,78 +11,8 @@
  */
 namespace Cms\View;
 
-use Cake\Cache\Cache;
-use Cake\Core\Configure;
-use Cake\View\View;
-use Cms\Model\Entity\Article;
-use DirectoryIterator;
-use elFinder;
-use Exception;
-
 class Shortcode
 {
-    protected static $imageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
-
-    /**
-     * Parse article shortcodes.
-     *
-     * @param \Cms\Model\Entity\Article $article Article entity
-     * @param array $fields Type fields
-     * @param \Cake\View\View $view View instance
-     * @return \Cms\Model\Entity\Article
-     */
-    public static function parse(Article $article, array $fields, View $view)
-    {
-        if (empty($fields)) {
-            return $article;
-        }
-
-        foreach ($fields as $info) {
-            $fieldName = $info['field'];
-
-            // skip empty values
-            if (!$article->get($fieldName)) {
-                continue;
-            }
-
-            // skip non-editor fields
-            if (!$info['editor']) {
-                continue;
-            }
-
-            $content = $article->get($fieldName);
-
-            $shortcodes = static::get($content);
-
-            if (empty($shortcodes)) {
-                continue;
-            }
-
-            foreach ($shortcodes as $shortcode) {
-                $params = static::getParams($shortcode);
-
-                // skip if path is not defined
-                if (empty($params['path'])) {
-                    continue;
-                }
-
-                $key = static::getKey($shortcode);
-                $cached = Cache::read($key);
-
-                $content = $cached ?
-                    $cached :
-                    str_replace($shortcode, static::renderGallery($params['path'], $view), $content);
-
-                // always re-write the cache
-                Cache::write($key, $content);
-            }
-
-            $article->set($fieldName, $content);
-        }
-
-        return $article;
-    }
-
     /**
      * Shortcodes getter.
      *
@@ -95,9 +25,44 @@ class Shortcode
             return [];
         }
 
-        preg_match_all('/\[gallery.*?\]/', $content, $matches);
+        preg_match_all('/\[([A-Za-z_]+)\s?(.*?)\]/', $content, $matches);
+        if (empty($matches[0])) {
+            return [];
+        }
 
-        return !empty($matches[0]) ? $matches[0] : [];
+        $result = [];
+        foreach ($matches[0] as $k => $match) {
+            $result[] = [
+                'full' => $match,
+                'name' => $matches[1][$k],
+                'params' => static::getParams($match)
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Shortcode parser.
+     *
+     * @param array $shortcode Shortcode to parse
+     * @return string
+     */
+    public static function parse(array $shortcode)
+    {
+        $result = '';
+
+        if (empty($shortcode)) {
+            return $result;
+        }
+
+        $method = 'render' . ucfirst($shortcode['name']);
+
+        if (!method_exists(__CLASS__, $method)) {
+            return $result;
+        }
+
+        return static::$method($shortcode['params']);
     }
 
     /**
@@ -106,12 +71,8 @@ class Shortcode
      * @param string $shortcode Shortcode
      * @return array
      */
-    public static function getParams($shortcode)
+    protected static function getParams($shortcode)
     {
-        if (!is_string($shortcode)) {
-            return [];
-        }
-
         preg_match_all('/\s(\w+)=["|\'](.*?)["|\']/', $shortcode, $matches);
 
         if (empty($matches[1])) {
@@ -127,50 +88,52 @@ class Shortcode
     }
 
     /**
-     * Shortcode key getter.
-     *
-     * @param string $shortcode Shortcode
-     * @return string
-     */
-    public static function getKey($shortcode)
-    {
-        if (!is_string($shortcode)) {
-            return '';
-        }
-
-        return 'shortcode_gallery_' . md5($shortcode);
-    }
-
-    /**
      * Render gallery shortcode.
      *
-     * @param string $path Directory path
-     * @param \Cake\View\View $view View instance
+     * Note: ideally this should be moved to its own class
+     * and that is the reason we are using fully namespaced
+     * classes references, and variables that could be set
+     * as class properties ($imageExtensions and $html).
+     *
+     * @param array $params Shortcode parameters
      * @return string
      */
-    protected static function renderGallery($path, View $view)
+    protected static function renderGallery(array $params)
     {
+        $imageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
+        $html = [
+            'wrapper' => '<div class="row">%s</div>',
+            'item' => '<div class="col-xs-4 col-md-3 col-lg-2"><a href="%s" data-lightbox="gallery"><img src="%s" class="thumbnail"/></a></div>',
+            'error' => '<div class="alert alert-danger" role="alert">%s</div>'
+        ];
+
+        $path = !empty($params['path']) ? $params['path'] : '';
         $path = trim($path, DIRECTORY_SEPARATOR);
 
-        try {
-            $it = new DirectoryIterator(WWW_ROOT . $path);
-        } catch (Exception $e) {
-            return '<div class="alert alert-danger" role="alert">Failed to find files in: ' . $path . '</div>';
+        // skip if path is not defined
+        if (empty($path)) {
+            return sprintf($html['error'], 'Gallery has no path');
         }
 
-        $result = '<div class="row">';
-        foreach ($it as $file) {
+        try {
+            $iterator = new \DirectoryIterator(WWW_ROOT . $path);
+        } catch (\UnexpectedValueException $e) {
+            return sprintf($html['error'], 'No images found in: ' . $path);
+        }
+
+        $result = '';
+        foreach ($iterator as $file) {
             if (!$file->isFile()) {
                 continue;
             }
 
-            if (!in_array(strtolower($file->getExtension()), static::$imageExtensions)) {
+            if (!in_array(strtolower($file->getExtension()), $imageExtensions)) {
                 continue;
             }
 
-            $options = Configure::read('TinymceElfinder.options');
+            $options = \Cake\Core\Configure::read('TinymceElfinder.options');
 
-            $elFinder = new elFinder($options);
+            $elFinder = new \elFinder($options);
             $volume = $elFinder->getVolume('l' . $options['roots'][0]['id'] . '_');
 
             $hash = $volume->getHash(dirname($file->getPathname()), $file->getFilename());
@@ -178,22 +141,18 @@ class Shortcode
 
             $tmbname = $stat['hash'] . $stat['ts'] . '.png';
 
-            $thumbPath = $options['roots'][0]['path'] . DS . $options['roots'][0]['tmbPath'] . DS . $tmbname;
-            $thumbUrl = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
-
+            $thumbnail = $options['roots'][0]['path'] . DS . $options['roots'][0]['tmbPath'] . DS . $tmbname;
             // generate non-existing thumbnail
-            if (!file_exists($thumbPath)) {
+            if (!file_exists($thumbnail)) {
                 $volume->tmb($hash);
             }
 
-            $image = $view->Html->image($thumbUrl, ['class' => 'thumbnail']);
-            $link = $view->Html->link($image, '/' . $path . '/' . $file->getFilename(), [
-                'data-lightbox' => 'gallery',
-                'escape' => false
-            ]);
-            $result .= '<div class="col-xs-4 col-md-3 col-lg-2">' . $link . '</div>';
+            $image = $options['roots'][0]['URL'] . '/' . $options['roots'][0]['tmbPath'] . '/' . $tmbname;
+            $link = '/' . $path . '/' . $file->getFilename();
+            $result .= sprintf($html['item'], $link, $image);
         }
-        $result .= '</div>';
+
+        $result = sprintf($html['wrapper'], $result);
 
         return $result;
     }
