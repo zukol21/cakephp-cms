@@ -116,13 +116,13 @@ class Shortcode
         }
 
         try {
-            $it = new \DirectoryIterator(WWW_ROOT . $path);
+            $iterator = new \DirectoryIterator(WWW_ROOT . $path);
         } catch (\UnexpectedValueException $e) {
             return sprintf($html['error'], 'No images found in: ' . $path);
         }
 
         $result = '';
-        foreach ($it as $file) {
+        foreach ($iterator as $file) {
             if (!$file->isFile()) {
                 continue;
             }
