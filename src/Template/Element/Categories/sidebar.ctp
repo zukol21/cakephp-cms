@@ -10,7 +10,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 ?>
-<div class="box box-solid">
+<div class="box box-primary">
     <div class="box-header with-border">
         <i class="fa fa-tag"></i>
         <h3 class="box-title"><?= __('Categories') ?></h3>
