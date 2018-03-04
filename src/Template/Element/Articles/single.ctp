@@ -71,7 +71,7 @@ $isPublished = $article->publish_date <= Time::now();
 ?>
 <div class="row">
     <div class="col-xs-12">
-        <div class="box box-<?= $isPublished ? 'solid' : 'danger' ?> single-item">
+        <div class="box box-<?= $isPublished ? 'primary' : 'danger' ?> single-item">
             <div class="box-header with-border">
                 <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>

@@ -47,7 +47,7 @@ foreach ($articles as $article) {
         'types' => $types
     ]) ?>
     <div class="col-xs-12 item">
-        <div class="box box-<?= !$isPublished ? 'danger' : 'solid' ?> list-item <?= $this->fetch('article-box-classes') ?>">
+        <div class="box box-<?= !$isPublished ? 'danger' : 'primary' ?> list-item <?= $this->fetch('article-box-classes') ?>">
             <?= $this->fetch('article-header-start') ?>
                 <?= $this->fetch('article-header') ?>
                 <?= $this->fetch('article-action-buttons-start') ?>

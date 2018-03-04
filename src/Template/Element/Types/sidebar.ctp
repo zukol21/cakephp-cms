@@ -12,7 +12,7 @@
 
 use Cake\Utility\Inflector;
 ?>
-<div class="box box-solid">
+<div class="box box-primary">
     <div class="box-header with-border">
         <i class="fa fa-tags"></i>
         <h3 class="box-title"><?= __('Read More') ?></h3>
