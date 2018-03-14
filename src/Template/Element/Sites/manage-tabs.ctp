@@ -26,6 +26,7 @@
         </li>
     </ul>
     <div class="tab-content">
+        <?php if (!empty($categories)) : ?>
         <div role="tabpanel" class="tab-pane" id="manage-content">
             <?= $this->element('Cms.Articles/new', [
                 'categories' => $categories,
@@ -34,6 +35,7 @@
                 'articleTypes' => $types
             ]) ?>
         </div>
+        <?php endif; ?>
         <div role="tabpanel" class="tab-pane" id="manage-categories">
             <?php if (!empty($site->categories)) : ?>
             <table class="table table-hover table-condensed table-vertical-align">
