@@ -12,11 +12,13 @@
 ?>
 <div class="nav-tabs-custom">
     <ul id="relatedTabs" class="nav nav-tabs" role="tablist">
+        <?php if (!empty($categories)) : ?>
         <li role="presentation">
             <a href="#manage-content" aria-controls="manage-content" role="tab" data-toggle="tab">
                 <?= __('Add Content'); ?>
             </a>
         </li>
+        <?php endif; ?>
         <li role="presentation">
             <a href="#manage-categories" aria-controls="manage-categories" role="tab" data-toggle="tab">
                 <?= __('Manage Categories'); ?>
