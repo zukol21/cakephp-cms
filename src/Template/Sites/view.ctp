@@ -11,10 +11,10 @@
  */
 ?>
 <section class="content-header">
+	<div class="btn-group btn-group-sm toolbox pull-right" role="group">
+		<?= $this->element('Cms.Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
+	</div>
     <h1><?= h($site->name) ?> <small><?= $searchTitle ?></small></h1>
-    <div class="btn-group btn-group-sm toolbox pull-right" role="group">
-        <?= $this->element('Cms.Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
-    </div>
 </section>
 <section class="content">
     <?= $this->element('Cms.Sites/manage', [
