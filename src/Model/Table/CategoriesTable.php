@@ -45,7 +45,7 @@ class CategoriesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('categories');
+        $this->table('qobo_cms_categories');
         $this->displayField('name');
         $this->primaryKey('id');
 
@@ -67,6 +67,7 @@ class CategoriesTable extends Table
             'foreignKey' => 'parent_id'
         ]);
         $this->hasMany('Cms.Articles', [
+            'foreignKey' => 'category_id',
             'sort' => ['Articles.publish_date' => 'DESC']
         ]);
     }
