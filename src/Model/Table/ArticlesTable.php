@@ -76,7 +76,7 @@ class ArticlesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('articles');
+        $this->table('qobo_cms_articles');
         $this->displayField('title');
         $this->primaryKey('id');
 
