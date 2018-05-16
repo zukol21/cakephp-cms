@@ -33,7 +33,7 @@ class SitesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('sites');
+        $this->table('qobo_cms_sites');
         $this->displayField('name');
         $this->primaryKey('id');
 
@@ -41,8 +41,11 @@ class SitesTable extends Table
         $this->addBehavior('Muffin/Slug.Slug');
         $this->addBehavior('Muffin/Trash.Trash');
 
-        $this->hasMany('Cms.Categories');
+        $this->hasMany('Cms.Categories', [
+            'foreignKey' => 'site_id',
+        ]);
         $this->hasMany('Cms.Articles', [
+            'foreignKey' => 'site_id',
             'sort' => ['Articles.publish_date' => 'DESC']
         ]);
     }

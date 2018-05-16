@@ -72,7 +72,7 @@ class ArticlesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->assertEquals('articles', $this->Articles->table());
+        $this->assertEquals('qobo_cms_articles', $this->Articles->table());
 
         $this->assertEquals('title', $this->Articles->displayField());
         $this->assertEquals('id', $this->Articles->primaryKey());
