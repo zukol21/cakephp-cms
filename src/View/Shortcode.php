@@ -14,6 +14,30 @@ namespace Cms\View;
 class Shortcode
 {
     /**
+     * Shortcodes runner.
+     *
+     * @param string $content Content to search for shortcodes
+     * @return string the output of the shortcodes
+     */
+    public static function doShortcode($content)
+    {
+      // Get all the shortcodes
+      $shortcodes = Self::get($content);
+
+      // Loop through all shortcodes
+      foreach ($shortcodes as $shortcode) {
+        // Parse the shortcodes
+        $parsed = Shortcode::parse($shortcode);
+
+        // Replace the content with the shortcode output
+        $content = str_replace($shortcode['full'], $parsed, $content);
+      }
+
+      // Return the content
+      return $content;
+    }
+
+    /**
      * Shortcodes getter.
      *
      * @param string $content Content to look for shortcodes
