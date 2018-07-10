@@ -27,7 +27,7 @@ class Shortcode
       // Loop through all shortcodes
       foreach ($shortcodes as $shortcode) {
         // Parse the shortcodes
-        $parsed = Shortcode::parse($shortcode);
+        $parsed = Self::::parse($shortcode);
 
         // Replace the content with the shortcode output
         $content = str_replace($shortcode['full'], $parsed, $content);
