@@ -36,7 +36,7 @@ class Shortcode
                 'full' => $match,
                 'name' => $matches[1][$k],
                 'params' => static::getParams($match),
-                'content' => $matches[5][0]
+                'content' => $matches[5][$k]
             ];
         }
 
