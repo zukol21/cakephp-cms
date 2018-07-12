@@ -51,6 +51,7 @@ class Shortcode
      */
     public static function getShortcodeRegex()
     {
+        // @codingStandardsIgnoreStart
         return
             '\\['                                // Opening bracket
             . '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
@@ -80,6 +81,7 @@ class Shortcode
             .     ')?'
             . ')'
             . '(\\]?)';                          // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
+        // @codingStandardsIgnoreEnd
     }
 
     /**
