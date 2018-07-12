@@ -14,7 +14,7 @@ class ShortcodeTest extends TestCase
     {
         $content = 'A plain [foo] shortcode.';
         $expected = [
-            ['full' => '[foo]', 'name' => 'foo', 'params' => []]
+            ['full' => '[foo]', 'name' => 'foo', 'params' => [], 'content' => '']
         ];
 
         $this->assertEquals($expected, Shortcode::get($content));
@@ -27,7 +27,8 @@ class ShortcodeTest extends TestCase
             [
                 'full' => '[foo hello="world" world=\'hello\']',
                 'name' => 'foo',
-                'params' => ['hello' => 'world', 'world' => 'hello']
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => ''
             ]
         ];
 
