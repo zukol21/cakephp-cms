@@ -25,7 +25,7 @@ class Shortcode
             return [];
         }
 
-        preg_match_all("/" . self::get_shortcode_regex() . "/", $content, $matches);
+        preg_match_all('/' . self::getShortcodeRegex() . '/', $content, $matches);
         if (empty($matches[0])) {
             return [];
         }
@@ -44,12 +44,12 @@ class Shortcode
     }
 
     /**
-    * Shortcode regex.
-    * Source: https://developer.wordpress.org/reference/functions/get_shortcode_regex/
-    *
-    * @return string The Regex string
-    */
-    public static function get_shortcode_regex()
+     * Shortcode regex.
+     * Source: https://developer.wordpress.org/reference/functions/get_shortcode_regex/
+     *
+     * @return string The Regex string
+     */
+    public static function getShortcodeRegex()
     {
         return
             '\\['                                // Opening bracket
@@ -102,7 +102,7 @@ class Shortcode
             return $result;
         }
 
-        return static::$method($shortcode['params'],$shortcode['content']);
+        return static::$method($shortcode['params'], $shortcode['content']);
     }
 
     /**
