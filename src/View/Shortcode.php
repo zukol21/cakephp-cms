@@ -34,7 +34,7 @@ class Shortcode
         foreach ($matches[0] as $k => $match) {
             $result[] = [
                 'full' => $match,
-                'name' => $matches[1][$k],
+                'name' => $matches[2][$k],
                 'params' => static::getParams($match),
                 'content' => $matches[5][$k]
             ];
