@@ -20,12 +20,37 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
+    public function testGetPlainShortcodeWithClosingTag()
+    {
+        $content = 'A plain [foo][/foo] shortcode.';
+        $expected = [
+            ['full' => '[foo][/foo]', 'name' => 'foo', 'params' => [], 'content' => '']
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
     public function testGetShortcodeWithParams()
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\'] with parameters.';
         $expected = [
             [
                 'full' => '[foo hello="world" world=\'hello\']',
+                'name' => 'foo',
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => ''
+            ]
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetShortcodeWithParamsAndClosingTag()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\'][/foo] with parameters.';
+        $expected = [
+            [
+                'full' => '[foo hello="world" world=\'hello\'][/foo]',
                 'name' => 'foo',
                 'params' => ['hello' => 'world', 'world' => 'hello'],
                 'content' => ''
