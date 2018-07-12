@@ -30,6 +30,21 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
+    public function testGetPlainShortcodeWithContent()
+    {
+        $content = 'A plain [foo]Hello World![/foo] shortcode with content.';
+        $expected = [
+            [
+                'full' => '[foo]Hello World![/foo]',
+                'name' => 'foo',
+                'params' => [],
+                'content' => 'Hello World!'
+            ]
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
     public function testGetShortcodeWithParams()
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\'] with parameters.';
@@ -54,6 +69,21 @@ class ShortcodeTest extends TestCase
                 'name' => 'foo',
                 'params' => ['hello' => 'world', 'world' => 'hello'],
                 'content' => ''
+            ]
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetShortcodeWithParamsAndContent()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\']Hello World![/foo] with parameters.';
+        $expected = [
+            [
+                'full' => '[foo hello="world" world=\'hello\']Hello World![/foo]',
+                'name' => 'foo',
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => 'Hello World!'
             ]
         ];
 
