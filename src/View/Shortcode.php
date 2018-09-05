@@ -21,20 +21,20 @@ class Shortcode
      */
     public static function doShortcode($content)
     {
-      // Get all the shortcodes
-      $shortcodes = Self::get($content);
+        // Get all the shortcodes
+        $shortcodes = self::get($content);
 
-      // Loop through all shortcodes
-      foreach ($shortcodes as $shortcode) {
-        // Parse the shortcodes
-        $parsed = Self::::parse($shortcode);
+        // Loop through all shortcodes
+        foreach ($shortcodes as $shortcode) {
+            // Parse the shortcodes
+            $parsed = self::parse($shortcode);
 
-        // Replace the content with the shortcode output
-        $content = str_replace($shortcode['full'], $parsed, $content);
-      }
+            // Replace the content with the shortcode output
+            $content = str_replace($shortcode['full'], $parsed, $content);
+        }
 
-      // Return the content
-      return $content;
+        // Return the content
+        return $content;
     }
 
     /**
