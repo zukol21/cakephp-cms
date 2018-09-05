@@ -25,7 +25,7 @@ class Shortcode
             return [];
         }
 
-        preg_match_all('/\[([A-Za-z_]+)\s?(.*?)\]/', $content, $matches);
+        preg_match_all('/' . self::getShortcodeRegex() . '/', $content, $matches);
         if (empty($matches[0])) {
             return [];
         }
@@ -34,12 +34,54 @@ class Shortcode
         foreach ($matches[0] as $k => $match) {
             $result[] = [
                 'full' => $match,
-                'name' => $matches[1][$k],
-                'params' => static::getParams($match)
+                'name' => $matches[2][$k],
+                'params' => static::getParams($match),
+                'content' => $matches[5][$k]
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * Shortcode regex.
+     * Source: https://developer.wordpress.org/reference/functions/get_shortcode_regex/
+     *
+     * @return string The Regex string
+     */
+    public static function getShortcodeRegex()
+    {
+        // @codingStandardsIgnoreStart
+        return
+            '\\['                                // Opening bracket
+            . '(\\[?)'                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+            . "([A-Za-z_]+)"                     // 2: Shortcode name
+            . '(?![\\w-])'                       // Not followed by word character or hyphen
+            . '('                                // 3: Unroll the loop: Inside the opening shortcode tag
+            .     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
+            .     '(?:'
+            .         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
+            .         '[^\\]\\/]*'               // Not a closing bracket or forward slash
+            .     ')*?'
+            . ')'
+            . '(?:'
+            .     '(\\/)'                        // 4: Self closing tag ...
+            .     '\\]'                          // ... and closing bracket
+            . '|'
+            .     '\\]'                          // Closing bracket
+            .     '(?:'
+            .         '('                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+            .             '[^\\[]*+'             // Not an opening bracket
+            .             '(?:'
+            .                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+            .                 '[^\\[]*+'         // Not an opening bracket
+            .             ')*+'
+            .         ')'
+            .         '\\[\\/\\2\\]'             // Closing shortcode tag
+            .     ')?'
+            . ')'
+            . '(\\]?)';                          // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -62,7 +104,7 @@ class Shortcode
             return $result;
         }
 
-        return static::$method($shortcode['params']);
+        return static::$method($shortcode['params'], $shortcode['content']);
     }
 
     /**
