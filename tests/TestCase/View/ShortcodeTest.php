@@ -168,4 +168,44 @@ class ShortcodeTest extends TestCase
             $this->assertEquals($expected, Shortcode::parse($shortcode));
         }
     }
+
+    public function testDoShortcode()
+    {
+        $content = 'A plain [foo] shortcode.';
+        $expected = 'A plain  shortcode.';
+
+        $this->assertEquals($expected, Shortcode::doShortcode($content));
+    }
+
+    public function testDoShortcodeInvalid()
+    {
+        $content = [];
+        $expected = '';
+
+        $this->assertEquals($expected, Shortcode::doShortcode($content));
+    }
+
+    public function testDoShortcodeWithParams()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\'] with parameters.';
+        $expected = 'Shortcode  with parameters.';
+
+        $this->assertEquals($expected, Shortcode::doShortcode($content));
+    }
+
+    public function testDoShortcodeWithContent()
+    {
+        $content = 'A plain [foo]Hello World![/foo] shortcode with content.';
+        $expected = 'A plain Hello World! shortcode with content.';
+
+        $this->assertEquals($expected, Shortcode::doShortcode($content));
+    }
+
+    public function testDoShortcodeWithParamsAndContent()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\']Hello World![/foo] with parameters.';
+        $expected = 'Shortcode Hello World! with parameters.';
+
+        $this->assertEquals($expected, Shortcode::doShortcode($content));
+    }
 }
