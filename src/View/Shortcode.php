@@ -14,6 +14,34 @@ namespace Cms\View;
 class Shortcode
 {
     /**
+     * Shortcodes runner.
+     *
+     * @param string $content Content to search for shortcodes
+     * @return string the output of the shortcodes
+     */
+    public static function doShortcode($content)
+    {
+        if (! is_string($content)) {
+            return '';
+        }
+
+        // Get all the shortcodes
+        $shortcodes = self::get($content);
+
+        // Loop through all shortcodes
+        foreach ($shortcodes as $shortcode) {
+            // Parse the shortcodes
+            $parsed = self::parse($shortcode);
+
+            // Replace the content with the shortcode output
+            $content = str_replace($shortcode['full'], $parsed, $content);
+        }
+
+        // Return the content
+        return $content;
+    }
+
+    /**
      * Shortcodes getter.
      *
      * @param string $content Content to look for shortcodes
@@ -92,16 +120,14 @@ class Shortcode
      */
     public static function parse(array $shortcode)
     {
-        $result = '';
-
         if (empty($shortcode)) {
-            return $result;
+            return '';
         }
 
         $method = 'render' . ucfirst($shortcode['name']);
 
         if (!method_exists(__CLASS__, $method)) {
-            return $result;
+            return isset($shortcode['content']) ? $shortcode['content'] : '';
         }
 
         return static::$method($shortcode['params'], $shortcode['content']);
