@@ -120,16 +120,14 @@ class Shortcode
      */
     public static function parse(array $shortcode)
     {
-        $result = '';
-
         if (empty($shortcode)) {
-            return $result;
+            return '';
         }
 
         $method = 'render' . ucfirst($shortcode['name']);
 
         if (!method_exists(__CLASS__, $method)) {
-            return $result;
+            return isset($shortcode['content']) ? $shortcode['content'] : '';
         }
 
         return static::$method($shortcode['params'], $shortcode['content']);
