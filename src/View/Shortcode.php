@@ -21,6 +21,10 @@ class Shortcode
      */
     public static function doShortcode($content)
     {
+        if (! is_string($content)) {
+            return '';
+        }
+
         // Get all the shortcodes
         $shortcodes = self::get($content);
 
