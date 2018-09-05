@@ -14,7 +14,32 @@ class ShortcodeTest extends TestCase
     {
         $content = 'A plain [foo] shortcode.';
         $expected = [
-            ['full' => '[foo]', 'name' => 'foo', 'params' => []]
+            ['full' => '[foo]', 'name' => 'foo', 'params' => [], 'content' => '']
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetPlainShortcodeWithClosingTag()
+    {
+        $content = 'A plain [foo][/foo] shortcode.';
+        $expected = [
+            ['full' => '[foo][/foo]', 'name' => 'foo', 'params' => [], 'content' => '']
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetPlainShortcodeWithContent()
+    {
+        $content = 'A plain [foo]Hello World![/foo] shortcode with content.';
+        $expected = [
+            [
+                'full' => '[foo]Hello World![/foo]',
+                'name' => 'foo',
+                'params' => [],
+                'content' => 'Hello World!'
+            ]
         ];
 
         $this->assertEquals($expected, Shortcode::get($content));
@@ -27,7 +52,38 @@ class ShortcodeTest extends TestCase
             [
                 'full' => '[foo hello="world" world=\'hello\']',
                 'name' => 'foo',
-                'params' => ['hello' => 'world', 'world' => 'hello']
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => ''
+            ]
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetShortcodeWithParamsAndClosingTag()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\'][/foo] with parameters.';
+        $expected = [
+            [
+                'full' => '[foo hello="world" world=\'hello\'][/foo]',
+                'name' => 'foo',
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => ''
+            ]
+        ];
+
+        $this->assertEquals($expected, Shortcode::get($content));
+    }
+
+    public function testGetShortcodeWithParamsAndContent()
+    {
+        $content = 'Shortcode [foo hello="world" world=\'hello\']Hello World![/foo] with parameters.';
+        $expected = [
+            [
+                'full' => '[foo hello="world" world=\'hello\']Hello World![/foo]',
+                'name' => 'foo',
+                'params' => ['hello' => 'world', 'world' => 'hello'],
+                'content' => 'Hello World!'
             ]
         ];
 
