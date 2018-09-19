@@ -14,7 +14,7 @@
     "require": {
         "hashmode/cakephp-tinymce-elfinder": "^1.0",
         "muffin/slug": "^1.0",
-        "qobo/cakephp-utils": "^7.0"
+        "qobo/cakephp-utils": "^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.0",
