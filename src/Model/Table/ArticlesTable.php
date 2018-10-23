@@ -24,9 +24,9 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 use Qobo\Cms\Event\EventName;
 use Qobo\Cms\View\Shortcode;
-use InvalidArgumentException;
 
 /**
  * Articles Model

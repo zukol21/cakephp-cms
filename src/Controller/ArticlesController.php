@@ -11,9 +11,9 @@
  */
 namespace Qobo\Cms\Controller;
 
+use InvalidArgumentException;
 use Qobo\Cms\Controller\AppController;
 use Qobo\Cms\Controller\UploadTrait;
-use InvalidArgumentException;
 
 /**
  * Articles Controller
