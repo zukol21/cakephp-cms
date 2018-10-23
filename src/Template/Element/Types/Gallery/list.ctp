@@ -15,7 +15,7 @@ echo $this->fetch('article-body');
 echo $this->Html->link(
     $this->Html->image($article->article_featured_images[0]->path, ['class' => 'img-responsive center-block pad']),
     [
-        'plugin' => 'Cms',
+        'plugin' => 'Qobo/Cms',
         'controller' => 'Articles',
         'action' => 'view',
         $site->slug,

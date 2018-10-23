@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Test\TestCase\Model\Table;
+namespace Qobo\Cms\Test\TestCase\Model\Table;
 
 use Cake\ORM\Association\BelongsTo;
 use Cake\ORM\Association\HasMany;
@@ -7,7 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
-use Cms\Model\Table\CategoriesTable;
+use Qobo\Cms\Model\Table\CategoriesTable;
 
 /**
  * Cms\Model\Table\CategoriesTable Test Case
@@ -28,10 +28,10 @@ class CategoriesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.categories',
-        'plugin.cms.sites',
-        'plugin.cms.articles',
-        'plugin.cms.users',
+        'plugin.qobo/cms.categories',
+        'plugin.qobo/cms.sites',
+        'plugin.qobo/cms.articles',
+        'plugin.qobo/cms.users',
     ];
 
     /**
@@ -42,7 +42,7 @@ class CategoriesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Categories') ? [] : ['className' => 'Cms\Model\Table\CategoriesTable'];
+        $config = TableRegistry::exists('Categories') ? [] : ['className' => 'Qobo\Cms\Model\Table\CategoriesTable'];
         $this->CategoriesTable = TableRegistry::get('Categories', $config);
     }
 
@@ -106,7 +106,7 @@ class CategoriesTableTest extends TestCase
         $result = $this->CategoriesTable->getBySite('general', $site);
         $this->assertNotEmpty($result);
         $this->assertInternalType('object', $result);
-        $this->assertInstanceOf(\Cms\Model\Entity\Category::class, $result);
+        $this->assertInstanceOf(\Qobo\Cms\Model\Entity\Category::class, $result);
     }
 
     /**

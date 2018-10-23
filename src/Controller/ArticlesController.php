@@ -9,16 +9,16 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Controller;
+namespace Qobo\Cms\Controller;
 
-use Cms\Controller\AppController;
-use Cms\Controller\UploadTrait;
+use Qobo\Cms\Controller\AppController;
+use Qobo\Cms\Controller\UploadTrait;
 use InvalidArgumentException;
 
 /**
  * Articles Controller
  *
- * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Qobo\Cms\Model\Table\ArticlesTable $Articles
  */
 class ArticlesController extends AppController
 {

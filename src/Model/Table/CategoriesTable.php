@@ -9,7 +9,7 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Model\Table;
+namespace Qobo\Cms\Model\Table;
 
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
@@ -57,16 +57,16 @@ class CategoriesTable extends Table
             }
         ]);
 
-        $this->belongsTo('Cms.Sites');
+        $this->belongsTo('Qobo/Cms.Sites');
         $this->belongsTo('ParentCategories', [
-            'className' => 'Cms.Categories',
+            'className' => 'Qobo/Cms.Categories',
             'foreignKey' => 'parent_id'
         ]);
         $this->hasMany('ChildCategories', [
-            'className' => 'Cms.Categories',
+            'className' => 'Qobo/Cms.Categories',
             'foreignKey' => 'parent_id'
         ]);
-        $this->hasMany('Cms.Articles', [
+        $this->hasMany('Qobo/Cms.Articles', [
             'foreignKey' => 'category_id',
             'sort' => ['Articles.publish_date' => 'DESC']
         ]);

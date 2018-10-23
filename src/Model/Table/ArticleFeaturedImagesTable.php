@@ -9,7 +9,7 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Model\Table;
+namespace Qobo\Cms\Model\Table;
 
 use Burzum\FileStorage\Model\Table\ImageStorageTable;
 

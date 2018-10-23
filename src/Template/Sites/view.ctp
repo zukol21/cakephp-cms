@@ -12,12 +12,12 @@
 ?>
 <section class="content-header">
     <div class="btn-group btn-group-sm toolbox pull-right" role="group">
-        <?= $this->element('Cms.Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
+        <?= $this->element('Qobo/Cms.Sites/toolbar', ['site' => $site, 'user' => $user]) ?>
     </div>
     <h1><?= h($site->name) ?> <small><?= $searchTitle ?></small></h1>
 </section>
 <section class="content">
-    <?= $this->element('Cms.Sites/manage', [
+    <?= $this->element('Qobo/Cms.Sites/manage', [
         'articles' => $site->articles,
         'categories' => $categories,
         'site' => $site,
@@ -26,10 +26,10 @@
     ]) ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
-            <?= $this->element('Cms.sidebar') ?>
+            <?= $this->element('Qobo/Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Cms.Articles/list', [
+            <?= $this->element('Qobo/Cms.Articles/list', [
                 'site' => $site,
                 'articles' => $site->articles,
                 'articleTypes' => $types

@@ -21,7 +21,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <?= $this->element('Cms.Articles/post', [
+                    <?= $this->element('Qobo/Cms.Articles/post', [
                         'url' => [
                             'controller' => 'Articles',
                             'action' => 'edit',

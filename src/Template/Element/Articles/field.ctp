@@ -63,6 +63,6 @@ foreach ($typeOptions['fields'] as $field => $options) {
 
     if (!$loadedEditor) {
         $loadedEditor = true;
-        echo $this->element('Cms.tinymce');
+        echo $this->element('Qobo/Cms.tinymce');
     }
 }

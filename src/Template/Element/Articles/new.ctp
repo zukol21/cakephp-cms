@@ -43,7 +43,7 @@ $this->Html->scriptBlock(
             <div class="tab-content">
             <?php foreach (array_keys($articleTypes) as $type) : ?>
                 <div role="tabpanel" class="tab-pane fade" id="<?= h($type) ?>">
-                <?= $this->element('Cms.Articles/post', [
+                <?= $this->element('Qobo/Cms.Articles/post', [
                     'categories' => $categories,
                     'url' => ['controller' => 'Articles', 'action' => 'add', $site->slug, $type],
                     'article' => $article,

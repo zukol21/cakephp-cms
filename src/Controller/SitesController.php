@@ -9,14 +9,14 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Controller;
+namespace Qobo\Cms\Controller;
 
-use Cms\Controller\AppController;
+use Qobo\Cms\Controller\AppController;
 
 /**
  * Sites Controller
  *
- * @property \Cms\Model\Table\SitesTable $Sites
+ * @property \Qobo\Cms\Model\Table\SitesTable $Sites
  */
 class SitesController extends AppController
 {
@@ -63,10 +63,10 @@ class SitesController extends AppController
         $site = $this->Sites->patchEntity($site, $this->request->data);
         if ($this->Sites->save($site)) {
             $this->Flash->success(__('The site has been saved.'));
-            $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug];
+            $redirectUrl = ['plugin' => 'Qobo/Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug];
         } else {
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
-            $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
+            $redirectUrl = ['plugin' => 'Qobo/Cms', 'controller' => 'Sites', 'action' => 'index'];
         }
 
         return $this->redirect($redirectUrl);
@@ -91,7 +91,7 @@ class SitesController extends AppController
             $this->Flash->error(__('The site could not be saved. Please, try again.'));
         }
 
-        $redirect = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
+        $redirect = ['plugin' => 'Qobo/Cms', 'controller' => 'Sites', 'action' => 'index'];
         if ($site->active) {
             $redirect['action'] = 'view';
             $redirect[] = $site->slug;
@@ -117,6 +117,6 @@ class SitesController extends AppController
             $this->Flash->error(__('The site could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index']);
+        return $this->redirect(['plugin' => 'Qobo/Cms', 'controller' => 'Sites', 'action' => 'index']);
     }
 }

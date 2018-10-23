@@ -10,15 +10,15 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-echo $this->element('Cms.Articles/modal', [
+echo $this->element('Qobo/Cms.Articles/modal', [
     'site' => $site, 'categories' => $categories, 'types' => $types, 'articles' => $articles
 ]);
 
-echo $this->element('Cms.Categories/modal', [
+echo $this->element('Qobo/Cms.Categories/modal', [
     'site' => $site, 'categories' => $site->categories, 'categoriesTree' => $categories
 ]);
 
-echo $this->element('Cms.Sites/manage-tabs', [
+echo $this->element('Qobo/Cms.Sites/manage-tabs', [
     'site' => $site, 'categories' => $categories, 'types' => $types, 'article' => $article
 ]);
 ?>

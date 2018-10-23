@@ -17,7 +17,7 @@ echo $this->Html->link('<i class="fa fa-pencil"></i> ' . __('Edit'), '#', [
     'data-toggle' => 'modal',
     'data-target' => '#cms-site-edit' . $site->id,
     'escape' => false
-]) . $this->element('Cms.Sites/modal', ['site' => $site]);
+]) . $this->element('Qobo/Cms.Sites/modal', ['site' => $site]);
 
 // delete button
 echo $this->Form->postLink(

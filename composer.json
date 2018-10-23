@@ -22,14 +22,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Cms\\": "src",
-            "Cms\\Test\\Fixture\\": "tests\\Fixture",
+            "Qobo\\Cms\\": "src",
+            "Qobo\\Cms\\Test\\Fixture\\": "tests\\Fixture",
             "Burzum\\FileStorage\\Test\\Fixture\\": "tests"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Cms\\Test\\": "tests",
+            "Qobo\\Cms\\Test\\": "tests",
             "Burzum\\FileStorage\\Test\\": "./vendor/cakedc/users/tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }

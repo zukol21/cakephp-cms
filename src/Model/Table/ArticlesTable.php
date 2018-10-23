@@ -9,7 +9,7 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Model\Table;
+namespace Qobo\Cms\Model\Table;
 
 use ArrayObject;
 use Cake\Cache\Cache;
@@ -24,8 +24,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
-use Cms\Event\EventName;
-use Cms\View\Shortcode;
+use Qobo\Cms\Event\EventName;
+use Qobo\Cms\View\Shortcode;
 use InvalidArgumentException;
 
 /**
@@ -89,15 +89,15 @@ class ArticlesTable extends Table
         ]);
 
         $this->hasMany('ArticleFeaturedImages', [
-            'className' => 'Cms.ArticleFeaturedImages',
+            'className' => 'Qobo/Cms.ArticleFeaturedImages',
             'foreignKey' => 'foreign_key',
             'conditions' => [
                 'ArticleFeaturedImages.model' => 'ArticleFeaturedImage'
             ],
             'sort' => ['ArticleFeaturedImages.created' => 'DESC']
         ]);
-        $this->belongsTo('Cms.Sites');
-        $this->belongsTo('Cms.Categories');
+        $this->belongsTo('Qobo/Cms.Sites');
+        $this->belongsTo('Qobo/Cms.Categories');
         $this->belongsTo('Author', [
             'className' => 'CakeDC/Users.Users',
             'foreignKey' => 'created_by'

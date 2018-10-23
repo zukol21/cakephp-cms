@@ -16,7 +16,7 @@ echo $this->Html->css(
     [
         'AdminLTE./plugins/daterangepicker/daterangepicker',
         'AdminLTE./plugins/select2/select2.min',
-        'Cms.style',
+        'Qobo/Cms.style',
         'Qobo/Utils.select2-bootstrap.min',
         'Qobo/Utils.select2-style'
     ],
@@ -29,8 +29,8 @@ echo $this->Html->script(
         'AdminLTE./plugins/daterangepicker/moment.min',
         'AdminLTE./plugins/daterangepicker/daterangepicker',
         'AdminLTE./plugins/select2/select2.full.min',
-        'Cms.select2.init',
-        'Cms.datetimepicker.init',
+        'Qobo/Cms.select2.init',
+        'Qobo/Cms.datetimepicker.init',
     ],
     ['block' => 'scriptBottom']
 );
@@ -71,7 +71,7 @@ $publishDate = $article && $article->publish_date ?
         ]) ?>
     </div>
     <div class="col-lg-8 col-lg-pull-4">
-        <?= $this->element('Cms.Articles/field', [
+        <?= $this->element('Qobo/Cms.Articles/field', [
             'typeOptions' => $typeOptions,
             'article' => $article
         ]) ?>

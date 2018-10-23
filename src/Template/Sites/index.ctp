@@ -89,12 +89,12 @@ echo $this->Html->scriptBlock(
         </div>
     </div>
 </section>
-<?= $this->element('Cms.Sites/modal', ['site' => null]) ?>
+<?= $this->element('Qobo/Cms.Sites/modal', ['site' => null]) ?>
 <?php
 foreach ($sites as $site) {
     if ($site->active) {
         continue;
     }
 
-    echo $this->element('Cms.Sites/modal', ['site' => $site]);
+    echo $this->element('Qobo/Cms.Sites/modal', ['site' => $site]);
 }

@@ -30,4 +30,4 @@ echo $this->Html->scriptBlock(
     'var tinymce_init_config = ' . json_encode(Configure::read('TinyMCE')) . ';',
     ['block' => 'scriptBottom']
 );
-echo $this->Html->script('Cms.tinymce.init', ['block' => 'scriptBottom']);
+echo $this->Html->script('Qobo/Cms.tinymce.init', ['block' => 'scriptBottom']);

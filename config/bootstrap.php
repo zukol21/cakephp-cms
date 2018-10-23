@@ -9,7 +9,7 @@ use Cake\Core\Configure;
 $config = Configure::read('CMS');
 $config = $config ? $config : [];
 // load default plugin config
-Configure::load('Cms.cms');
+Configure::load('Qobo/Cms.cms');
 // overwrite default plugin config by app level config
 Configure::write('CMS', array_replace_recursive(
     Configure::read('CMS'),
@@ -21,7 +21,7 @@ Configure::write('CMS', array_replace_recursive(
  */
 $config = Configure::read('FileStorage');
 $config = $config ? $config : [];
-Configure::load('Cms.file_storage');
+Configure::load('Qobo/Cms.file_storage');
 Configure::write('FileStorage', array_replace_recursive(
     Configure::read('FileStorage'),
     $config
@@ -33,7 +33,7 @@ StorageUtils::generateHashes(); // This is very important! The hashes are needed
  */
 $config = Configure::read('TinyMCE');
 $config = $config ? $config : [];
-Configure::load('Cms.tinymce');
+Configure::load('Qobo/Cms.tinymce');
 Configure::write('TinyMCE', array_replace_recursive(
     Configure::read('TinyMCE'),
     $config
@@ -44,7 +44,7 @@ Configure::write('TinyMCE', array_replace_recursive(
  */
 $config = Configure::read('TinymceElfinder');
 $config = $config ? $config : [];
-Configure::load('Cms.elfinder');
+Configure::load('Qobo/Cms.elfinder');
 Configure::write('TinymceElfinder', array_replace_recursive(
     Configure::read('TinymceElfinder'),
     $config

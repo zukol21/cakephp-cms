@@ -1,7 +1,7 @@
 <?php
-namespace Cms\Test\TestCase\View;
+namespace Qobo\Cms\Test\TestCase\View;
 
-use Cms\View\Shortcode;
+use Qobo\Cms\View\Shortcode;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 

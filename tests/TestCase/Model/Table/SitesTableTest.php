@@ -1,13 +1,13 @@
 <?php
-namespace Cms\Test\TestCase\Model\Table;
+namespace Qobo\Cms\Test\TestCase\Model\Table;
 
 use Cake\ORM\Association\HasMany;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
-use Cms\Model\Entity\Site;
-use Cms\Model\Table\SitesTable;
+use Qobo\Cms\Model\Entity\Site;
+use Qobo\Cms\Model\Table\SitesTable;
 
 /**
  * Cms\Model\Table\SitesTable Test Case
@@ -28,9 +28,9 @@ class SitesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.articles',
-        'plugin.cms.categories',
-        'plugin.cms.sites',
+        'plugin.qobo/cms.articles',
+        'plugin.qobo/cms.categories',
+        'plugin.qobo/cms.sites',
         'plugin.Burzum/FileStorage.file_storage'
     ];
 
@@ -42,7 +42,7 @@ class SitesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Sites') ? [] : ['className' => 'Cms\Model\Table\SitesTable'];
+        $config = TableRegistry::exists('Sites') ? [] : ['className' => 'Qobo\Cms\Model\Table\SitesTable'];
         $this->Sites = TableRegistry::get('Sites', $config);
     }
 

@@ -40,7 +40,7 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     ) ?>
 </section>
 <section class="content">
-    <?= $this->element('Cms.Sites/manage', [
+    <?= $this->element('Qobo/Cms.Sites/manage', [
         'articles' => [$article],
         'categories' => $categories,
         'site' => $site,
@@ -49,10 +49,10 @@ $this->Breadcrumbs->add($article->title, null, ['class' => 'active']);
     ]) ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
-            <?= $this->element('Cms.sidebar') ?>
+            <?= $this->element('Qobo/Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Cms.Articles/single', [
+            <?= $this->element('Qobo/Cms.Articles/single', [
                 'site' => $site,
                 'article' => $article,
                 'articleTypes' => $types

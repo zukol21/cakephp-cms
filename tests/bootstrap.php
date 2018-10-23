@@ -106,15 +106,15 @@ Cake\Datasource\ConnectionManager::config('test', [
 ]);
 
 // Alias AppController to the test App
-class_alias($pluginName . '\Test\App\Controller\AppController', 'App\Controller\AppController');
+class_alias('Qobo\\' . $pluginName . '\Test\App\Controller\AppController', 'App\Controller\AppController');
 // If plugin has routes.php/bootstrap.php then load them, otherwise don't.
 $loadPluginRoutes = file_exists(dirname(__FILE__) . DS . 'config' . DS . 'routes.php');
 $loadPluginBootstrap = file_exists(dirname(__FILE__) . DS . 'config' . DS . 'bootstrap.php');
 Cake\Core\Plugin::load('CakephpTinymceElfinder', ['routes' => true]);
-Cake\Core\Plugin::load($pluginName, ['path' => ROOT . DS, 'autoload' => true, 'routes' => $loadPluginRoutes, 'bootstrap' => $loadPluginBootstrap]);
+Cake\Core\Plugin::load('Qobo/' . $pluginName, ['path' => ROOT . DS, 'autoload' => true, 'routes' => $loadPluginRoutes, 'bootstrap' => $loadPluginBootstrap]);
 
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
-Configure::load('Cms.cms');
-Configure::load('Cms.elfinder');
+Configure::load('Qobo/Cms.cms');
+Configure::load('Qobo/Cms.elfinder');

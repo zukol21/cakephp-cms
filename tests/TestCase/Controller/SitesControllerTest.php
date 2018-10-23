@@ -1,17 +1,17 @@
 <?php
-namespace Cms\Test\TestCase\Controller;
+namespace Qobo\Cms\Test\TestCase\Controller;
 
 use Cake\ORM\ResultSet;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
-use Cms\Model\Entity\Site;
+use Qobo\Cms\Model\Entity\Site;
 
 class SitesControllerTest extends IntegrationTestCase
 {
     public $fixtures = [
-        'plugin.cms.sites',
-        'plugin.cms.articles',
-        'plugin.cms.categories',
+        'plugin.qobo/cms.sites',
+        'plugin.qobo/cms.articles',
+        'plugin.qobo/cms.categories',
         'plugin.Burzum/FileStorage.file_storage'
     ];
 
@@ -29,7 +29,7 @@ class SitesControllerTest extends IntegrationTestCase
 
         $this->enableRetainFlashMessages();
 
-        $this->Sites = TableRegistry::get('Cms.Sites');
+        $this->Sites = TableRegistry::get('Qobo/Cms.Sites');
 
         // Save featured image
         $data = [

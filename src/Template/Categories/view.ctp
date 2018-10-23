@@ -28,7 +28,7 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
     ) ?>
 </section>
 <section class="content">
-    <?= $this->element('Cms.Sites/manage', [
+    <?= $this->element('Qobo/Cms.Sites/manage', [
         'articles' => $category->articles,
         'categories' => $categories,
         'site' => $site,
@@ -37,10 +37,10 @@ $this->Breadcrumbs->add($category->name, null, ['class' => 'active']);
     ]) ?>
     <div class="row">
         <div class="col-xs-12 col-md-3 col-md-push-9">
-            <?= $this->element('Cms.sidebar') ?>
+            <?= $this->element('Qobo/Cms.sidebar') ?>
         </div>
         <div class="col-xs-12 col-md-7 col-md-offset-1 col-md-pull-3">
-            <?= $this->element('Cms.Articles/list', [
+            <?= $this->element('Qobo/Cms.Articles/list', [
                 'site' => $site,
                 'articles' => $category->articles,
                 'articleTypes' => $types

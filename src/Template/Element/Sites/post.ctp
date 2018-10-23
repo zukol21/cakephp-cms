@@ -13,7 +13,7 @@
 echo $this->Html->css('AdminLTE./plugins/iCheck/all', ['block' => 'css']);
 echo $this->Html->script([
     'AdminLTE./plugins/iCheck/icheck.min',
-    'Cms.icheck.init'
+    'Qobo/Cms.icheck.init'
     ], ['block' => 'scriptBottom']);
 
 $formOptions = [];

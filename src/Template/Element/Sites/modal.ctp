@@ -21,7 +21,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <?= $this->element('Cms.Sites/post', [
+                <?= $this->element('Qobo/Cms.Sites/post', [
                     'url' => [
                         'controller' => 'Sites',
                         'action' => 'edit',
@@ -44,7 +44,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <?= $this->element('Cms.Sites/post', [
+                <?= $this->element('Qobo/Cms.Sites/post', [
                     'url' => [
                         'controller' => 'Sites',
                         'action' => 'add'

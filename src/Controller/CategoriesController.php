@@ -9,14 +9,14 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Controller;
+namespace Qobo\Cms\Controller;
 
-use Cms\Controller\AppController;
+use Qobo\Cms\Controller\AppController;
 
 /**
  * Categories Controller
  *
- * @property \Cms\Model\Table\CategoriesTable $Categories
+ * @property \Qobo\Cms\Model\Table\CategoriesTable $Categories
  */
 class CategoriesController extends AppController
 {

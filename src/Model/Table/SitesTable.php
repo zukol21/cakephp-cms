@@ -9,7 +9,7 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Model\Table;
+namespace Qobo\Cms\Model\Table;
 
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
@@ -41,10 +41,10 @@ class SitesTable extends Table
         $this->addBehavior('Muffin/Slug.Slug');
         $this->addBehavior('Muffin/Trash.Trash');
 
-        $this->hasMany('Cms.Categories', [
+        $this->hasMany('Qobo/Cms.Categories', [
             'foreignKey' => 'site_id',
         ]);
-        $this->hasMany('Cms.Articles', [
+        $this->hasMany('Qobo/Cms.Articles', [
             'foreignKey' => 'site_id',
             'sort' => ['Articles.publish_date' => 'DESC']
         ]);

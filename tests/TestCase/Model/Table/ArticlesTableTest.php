@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Test\TestCase\Model\Table;
+namespace Qobo\Cms\Test\TestCase\Model\Table;
 
 use Cake\Core\Configure;
 use Cake\ORM\Association\BelongsTo;
@@ -9,9 +9,9 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Validation\Validator;
-use Cms\Model\Entity\Article;
-use Cms\Model\Entity\Category;
-use Cms\Model\Table\ArticlesTable;
+use Qobo\Cms\Model\Entity\Article;
+use Qobo\Cms\Model\Entity\Category;
+use Qobo\Cms\Model\Table\ArticlesTable;
 
 /**
  * Cms\Model\Table\ArticlesTable Test Case
@@ -32,9 +32,9 @@ class ArticlesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.cms.articles',
-        'plugin.cms.categories',
-        'plugin.cms.sites',
+        'plugin.qobo/cms.articles',
+        'plugin.qobo/cms.categories',
+        'plugin.qobo/cms.sites',
         'plugin.Burzum/FileStorage.file_storage'
     ];
 
@@ -46,11 +46,11 @@ class ArticlesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Articles') ? [] : ['className' => 'Cms\Model\Table\ArticlesTable'];
+        $config = TableRegistry::exists('Articles') ? [] : ['className' => 'Qobo\Cms\Model\Table\ArticlesTable'];
         $this->Articles = TableRegistry::get('Articles', $config);
 
         // load default plugin config
-        Configure::load('Cms.cms');
+        Configure::load('Qobo/Cms.cms');
     }
 
     /**
@@ -359,7 +359,6 @@ class ArticlesTableTest extends TestCase
 
         $entity = $this->Articles->newEntity();
         $entity = $this->Articles->patchEntity($entity, $data);
-
         $this->Articles->save($entity);
 
         $this->assertEquals('first-article-1', $entity->get('slug'));

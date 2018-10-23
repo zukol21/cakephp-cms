@@ -9,11 +9,11 @@
  * @copyright     Copyright (c) Qobo Ltd. (https://www.qobo.biz)
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Cms\Controller;
+namespace Qobo\Cms\Controller;
 
 use App\Controller\AppController as BaseController;
 use Cake\Event\Event;
-use Cms\Model\Table\ArticlesTable;
+use Qobo\Cms\Model\Table\ArticlesTable;
 
 class AppController extends BaseController
 {

@@ -2,7 +2,8 @@
 use Cake\Routing\Router;
 
 Router::plugin(
-    'Cms',
+    'Qobo/Cms',
+    ['path' => '/cms'],
     function ($routes) {
         $routes->extensions(['json']);
 

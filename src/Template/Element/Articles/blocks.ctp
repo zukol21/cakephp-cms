@@ -25,7 +25,7 @@ $this->start('article-action-buttons-start') ?>
  * BLOCK: Article action buttons
  */
 $this->start('article-action-buttons'); ?>
-    <?= $this->element('Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
+    <?= $this->element('Qobo/Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
 <?php
 $this->end();
 

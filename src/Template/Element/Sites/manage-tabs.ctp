@@ -28,7 +28,7 @@
     <div class="tab-content">
         <?php if (!empty($categories)) : ?>
         <div role="tabpanel" class="tab-pane" id="manage-content">
-            <?= $this->element('Cms.Articles/new', [
+            <?= $this->element('Qobo/Cms.Articles/new', [
                 'categories' => $categories,
                 'site' => $site,
                 'article' => $article,

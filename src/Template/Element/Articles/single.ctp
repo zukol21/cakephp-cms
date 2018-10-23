@@ -13,7 +13,7 @@
 use Cake\Cache\Cache;
 use Cake\I18n\Time;
 use Cake\Utility\Inflector;
-use Cms\View\Shortcode;
+use Qobo\Cms\View\Shortcode;
 
 // load lightbox library
 $this->Html->css('Qobo/Utils./plugins/lightbox2/css/lightbox.min', ['block' => 'css']);
@@ -76,7 +76,7 @@ $isPublished = $article->publish_date <= Time::now();
                 <i class="fa fa-<?= $articleTypes[$article->type]['icon'] ?>"></i>
                 <h3 class="box-title"><?= $article->title ?></h3>
                 <div class="box-tools pull-right">
-                    <?= $this->element('Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
+                    <?= $this->element('Qobo/Cms./Menu/article-actions', ['site' => $site, 'article' => $article]) ?>
                 </div>
             </div>
             <div class="box-body">
