@@ -45,9 +45,9 @@ class CategoriesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_categories');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_categories');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
@@ -132,10 +132,16 @@ class CategoriesTable extends Table
         }
 
         $query = $this->find('all')
-            ->limit(1)
-            ->where(['Categories.id' => $id])
-            ->orWhere(['Categories.slug' => $id])
-            ->andWhere(['Categories.site_id' => $site->id]);
+            ->where([
+                'AND' => [
+                    'Categories.site_id' => $site->id,
+                    'OR' => [
+                        'Categories.id' => $id,
+                        'Categories.slug' => $id
+                    ]
+                ]
+            ])
+            ->limit(1);
 
         return $query->firstOrFail();
     }
@@ -197,20 +203,20 @@ class CategoriesTable extends Table
     {
         $behavior = $this->behaviors()->Slug;
 
-        $primaryKey = $this->primaryKey();
-        $field = $this->aliasField($behavior->config('field'));
+        $primaryKey = $this->getPrimaryKey();
+        $field = $this->aliasField($behavior->getConfig('field'));
 
         $conditions = [$field => $slug];
         // add site id to conditions
         $conditions['Categories.site_id'] = $entity->site_id;
-        $conditions += $behavior->config('scope');
+        $conditions += $behavior->getConfig('scope');
         if ($id = $entity->{$primaryKey}) {
             $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('maxLength');
+        $length = $behavior->getConfig('maxLength');
 
         while ($this->exists($conditions)) {
             $i++;

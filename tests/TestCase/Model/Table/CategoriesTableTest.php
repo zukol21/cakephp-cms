@@ -68,10 +68,10 @@ class CategoriesTableTest extends TestCase
         $this->assertTrue($this->CategoriesTable->hasBehavior('Timestamp'));
         $this->assertTrue($this->CategoriesTable->hasBehavior('Tree'));
         $this->assertTrue($this->CategoriesTable->hasBehavior('Slug'));
-        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('Sites'));
-        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('ParentCategories'));
-        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('ChildCategories'));
-        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('Articles'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->getAssociation('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->getAssociation('ParentCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->getAssociation('ChildCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->getAssociation('Articles'));
         $this->assertInstanceOf(CategoriesTable::class, $this->CategoriesTable);
     }
 

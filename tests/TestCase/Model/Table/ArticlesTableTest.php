@@ -72,20 +72,20 @@ class ArticlesTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->assertEquals('qobo_cms_articles', $this->Articles->table());
+        $this->assertEquals('qobo_cms_articles', $this->Articles->getTable());
 
-        $this->assertEquals('title', $this->Articles->displayField());
-        $this->assertEquals('id', $this->Articles->primaryKey());
+        $this->assertEquals('title', $this->Articles->getDisplayField());
+        $this->assertEquals('id', $this->Articles->getPrimaryKey());
 
         $this->assertTrue($this->Articles->hasBehavior('Timestamp'));
         $this->assertTrue($this->Articles->hasBehavior('Trash'));
         $this->assertTrue($this->Articles->hasBehavior('Slug'));
 
-        $this->assertInstanceOf(HasMany::class, $this->Articles->association('ArticleFeaturedImages'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Sites'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Categories'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Author'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Editor'));
+        $this->assertInstanceOf(HasMany::class, $this->Articles->getAssociation('ArticleFeaturedImages'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Categories'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Author'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Editor'));
 
         $this->assertInstanceOf(ArticlesTable::class, $this->Articles);
     }

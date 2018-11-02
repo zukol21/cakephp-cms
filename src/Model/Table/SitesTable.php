@@ -33,9 +33,9 @@ class SitesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_sites');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_sites');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Slug.Slug');
@@ -117,10 +117,16 @@ class SitesTable extends Table
         $contain = $this->_getContainAssociations($id, $categories, $articles);
 
         $query = $this->find('all')
+            ->where([
+                'AND' => [
+                    'Sites.active' => true,
+                    'OR' => [
+                        'Sites.id' => $id,
+                        'Sites.slug' => $id
+                    ]
+                ]
+            ])
             ->limit(1)
-            ->where(['Sites.id' => $id])
-            ->orWhere(['Sites.slug' => $id])
-            ->andWhere(['Sites.active' => true])
             ->contain($contain);
 
         $site = $query->firstOrFail();

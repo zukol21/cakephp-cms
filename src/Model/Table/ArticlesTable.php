@@ -76,9 +76,9 @@ class ArticlesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_articles');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_articles');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Trash.Trash');
@@ -175,7 +175,7 @@ class ArticlesTable extends Table
         $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
 
         $event = new Event((string)EventName::ARTICLES_SHOW_UNPUBLISHED(), $this, ['siteId' => $siteId]);
-        $this->eventManager()->dispatch($event);
+        $this->getEventManager()->dispatch($event);
 
         $query->order(['Articles.publish_date' => 'DESC']);
         if (!(bool)$event->result) {
@@ -296,10 +296,14 @@ class ArticlesTable extends Table
         }
 
         $query = $this->find('all')
-            ->limit(1)
-            ->where(['Articles.id' => $id])
-            ->orWhere(['Articles.slug' => $id])
+            ->where([
+                'OR' => [
+                    'Articles.id' => $id,
+                    'Articles.slug' => $id
+                ]
+            ])
             ->contain($contain)
+            ->limit(1)
             ->applyOptions(['site_id' => $siteId]);
 
         return $query->firstOrFail();
@@ -441,18 +445,18 @@ class ArticlesTable extends Table
     {
         $behavior = $this->behaviors()->Slug;
 
-        $primaryKey = $this->primaryKey();
-        $field = $this->aliasField($behavior->config('field'));
+        $primaryKey = $this->getPrimaryKey();
+        $field = $this->aliasField($behavior->getConfig('field'));
 
         $conditions = [$field => $slug];
-        $conditions += $behavior->config('scope');
+        $conditions += $behavior->getConfig('scope');
         if ($id = $entity->{$primaryKey}) {
             $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('maxLength');
+        $length = $behavior->getConfig('maxLength');
 
         while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
             $i++;

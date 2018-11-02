@@ -68,8 +68,8 @@ class SitesTableTest extends TestCase
         $this->assertTrue($this->Sites->hasBehavior('Timestamp'));
         $this->assertTrue($this->Sites->hasBehavior('Slug'));
         $this->assertTrue($this->Sites->hasBehavior('Trash'));
-        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Categories'));
-        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Articles'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->getAssociation('Categories'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->getAssociation('Articles'));
         $this->assertInstanceOf(SitesTable::class, $this->Sites);
     }
 
