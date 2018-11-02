@@ -71,7 +71,7 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug
      * @param string $type Site type
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      * @throws \InvalidArgumentException
      */
     public function add($siteId, $type)
@@ -115,7 +115,7 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug.
      * @param string $type Site type.
      * @param string|null $id Article id.
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      * @throws \InvalidArgumentException
      */
     public function edit($siteId, $type, $id = null)
@@ -157,7 +157,7 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function delete($siteId, $id = null)
     {

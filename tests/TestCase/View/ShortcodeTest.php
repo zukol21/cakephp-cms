@@ -10,7 +10,7 @@ use stdClass;
  */
 class ShortcodeTest extends TestCase
 {
-    public function testGetPlainShortcode()
+    public function testGetPlainShortcode(): void
     {
         $content = 'A plain [foo] shortcode.';
         $expected = [
@@ -20,7 +20,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetPlainShortcodeWithClosingTag()
+    public function testGetPlainShortcodeWithClosingTag(): void
     {
         $content = 'A plain [foo][/foo] shortcode.';
         $expected = [
@@ -30,7 +30,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetPlainShortcodeWithContent()
+    public function testGetPlainShortcodeWithContent(): void
     {
         $content = 'A plain [foo]Hello World![/foo] shortcode with content.';
         $expected = [
@@ -45,7 +45,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetShortcodeWithParams()
+    public function testGetShortcodeWithParams(): void
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\'] with parameters.';
         $expected = [
@@ -60,7 +60,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetShortcodeWithParamsAndClosingTag()
+    public function testGetShortcodeWithParamsAndClosingTag(): void
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\'][/foo] with parameters.';
         $expected = [
@@ -75,7 +75,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetShortcodeWithParamsAndContent()
+    public function testGetShortcodeWithParamsAndContent(): void
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\']Hello World![/foo] with parameters.';
         $expected = [
@@ -90,7 +90,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function testGetWithEmptyContent()
+    public function testGetWithEmptyContent(): void
     {
         $content = '';
         $expected = [];
@@ -100,13 +100,18 @@ class ShortcodeTest extends TestCase
 
     /**
      * @dataProvider invalidContentProvider
+     * @param mixed $content Invalid content
+     * @param mixed[] $expected Expected result
      */
-    public function testGetWithInvalidContent($content, $expected)
+    public function testGetWithInvalidContent($content, array $expected): void
     {
         $this->assertEquals($expected, Shortcode::get($content));
     }
 
-    public function invalidContentProvider()
+    /**
+     * @return mixed[]
+     */
+    public function invalidContentProvider(): array
     {
         return [
             [['foo'], []],
@@ -116,7 +121,7 @@ class ShortcodeTest extends TestCase
         ];
     }
 
-    public function testParseNonExistingShortcode()
+    public function testParseNonExistingShortcode(): void
     {
         $content = 'A non-parsable [foo] shortcode.';
         $shortcodes = Shortcode::get($content);
@@ -127,7 +132,7 @@ class ShortcodeTest extends TestCase
         }
     }
 
-    public function testParseEmptyShortcode()
+    public function testParseEmptyShortcode(): void
     {
         $shortcode = [];
         $expected = '';
@@ -135,7 +140,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::parse($shortcode));
     }
 
-    public function testParseGalleryWithoutPath()
+    public function testParseGalleryWithoutPath(): void
     {
         $content = 'A [gallery] shortcode.';
         $shortcodes = Shortcode::get($content);
@@ -146,7 +151,7 @@ class ShortcodeTest extends TestCase
         }
     }
 
-    public function testParseGalleryWithInvalidPath()
+    public function testParseGalleryWithInvalidPath(): void
     {
         $content = 'A [gallery path="/some/random/path"] shortcode with invalid path.';
         $shortcodes = Shortcode::get($content);
@@ -157,7 +162,7 @@ class ShortcodeTest extends TestCase
         }
     }
 
-    public function testParseGalleryWithoutImages()
+    public function testParseGalleryWithoutImages(): void
     {
         // current dir as path
         $content = 'A [gallery path="js"] shortcode without images.';
@@ -169,7 +174,7 @@ class ShortcodeTest extends TestCase
         }
     }
 
-    public function testDoShortcode()
+    public function testDoShortcode(): void
     {
         $content = 'A plain [foo] shortcode.';
         $expected = 'A plain  shortcode.';
@@ -177,7 +182,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::doShortcode($content));
     }
 
-    public function testDoShortcodeInvalid()
+    public function testDoShortcodeInvalid(): void
     {
         $content = [];
         $expected = '';
@@ -185,7 +190,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::doShortcode($content));
     }
 
-    public function testDoShortcodeWithParams()
+    public function testDoShortcodeWithParams(): void
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\'] with parameters.';
         $expected = 'Shortcode  with parameters.';
@@ -193,7 +198,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::doShortcode($content));
     }
 
-    public function testDoShortcodeWithContent()
+    public function testDoShortcodeWithContent(): void
     {
         $content = 'A plain [foo]Hello World![/foo] shortcode with content.';
         $expected = 'A plain Hello World! shortcode with content.';
@@ -201,7 +206,7 @@ class ShortcodeTest extends TestCase
         $this->assertEquals($expected, Shortcode::doShortcode($content));
     }
 
-    public function testDoShortcodeWithParamsAndContent()
+    public function testDoShortcodeWithParamsAndContent(): void
     {
         $content = 'Shortcode [foo hello="world" world=\'hello\']Hello World![/foo] with parameters.';
         $expected = 'Shortcode Hello World! with parameters.';

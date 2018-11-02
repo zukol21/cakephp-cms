@@ -43,7 +43,11 @@ class CategoriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Categories') ? [] : ['className' => 'Cms\Model\Table\CategoriesTable'];
-        $this->CategoriesTable = TableRegistry::get('Categories', $config);
+        /**
+         * @var \Cms\Model\Table\CategoriesTable $table
+         */
+        $table = TableRegistry::get('Categories', $config);
+        $this->CategoriesTable = $table;
     }
 
     /**
@@ -63,7 +67,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->assertTrue($this->CategoriesTable->hasBehavior('Timestamp'));
         $this->assertTrue($this->CategoriesTable->hasBehavior('Tree'));
@@ -80,7 +84,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->assertInstanceOf(Validator::class, $this->CategoriesTable->validationDefault(new Validator()));
     }
@@ -90,7 +94,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->assertInstanceOf(RulesChecker::class, $this->CategoriesTable->buildRules(new RulesChecker()));
     }
@@ -100,7 +104,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetBySite()
+    public function testGetBySite(): void
     {
         $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('general', $site);
@@ -115,7 +119,7 @@ class CategoriesTableTest extends TestCase
      * @return void
      * @expectedException \InvalidArgumentException
      */
-    public function testGetBySiteWithoutId()
+    public function testGetBySiteWithoutId(): void
     {
         $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('', $site);
@@ -127,7 +131,7 @@ class CategoriesTableTest extends TestCase
      * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      * @return void
      */
-    public function testGetBySiteWithWrongId()
+    public function testGetBySiteWithWrongId(): void
     {
         $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('non-existing-id', $site);
@@ -138,7 +142,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testUniqueSlug()
+    public function testUniqueSlug(): void
     {
         $data = ['name' => 'Foo bar', 'site_id' => '00000000-0000-0000-0000-000000000001'];
         $entity = $this->CategoriesTable->newEntity();
@@ -158,7 +162,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetSiteById()
+    public function testGetSiteById(): void
     {
         $entity = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
 
@@ -171,7 +175,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetSiteBySlug()
+    public function testGetSiteBySlug(): void
     {
         $entity = $this->CategoriesTable->Sites->getSite('blog');
 
@@ -185,7 +189,7 @@ class CategoriesTableTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @return void
      */
-    public function testGetSiteWithoutId()
+    public function testGetSiteWithoutId(): void
     {
         $entity = $this->CategoriesTable->Sites->getSite(null);
     }
@@ -196,12 +200,12 @@ class CategoriesTableTest extends TestCase
      * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      * @return void
      */
-    public function testGetSiteWithNonExistingId()
+    public function testGetSiteWithNonExistingId(): void
     {
         $entity = $this->CategoriesTable->Sites->getSite('non-existing-id');
     }
 
-    public function testGetTreeList()
+    public function testGetTreeList(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
 
@@ -213,7 +217,7 @@ class CategoriesTableTest extends TestCase
         $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId));
     }
 
-    public function testGetTreeListWithCategoryId()
+    public function testGetTreeListWithCategoryId(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
         $categoryId = '00000000-0000-0000-0000-000000000001';
@@ -225,7 +229,7 @@ class CategoriesTableTest extends TestCase
         $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, $categoryId));
     }
 
-    public function testGetTreeListWithArticles()
+    public function testGetTreeListWithArticles(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
 

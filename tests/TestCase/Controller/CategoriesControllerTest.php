@@ -6,6 +6,9 @@ use Cake\TestSuite\IntegrationTestCase;
 use Cms\Model\Entity\Category;
 use Cms\Model\Entity\Site;
 
+/**
+ * @property \Cms\Model\Table\CategoriesTable $Categories
+ */
 class CategoriesControllerTest extends IntegrationTestCase
 {
     public $fixtures = [
@@ -29,6 +32,10 @@ class CategoriesControllerTest extends IntegrationTestCase
 
         $this->enableRetainFlashMessages();
 
+        /**
+         * @var \Cms\Model\Table\CategoriesTable $table
+         */
+        $table = TableRegistry::get('Cms.Categories');
         $this->Categories = TableRegistry::get('Cms.Categories');
 
         // Save featured image
@@ -50,7 +57,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         parent::tearDown();
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->get('/cms/site/blog/category/general/view');
         $this->assertResponseOk();
@@ -63,7 +70,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertInternalType('array', $this->viewVariable('filteredCategories'));
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
             'name' => 'Category 7'
@@ -76,7 +83,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertSession('The category has been saved.', 'Flash.flash.0.message');
     }
 
-    public function testAddValidationError()
+    public function testAddValidationError(): void
     {
         $data = [
             // 'name' => 'News',
@@ -92,7 +99,7 @@ class CategoriesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testEdit($id)
+    public function testEdit(string $id): void
     {
         $data = ['name' => 'Category foobar'];
         $this->put('/cms/site/blog/categories/edit/' . $id, $data);
@@ -112,7 +119,7 @@ class CategoriesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testDelete($id)
+    public function testDelete(string $id): void
     {
         $this->delete('/cms/site/blog/categories/delete/' . $id);
 
@@ -125,7 +132,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertTrue($query->isEmpty());
     }
 
-    public function testDeleteInvalidId()
+    public function testDeleteInvalidId(): void
     {
         $id = '00000000-0000-0000-0000-000000000404';
         $this->delete('/cms/site/blog/categories/delete/' . $id);
@@ -137,7 +144,7 @@ class CategoriesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testMoveNode($id, $action)
+    public function testMoveNode(string $id, string $action): void
     {
         $result = $this->Categories->find()
             ->where(['id' => $id])
@@ -159,7 +166,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertNotEquals($result->get('rght'), $entity->get('rght'));
     }
 
-    public function testMoveNodeInvalidAction()
+    public function testMoveNodeInvalidAction(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
         $action = 'foobar';
@@ -171,7 +178,10 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertSession('Unknown move action.', 'Flash.flash.0.message');
     }
 
-    public function idsProvider()
+    /**
+     * @return mixed[]
+     */
+    public function idsProvider(): array
     {
         return [
             ['00000000-0000-0000-0000-000000000001', 'down'],

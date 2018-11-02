@@ -53,7 +53,7 @@ class CategoriesController extends AppController
      * Add method
      *
      * @param string $siteId Site id or slug.
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      */
     public function add($siteId)
     {
@@ -80,8 +80,8 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id or slug.
-     * @return \Cake\Network\Response
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @return \Cake\Http\Response
+     * @throws \Cake\Http\Exception\NotFoundException When record not found.
      */
     public function edit($siteId, $id = null)
     {
@@ -108,7 +108,7 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id.
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($siteId, $id = null)
@@ -138,7 +138,7 @@ class CategoriesController extends AppController
      * @param string $siteId Site id or slug
      * @param  string $id category id
      * @param  string $action move action
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response
      * @throws InvalidPrimaryKeyException When provided id is invalid.
      */
     public function moveNode($siteId, $id = null, $action = '')

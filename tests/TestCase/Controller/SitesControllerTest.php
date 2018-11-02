@@ -6,6 +6,9 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 use Cms\Model\Entity\Site;
 
+/**
+ * @property \Cms\Model\Table\SitesTable $Sites
+ */
 class SitesControllerTest extends IntegrationTestCase
 {
     public $fixtures = [
@@ -29,7 +32,11 @@ class SitesControllerTest extends IntegrationTestCase
 
         $this->enableRetainFlashMessages();
 
-        $this->Sites = TableRegistry::get('Cms.Sites');
+        /**
+         * @var \Cms\Model\Table\SitesTable $table
+         */
+        $table = TableRegistry::get('Cms.Sites');
+        $this->Sites = $table;
 
         // Save featured image
         $data = [
@@ -50,7 +57,7 @@ class SitesControllerTest extends IntegrationTestCase
         parent::tearDown();
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $this->get('/cms/sites');
         $this->assertResponseOk();
@@ -61,7 +68,7 @@ class SitesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testView($id)
+    public function testView(string $id): void
     {
         $this->get('/cms/sites/view/' . $id);
         $this->assertResponseOk();
@@ -73,7 +80,7 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertInternalType('array', $this->viewVariable('filteredCategories'));
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
             'name' => 'News',
@@ -87,7 +94,7 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertSession('The site has been saved.', 'Flash.flash.0.message');
     }
 
-    public function testAddValidationError()
+    public function testAddValidationError(): void
     {
         $data = [
             'name' => 'News',
@@ -101,7 +108,7 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertSession('The site could not be saved. Please, try again.', 'Flash.flash.0.message');
     }
 
-    public function testEdit()
+    public function testEdit(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
         $data = ['name' => 'Foobar'];
@@ -116,7 +123,7 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertEquals($data['name'], $entity->get('name'));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
         $this->delete('/cms/sites/delete/' . $id);
@@ -130,7 +137,7 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertTrue($query->isEmpty());
     }
 
-    public function testDeleteInvalidId()
+    public function testDeleteInvalidId(): void
     {
         $id = '00000000-0000-0000-0000-000000000404';
         $this->delete('/cms/sites/delete/' . $id);
@@ -139,7 +146,10 @@ class SitesControllerTest extends IntegrationTestCase
         $this->assertResponseCode(404);
     }
 
-    public function idsProvider()
+    /**
+     * @return mixed[]
+     */
+    public function idsProvider(): array
     {
         return [
             ['00000000-0000-0000-0000-000000000001'],
