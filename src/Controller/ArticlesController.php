@@ -30,9 +30,10 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug.
      * @param string $typeId Type slug.
      * @param string|null $id Article id.
-     * @return void
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function view($siteId, $typeId, $id = null)
+    public function view(string $siteId, string $typeId, ?string $id)
     {
         $site = $this->Articles->Sites->getSite($siteId, true);
 
@@ -49,10 +50,12 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string $typeId Type slug.
-     * @return void
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function type($siteId, $typeId)
+    public function type(string $siteId, string $typeId)
     {
         $site = $this->Articles->Sites->getSite($siteId, true);
 
@@ -71,10 +74,12 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug
      * @param string $type Site type
-     * @return \Cake\Http\Response
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function add($siteId, $type)
+    public function add(string $siteId, string $type)
     {
         $this->request->allowMethod(['post']);
 
@@ -92,18 +97,21 @@ class ArticlesController extends AppController
             'created_by' => $this->Auth->user('id'),
             'modified_by' => $this->Auth->user('id')
         ];
-        $data = array_merge($this->request->data, $data);
+        $requestData = (array)$this->request->getData();
+
+        $data = array_merge($requestData, $data);
 
         $article = $this->Articles->newEntity();
         $article = $this->Articles->patchEntity($article, $data);
+
         if ($this->Articles->save($article)) {
-            $this->Flash->success(__('The article has been saved.'));
+            $this->Flash->success((string)__('The article has been saved.'));
             //Upload the featured image when there is one.
-            if ($this->_isValidUpload($this->request->data)) {
+            if ($this->_isValidUpload($requestData)) {
                 $this->_upload($article->get('id'));
             }
         } else {
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The article could not be saved. Please, try again.'));
         }
 
         return $this->redirect($this->referer());
@@ -115,10 +123,12 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug.
      * @param string $type Site type.
      * @param string|null $id Article id.
-     * @return \Cake\Http\Response
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function edit($siteId, $type, $id = null)
+    public function edit(string $siteId, string $type, ?string $id)
     {
         $this->request->allowMethod(['patch', 'post', 'put']);
 
@@ -135,18 +145,20 @@ class ArticlesController extends AppController
             'type' => $type,
             'modified_by' => $this->Auth->user('id')
         ];
-        $data = array_merge($this->request->data, $data);
+        $requestData = (array)$this->request->getData();
+        $data = array_merge($requestData, $data);
 
         $article = $this->Articles->getArticle($id, $site->id);
         $article = $this->Articles->patchEntity($article, $data);
+
         if ($this->Articles->save($article)) {
             //Upload the featured image when there is one.
-            if ($this->_isValidUpload($this->request->data)) {
+            if ($this->_isValidUpload($requestData)) {
                 $this->_upload($article->get('id'));
             }
-            $this->Flash->success(__('The article has been saved.'));
+            $this->Flash->success((string)__('The article has been saved.'));
         } else {
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The article could not be saved. Please, try again.'));
         }
 
         return $this->redirect($this->referer());
@@ -157,23 +169,24 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Article id.
-     * @return \Cake\Http\Response
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function delete($siteId, $id = null)
+    public function delete(string $siteId, ?string $id)
     {
         $this->request->allowMethod(['post', 'delete']);
 
         $site = $this->Articles->Sites->getSite($siteId);
-        $article = $this->Articles->getArticle($id, $site->id);
+        $article = $this->Articles->getArticle($id, $site->get('id'));
 
         if ($this->Articles->delete($article)) {
-            $this->Flash->success(__('The article has been deleted.'));
+            $this->Flash->success((string)__('The article has been deleted.'));
         } else {
-            $this->Flash->error(__('The article could not be deleted. Please, try again.'));
+            $this->Flash->error((string)__('The article could not be deleted. Please, try again.'));
         }
 
         $redirect = $this->referer();
-        if (false !== strpos($redirect, $article->slug)) {
+        if (false !== strpos($redirect, $article->get('slug'))) {
             $redirect = ['controller' => 'Sites', 'action' => 'view', $site->slug];
         }
 
@@ -184,14 +197,15 @@ class ArticlesController extends AppController
      * Uploads and stores the related file.
      *
      * @param  int|null $articleId id of the relate slide
+     *
      * @return void
      */
-    protected function _upload($articleId = null)
+    protected function _upload(?int $articleId): void
     {
         $entity = $this->Articles->ArticleFeaturedImages->newEntity();
         $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
             $entity,
-            $this->request->data
+            $this->request->getData()
         );
 
         // upload image

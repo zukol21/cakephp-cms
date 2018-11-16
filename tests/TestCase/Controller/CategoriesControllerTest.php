@@ -8,7 +8,7 @@ use Cms\Model\Entity\Site;
 
 /**
  * @property \Cms\Model\Table\CategoriesTable $Categories
- * @property \Cake\ORM\Association\BelongsToMany $ArticleFeaturedImages
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
  */
 class CategoriesControllerTest extends IntegrationTestCase
 {

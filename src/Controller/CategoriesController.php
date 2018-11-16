@@ -17,6 +17,7 @@ use Cms\Controller\AppController;
  * Categories Controller
  *
  * @property \Cms\Model\Table\CategoriesTable $Categories
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
  */
 class CategoriesController extends AppController
 {
@@ -58,7 +59,7 @@ class CategoriesController extends AppController
      *
      * @return \Cake\Http\Response|void|null Redirects on successful add, renders add otherwise.
      */
-    public function add($siteId)
+    public function add(string $siteId)
     {
         $this->request->allowMethod(['post']);
 
@@ -66,13 +67,13 @@ class CategoriesController extends AppController
         $category = $this->Categories->newEntity();
 
         $data = ['site_id' => $site->id];
-        $data = array_merge($this->request->getData(), $data);
+        $data = array_merge((array)$this->request->getData(), $data);
 
         $category = $this->Categories->patchEntity($category, $data);
         if ($this->Categories->save($category)) {
-            $this->Flash->success(__('The category has been saved.'));
+            $this->Flash->success((string)__('The category has been saved.'));
         } else {
-            $this->Flash->error(__('The category could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The category could not be saved. Please, try again.'));
         }
 
         return $this->redirect($this->referer());
@@ -83,10 +84,12 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id or slug.
-     * @return \Cake\Http\Response
+     *
      * @throws \Cake\Http\Exception\NotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function edit($siteId, $id = null)
+    public function edit(string $siteId, ?string $id)
     {
         $this->request->allowMethod(['patch', 'post', 'put']);
 
@@ -94,13 +97,14 @@ class CategoriesController extends AppController
         $category = $this->Categories->getBySite($id, $site);
 
         $data = ['site_id' => $site->id];
-        $data = array_merge($this->request->data, $data);
+        $data = array_merge((array)$this->request->getData(), $data);
 
         $category = $this->Categories->patchEntity($category, $data);
+
         if ($this->Categories->save($category)) {
-            $this->Flash->success(__('The category has been saved.'));
+            $this->Flash->success((string)__('The category has been saved.'));
         } else {
-            $this->Flash->error(__('The category could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The category could not be saved. Please, try again.'));
         }
 
          return $this->redirect($this->referer());
@@ -111,10 +115,12 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id.
-     * @return \Cake\Http\Response
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function delete($siteId, $id = null)
+    public function delete(string $siteId, ?string $id)
     {
         $this->request->allowMethod(['post', 'delete']);
 
@@ -122,14 +128,14 @@ class CategoriesController extends AppController
         $category = $this->Categories->getBySite($id, $site);
 
         if ($this->Categories->delete($category)) {
-            $this->Flash->success(__('The category has been deleted.'));
+            $this->Flash->success((string)__('The category has been deleted.'));
         } else {
-            $this->Flash->error(__('The category could not be deleted. Please, try again.'));
+            $this->Flash->error((string)__('The category could not be deleted. Please, try again.'));
         }
 
         $redirect = $this->referer();
-        if (false !== strpos($redirect, $category->slug)) {
-            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->slug];
+        if (false !== strpos($redirect, $category->get('slug'))) {
+            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->get('slug')];
         }
 
         return $this->redirect($redirect);
@@ -139,16 +145,19 @@ class CategoriesController extends AppController
      * Move the node.
      *
      * @param string $siteId Site id or slug
-     * @param  string $id category id
-     * @param  string $action move action
-     * @return \Cake\Http\Response
-     * @throws InvalidPrimaryKeyException When provided id is invalid.
+     * @param string|null $id category id
+     * @param string $action move action
+     *
+     * @throws \Cake\Datasource\Exception\InvalidPrimaryKeyException
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function moveNode($siteId, $id = null, $action = '')
+    public function moveNode(string $siteId, ?string $id, string $action = '')
     {
         $moveActions = ['up', 'down'];
+
         if (!in_array($action, $moveActions)) {
-            $this->Flash->error(__('Unknown move action.'));
+            $this->Flash->error((string)__('Unknown move action.'));
 
             return $this->redirect($this->referer());
         }
@@ -162,9 +171,9 @@ class CategoriesController extends AppController
         $this->Categories->behaviors()->Tree->config('scope', ['site_id' => $category->get('site_id')]);
 
         if ($this->Categories->{$moveFunction}($category)) {
-            $this->Flash->success(__('{0} has been moved {1} successfully.', $category->name, $action));
+            $this->Flash->success((string)__('{0} has been moved {1} successfully.', $category->get('name'), $action));
         } else {
-            $this->Flash->error(__('Fail to move {0} {1}.', $category->name, $action));
+            $this->Flash->error((string)__('Fail to move {0} {1}.', $category->get('name'), $action));
         }
 
         return $this->redirect($this->referer());

@@ -22,7 +22,7 @@ use InvalidArgumentException;
  *
  * @property \Cake\ORM\Association\BelongsTo $ParentCategories
  * @property \Cake\ORM\Association\HasMany $ChildCategories
- * @property \Cake\ORM\Association\BelongsToMany $Articles
+ * @property \Cms\Model\Table\ArticlesTable $Articles
  *
  * @mixin \Muffin\Slug\Model\Behavior\SlugBehavior
  *
