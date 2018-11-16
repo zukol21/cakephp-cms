@@ -11,6 +11,13 @@ use Cms\Model\Entity\Site;
  */
 class CategoriesControllerTest extends IntegrationTestCase
 {
+    /**
+     * Category table
+     *
+     * @var \Cms\Model\Table\CategoriesTable $Categories
+     */
+    public $Categories;
+
     public $fixtures = [
         'plugin.cms.categories',
         'plugin.cms.articles',
@@ -36,7 +43,7 @@ class CategoriesControllerTest extends IntegrationTestCase
          * @var \Cms\Model\Table\CategoriesTable $table
          */
         $table = TableRegistry::get('Cms.Categories');
-        $this->Categories = TableRegistry::get('Cms.Categories');
+        $this->Categories = $table;
 
         // Save featured image
         $data = [
@@ -108,7 +115,9 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertResponseCode(302);
         $this->assertRedirect('/');
         $this->assertSession('The category has been saved.', 'Flash.flash.0.message');
-
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
         $entity = $this->Categories->find()
             ->where(['id' => $id])
             ->orWhere(['slug' => $id])
@@ -146,6 +155,9 @@ class CategoriesControllerTest extends IntegrationTestCase
      */
     public function testMoveNode(string $id, string $action): void
     {
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
         $result = $this->Categories->find()
             ->where(['id' => $id])
             ->orWhere(['slug' => $id])
@@ -157,6 +169,9 @@ class CategoriesControllerTest extends IntegrationTestCase
         $this->assertResponseCode(302);
         $this->assertRedirect('/');
 
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
         $entity = $this->Categories->find()
             ->where(['id' => $id])
             ->orWhere(['slug' => $id])

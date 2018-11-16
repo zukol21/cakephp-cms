@@ -92,8 +92,8 @@ class SitesTableTest extends TestCase
          */
         $entity = $this->Sites->save($entity);
 
-        $this->assertNotEmpty($entity->id);
-        $this->assertEquals('foo-bar', $entity->slug);
+        $this->assertNotEmpty($entity->get('id'));
+        $this->assertEquals('foo-bar', $entity->get('slug'));
 
         $this->assertInstanceOf(Validator::class, $this->Sites->validationDefault(new Validator()));
     }
@@ -149,13 +149,5 @@ class SitesTableTest extends TestCase
     public function testGetSiteEmptyParameter(): void
     {
         $this->Sites->getSite('');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetSiteWrongParameter(): void
-    {
-        $this->Sites->getSite(['foo']);
     }
 }

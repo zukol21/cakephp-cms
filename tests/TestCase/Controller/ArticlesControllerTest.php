@@ -141,6 +141,9 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertRedirect('/');
         $this->assertSession('The article has been saved.', 'Flash.flash.0.message');
 
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
         $entity = $this->Articles->find()
             ->where(['id' => $id])
             ->orWhere(['slug' => $id])

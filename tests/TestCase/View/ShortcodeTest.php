@@ -184,7 +184,7 @@ class ShortcodeTest extends TestCase
 
     public function testDoShortcodeInvalid(): void
     {
-        $content = [];
+        $content = '';
         $expected = '';
 
         $this->assertEquals($expected, Shortcode::doShortcode($content));

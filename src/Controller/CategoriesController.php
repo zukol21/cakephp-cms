@@ -25,10 +25,12 @@ class CategoriesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string|null $id Category id.
-     * @return void
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return void
      */
-    public function view($siteId, $id = null)
+    public function view(string $siteId, ?string $id): void
     {
         $site = $this->Categories->Sites->getSite($siteId, true);
         $category = $this->Categories->getBySite($id, $site);
@@ -53,7 +55,8 @@ class CategoriesController extends AppController
      * Add method
      *
      * @param string $siteId Site id or slug.
-     * @return \Cake\Http\Response
+     *
+     * @return \Cake\Http\Response|void|null Redirects on successful add, renders add otherwise.
      */
     public function add($siteId)
     {
@@ -63,7 +66,7 @@ class CategoriesController extends AppController
         $category = $this->Categories->newEntity();
 
         $data = ['site_id' => $site->id];
-        $data = array_merge($this->request->data, $data);
+        $data = array_merge($this->request->getData(), $data);
 
         $category = $this->Categories->patchEntity($category, $data);
         if ($this->Categories->save($category)) {

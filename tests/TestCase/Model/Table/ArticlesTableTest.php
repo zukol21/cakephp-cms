@@ -117,8 +117,8 @@ class ArticlesTableTest extends TestCase
 
         $this->Articles->save($entity);
 
-        $this->assertNotEmpty($entity->id);
-        $this->assertEquals('foo-bar', $entity->slug);
+        $this->assertNotEmpty($entity->get('id'));
+        $this->assertEquals('foo-bar', $entity->get('slug'));
 
         $this->assertInstanceOf(Validator::class, $this->Articles->validationDefault(new Validator()));
     }
@@ -214,14 +214,6 @@ class ArticlesTableTest extends TestCase
         $this->assertEquals('foo', $this->Articles->getSearchQuery());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetSearchQueryWrongParameter(): void
-    {
-        $this->Articles->setSearchQuery([]);
-    }
-
     public function testApplySearch(): void
     {
         $query = $this->Articles->find();
@@ -272,14 +264,6 @@ class ArticlesTableTest extends TestCase
         $this->Articles->getArticle('');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticleWrongParameter(): void
-    {
-        $this->Articles->getArticle(['foo']);
-    }
-
     public function testGetArticles(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
@@ -312,22 +296,6 @@ class ArticlesTableTest extends TestCase
             $this->assertInstanceOf(Category::class, $entity->get('category'));
             $this->assertInternalType('array', $entity->get('article_featured_images'));
         }
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticlesInvalidFirstParameter(): void
-    {
-        $this->Articles->getArticles([], '00000000-0000-0000-0000-000000000001');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticlesInvalidSecondParameter(): void
-    {
-        $this->Articles->getArticles('00000000-0000-0000-0000-000000000001', []);
     }
 
     public function testGetArticlesByCategory(): void

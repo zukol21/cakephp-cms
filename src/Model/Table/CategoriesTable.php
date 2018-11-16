@@ -11,6 +11,7 @@
  */
 namespace Cms\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -115,13 +116,13 @@ class CategoriesTable extends Table
     /**
      * Fetch and return Category by id or slug and associated Site id.
      *
-     * @param string $id Category id or slug.
-     * @param \Cake\ORM\Entity $site Site entity.
+     * @param string|null $id Category id or slug.
+     * @param \Cake\Datasource\EntityInterface $site Site entity.
      * @return \Cake\ORM\Entity
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getBySite($id, Entity $site)
+    public function getBySite(?string $id, EntityInterface $site)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Category id or slug cannot be empty.');

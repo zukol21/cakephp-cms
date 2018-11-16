@@ -237,7 +237,7 @@ class ArticlesTable extends Table
      * @param string $searchQuery Search query string
      * @return void
      */
-    public function setSearchQuery($searchQuery)
+    public function setSearchQuery(string $searchQuery)
     {
         if (!is_string($searchQuery)) {
             throw new InvalidArgumentException('Search query must be a string.');
@@ -277,7 +277,7 @@ class ArticlesTable extends Table
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function getArticle($id, $siteId = null, $associated = false)
+    public function getArticle(string $id, $siteId = null, $associated = false)
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Article id or slug cannot be empty.');
@@ -315,11 +315,13 @@ class ArticlesTable extends Table
      * @param string $siteId Site id.
      * @param string $type Type name.
      * @param bool $associated Contain associated categories and images.
-     * @return \Cake\ORM\Entity
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\ResultSetInterface
      */
-    public function getArticles($siteId, $type, $associated = false)
+    public function getArticles(string $siteId, string $type, bool $associated = false)
     {
         if (!is_string($siteId)) {
             throw new InvalidArgumentException('Site id or slug must be a string.');
@@ -330,7 +332,7 @@ class ArticlesTable extends Table
         }
 
         $contain = [];
-        if ((bool)$associated) {
+        if ($associated) {
             $contain = [
                 'Categories',
                 'ArticleFeaturedImages'
@@ -404,7 +406,7 @@ class ArticlesTable extends Table
      * @param string $type Type name
      * @return array
      */
-    public function getTypeOptions($type)
+    public function getTypeOptions(string $type): array
     {
         $result = [];
 
@@ -422,7 +424,7 @@ class ArticlesTable extends Table
      * Returns specified category(ies) articles.
      *
      * @param array $ids Category(ies) ID(s)
-     * @return \Cake\ORM\ResultSet
+     * @return \Cake\Datasource\ResultSetInterface
      */
     public function getArticlesByCategory(array $ids)
     {
