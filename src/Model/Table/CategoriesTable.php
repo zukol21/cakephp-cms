@@ -12,7 +12,6 @@
 namespace Cms\Model\Table;
 
 use Cake\Datasource\EntityInterface;
-use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -24,6 +23,9 @@ use InvalidArgumentException;
  * @property \Cake\ORM\Association\BelongsTo $ParentCategories
  * @property \Cake\ORM\Association\HasMany $ChildCategories
  * @property \Cake\ORM\Association\BelongsToMany $Articles
+ *
+ * @mixin \Muffin\Slug\Model\Behavior\SlugBehavior
+ *
  */
 class CategoriesTable extends Table
 {
@@ -53,7 +55,7 @@ class CategoriesTable extends Table
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
         $this->addBehavior('Muffin/Slug.Slug', [
-            'unique' => function (Entity $entity, $slug, $separator) {
+            'unique' => function (EntityInterface $entity, $slug, $separator) {
                 return $this->_uniqueSlug($entity, $slug, $separator);
             }
         ]);
@@ -118,11 +120,13 @@ class CategoriesTable extends Table
      *
      * @param string|null $id Category id or slug.
      * @param \Cake\Datasource\EntityInterface $site Site entity.
-     * @return \Cake\ORM\Entity
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function getBySite(?string $id, EntityInterface $site)
+    public function getBySite(?string $id, EntityInterface $site): EntityInterface
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Category id or slug cannot be empty.');
@@ -143,8 +147,14 @@ class CategoriesTable extends Table
                 ]
             ])
             ->limit(1);
+        $query->enableHydration(true);
 
-        return $query->firstOrFail();
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
+        $result = $query->firstOrFail();
+
+        return $result;
     }
 
     /**
@@ -154,9 +164,9 @@ class CategoriesTable extends Table
      * @param string $categoryId Site Id.
      * @param bool $filteredArticles flag in order to display a category if there is at least one article under this category.
      *
-     * @return array
+     * @return mixed[]
      */
-    public function getTreeList($siteId = '', $categoryId = '', $filteredArticles = false)
+    public function getTreeList(string $siteId = '', string $categoryId = '', bool $filteredArticles = false): array
     {
         $key = $siteId . $categoryId;
 
@@ -195,13 +205,17 @@ class CategoriesTable extends Table
     /**
      * Returns a unique slug.
      *
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @param string $slug Slug.
      * @param string $separator Separator.
+     *
      * @return string Unique slug.
      */
-    protected function _uniqueSlug(Entity $entity, $slug, $separator)
+    protected function _uniqueSlug(EntityInterface $entity, ?string $slug, ?string $separator): string
     {
+        /**
+         * @var \Muffin\Slug\Model\Behavior\SlugBehavior $Slug
+         */
         $behavior = $this->behaviors()->Slug;
 
         $primaryKey = $this->getPrimaryKey();
@@ -209,7 +223,7 @@ class CategoriesTable extends Table
 
         $conditions = [$field => $slug];
         // add site id to conditions
-        $conditions['Categories.site_id'] = $entity->site_id;
+        $conditions['Categories.site_id'] = $entity->get('site_id');
         $conditions += $behavior->getConfig('scope');
         if ($id = $entity->{$primaryKey}) {
             $conditions['NOT'][$this->aliasField($primaryKey)] = $id;

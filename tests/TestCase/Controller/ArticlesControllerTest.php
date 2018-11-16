@@ -9,6 +9,7 @@ use Cms\Model\Entity\Site;
 
 /**
  * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
  */
 class ArticlesControllerTest extends IntegrationTestCase
 {
