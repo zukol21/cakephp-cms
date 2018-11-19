@@ -22,7 +22,7 @@ use InvalidArgumentException;
  * Sites Model
  *
  * @property \Cms\Model\Table\CategoriesTable $Categories
- * @property \Cake\ORM\Association\HasMany $Articles
+ * @property \Cms\Model\Table\ArticlesTable $Articles
  */
 class SitesTable extends Table
 {

@@ -19,6 +19,7 @@ use InvalidArgumentException;
  * Articles Controller
  *
  * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Cms\Model\Table\SitesTable $Sites
  */
 class ArticlesController extends AppController
 {
@@ -187,7 +188,7 @@ class ArticlesController extends AppController
 
         $redirect = $this->referer();
         if (false !== strpos($redirect, $article->get('slug'))) {
-            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->slug];
+            $redirect = ['controller' => 'Sites', 'action' => 'view', $site->get('slug')];
         }
 
         return $this->redirect($redirect);
@@ -214,7 +215,7 @@ class ArticlesController extends AppController
             // delete old image
             $this->Articles->ArticleFeaturedImages->deleteAll([
                 'ArticleFeaturedImages.foreign_key' => $articleId,
-                'ArticleFeaturedImages.path !=' => $entity->path
+                'ArticleFeaturedImages.path !=' => $entity->get('path')
             ]);
         }
     }

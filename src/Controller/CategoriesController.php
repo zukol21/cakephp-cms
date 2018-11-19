@@ -45,7 +45,7 @@ class CategoriesController extends AppController
         $categoryIds[] = $category->id;
 
         $articles = $this->Categories->Articles->getArticlesByCategory($categoryIds);
-        $category->articles = $articles->toArray();
+        $category->set('articles', $articles->toArray());
 
         $this->set('filteredCategories', $this->Categories->getTreeList($site->id, '', true));
         $this->set(compact('site', 'category', 'categories'));
@@ -168,7 +168,8 @@ class CategoriesController extends AppController
         $moveFunction = 'move' . $action;
 
         // persist tree structure per site
-        $this->Categories->behaviors()->Tree->config('scope', ['site_id' => $category->get('site_id')]);
+        $treeBehavior = $this->Categories->getBehavior('Tree');
+        $treeBehavior->config('scope', ['site_id' => $category->get('site_id')]);
 
         if ($this->Categories->{$moveFunction}($category)) {
             $this->Flash->success((string)__('{0} has been moved {1} successfully.', $category->get('name'), $action));

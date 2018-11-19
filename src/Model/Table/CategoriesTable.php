@@ -23,6 +23,7 @@ use InvalidArgumentException;
  * @property \Cake\ORM\Association\BelongsTo $ParentCategories
  * @property \Cake\ORM\Association\HasMany $ChildCategories
  * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Cms\Model\Table\SitesTable $Sites
  *
  * @mixin \Muffin\Slug\Model\Behavior\SlugBehavior
  *
@@ -213,10 +214,7 @@ class CategoriesTable extends Table
      */
     protected function _uniqueSlug(EntityInterface $entity, ?string $slug, ?string $separator): string
     {
-        /**
-         * @var \Muffin\Slug\Model\Behavior\SlugBehavior $Slug
-         */
-        $behavior = $this->behaviors()->Slug;
+        $behavior = $this->getBehavior('Slug');
 
         $primaryKey = $this->getPrimaryKey();
         $field = $this->aliasField($behavior->getConfig('field'));

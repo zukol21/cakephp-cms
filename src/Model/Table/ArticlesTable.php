@@ -32,7 +32,10 @@ use InvalidArgumentException;
 /**
  * Articles Model
  *
- * @property \Cake\ORM\Association\HasMany $ArticleFeaturedImages
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
+ * @property \Cms\Model\Table\SitesTable $Sites
+ * @property \Cms\Model\Table\CategoriesTable $Categories
+ * @property \Muffin\Slug\Model\Behavior\SlugBehavior $Slug
  */
 class ArticlesTable extends Table
 {
@@ -171,8 +174,10 @@ class ArticlesTable extends Table
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
-    public function beforeFind(Event $event, Query $query, $options)
+    public function beforeFind(Event $event, Query $query, ArrayObject $options): void
     {
         $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
 
@@ -193,8 +198,10 @@ class ArticlesTable extends Table
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options): void
     {
         $types = $this->getTypes($entity->get('type'));
         $fields = $types[$entity->get('type')]['fields'];
@@ -476,7 +483,7 @@ class ArticlesTable extends Table
      */
     protected function _uniqueSlug(EntityInterface $entity, string $slug, string $separator): string
     {
-        $behavior = $this->behaviors()->Slug;
+        $behavior = $this->getBehavior('Slug');
 
         $primaryKey = $this->getPrimaryKey();
         $field = $this->aliasField($behavior->getConfig('field'));
