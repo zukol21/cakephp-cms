@@ -206,6 +206,9 @@ class Shortcode
             $options = Configure::read('TinymceElfinder.options');
 
             $elFinder = new \elFinder($options);
+            /**
+             * @var \elFinderVolumeLocalFileSystem $volume
+             */
             $volume = $elFinder->getVolume('l' . $options['roots'][0]['id'] . '_');
 
             $hash = $volume->getHash(dirname($file->getPathname()), $file->getFilename());
