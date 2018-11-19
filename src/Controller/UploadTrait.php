@@ -35,7 +35,7 @@ trait UploadTrait
         if ($fileUpload['error']) {
             $errorMessage = $this->_codeToMessage($fileUpload['error']);
             if (UPLOAD_ERR_NO_FILE !== $fileUpload['error']) {
-                $this->Flash->error($errorMessage);
+                $this->Flash->error((string)$errorMessage);
             }
 
             return false;
@@ -48,11 +48,11 @@ trait UploadTrait
      * Converts code to message.
      *
      * @see http://php.net/manual/en/features.file-upload.errors.php
-     * @param  string $code code value
+     * @param string $code code value
      *
-     * @return string Message of the code.
+     * @return string|null Message of the code.
      */
-    protected function _codeToMessage(string $code): string
+    protected function _codeToMessage(string $code): ?string
     {
         switch ($code) {
             case UPLOAD_ERR_INI_SIZE:

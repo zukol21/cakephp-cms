@@ -142,14 +142,17 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertRedirect('/');
         $this->assertSession('The article has been saved.', 'Flash.flash.0.message');
 
+        $query = $this->Articles->find()
+            ->where(['id' => $id])
+            ->orWhere(['slug' => $id]);
+
+        $query->enableHydration(true);
+        $query->contain('ArticleFeaturedImages');
+
         /**
          * @var \Cake\Datasource\EntityInterface
          */
-        $entity = $this->Articles->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id])
-            ->contain('ArticleFeaturedImages')
-            ->first();
+        $entity = $query->first();
 
         $this->assertEquals($data['title'], $entity->get('title'));
     }

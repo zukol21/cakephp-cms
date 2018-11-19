@@ -30,17 +30,17 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string $typeId Type slug.
-     * @param string|null $id Article id.
+     * @param string $id Article id.
      *
      * @return \Cake\Http\Response|void|null
      */
-    public function view(string $siteId, string $typeId, ?string $id)
+    public function view(string $siteId, string $typeId, string $id)
     {
         $site = $this->Articles->Sites->getSite($siteId, true);
 
         $this->set('site', $site);
         $this->set('type', $typeId);
-        $this->set('article', $this->Articles->getArticle($id, $site->id, true));
+        $this->set('article', $this->Articles->getArticle($id, $site->get('id'), true));
         $this->set('categories', $this->Articles->Categories->getTreeList($site->id));
         $this->set('filteredCategories', $this->Articles->Categories->getTreeList($site->id, '', true));
         $this->set('_serialize', ['article']);
@@ -123,13 +123,13 @@ class ArticlesController extends AppController
      *
      * @param string $siteId Site id or slug.
      * @param string $type Site type.
-     * @param string|null $id Article id.
+     * @param string $id Article id.
      *
      * @throws \InvalidArgumentException
      *
      * @return \Cake\Http\Response|void|null
      */
-    public function edit(string $siteId, string $type, ?string $id)
+    public function edit(string $siteId, string $type, string $id)
     {
         $this->request->allowMethod(['patch', 'post', 'put']);
 
@@ -149,7 +149,7 @@ class ArticlesController extends AppController
         $requestData = (array)$this->request->getData();
         $data = array_merge($requestData, $data);
 
-        $article = $this->Articles->getArticle($id, $site->id);
+        $article = $this->Articles->getArticle($id, $site->get('id'));
         $article = $this->Articles->patchEntity($article, $data);
 
         if ($this->Articles->save($article)) {
@@ -169,11 +169,11 @@ class ArticlesController extends AppController
      * Delete method
      *
      * @param string $siteId Site id or slug.
-     * @param string|null $id Article id.
+     * @param string $id Article id.
      *
      * @return \Cake\Http\Response|void|null
      */
-    public function delete(string $siteId, ?string $id)
+    public function delete(string $siteId, string $id)
     {
         $this->request->allowMethod(['post', 'delete']);
 
@@ -197,16 +197,16 @@ class ArticlesController extends AppController
     /**
      * Uploads and stores the related file.
      *
-     * @param  int|null $articleId id of the relate slide
+     * @param string $articleId id of the relate slide
      *
      * @return void
      */
-    protected function _upload(?int $articleId): void
+    protected function _upload(string $articleId): void
     {
         $entity = $this->Articles->ArticleFeaturedImages->newEntity();
         $entity = $this->Articles->ArticleFeaturedImages->patchEntity(
             $entity,
-            $this->request->getData()
+            (array)$this->request->getData()
         );
 
         // upload image

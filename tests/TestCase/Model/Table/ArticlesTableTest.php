@@ -238,7 +238,7 @@ class ArticlesTableTest extends TestCase
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
-        $entity = $this->Articles->getArticle($id);
+        $entity = $this->Articles->getArticle($id, null);
 
         $this->assertInstanceOf(Article::class, $entity);
         $this->assertNull($entity->get('category'));

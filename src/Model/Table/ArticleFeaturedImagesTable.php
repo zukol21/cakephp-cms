@@ -12,6 +12,7 @@
 namespace Cms\Model\Table;
 
 use Burzum\FileStorage\Model\Table\ImageStorageTable;
+use Cake\Datasource\EntityInterface;
 
 class ArticleFeaturedImagesTable extends ImageStorageTable
 {
@@ -20,11 +21,12 @@ class ArticleFeaturedImagesTable extends ImageStorageTable
      * Please note this is a child of the ImageStorageTable.
      *
      * @see ImageStorageTable class
-     * @param  string|int $articleId the id of the article
-     * @param  object $entity  Entity object
-     * @return bool         Flag whether the record has got stored or not
+     * @param string $articleId the id of the article
+     * @param \Cake\Datasource\EntityInterface $entity  Entity object
+     *
+     * @return \Cake\Datasource\EntityInterface|bool Flag whether the record has got stored or not
      */
-    public function uploadImage($articleId, $entity)
+    public function uploadImage(string $articleId, EntityInterface $entity)
     {
         $entity = $this->patchEntity($entity, [
             'adapter' => 'Local',

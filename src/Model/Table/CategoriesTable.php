@@ -216,6 +216,9 @@ class CategoriesTable extends Table
     {
         $behavior = $this->getBehavior('Slug');
 
+        /**
+         * @var string
+         */
         $primaryKey = $this->getPrimaryKey();
         $field = $this->aliasField($behavior->getConfig('field'));
 
