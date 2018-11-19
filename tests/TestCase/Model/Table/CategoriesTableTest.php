@@ -22,7 +22,6 @@ class CategoriesTableTest extends TestCase
      */
     public $CategoriesTable;
 
-
     /**
      * Sites object
      *

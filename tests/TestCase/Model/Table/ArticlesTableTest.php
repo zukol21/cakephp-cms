@@ -256,14 +256,6 @@ class ArticlesTableTest extends TestCase
         $this->assertInternalType('array', $entity->get('article_featured_images'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticleEmptyParameter(): void
-    {
-        $this->Articles->getArticle('');
-    }
-
     public function testGetArticles(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';

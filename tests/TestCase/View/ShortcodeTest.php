@@ -114,10 +114,8 @@ class ShortcodeTest extends TestCase
     public function invalidContentProvider(): array
     {
         return [
-            [['foo'], []],
             [357, []],
             [true, []],
-            [new stdClass, []],
         ];
     }
 

@@ -17,10 +17,11 @@ trait UploadTrait
     /**
      * Upload handler
      *
-     * @param  array  $data   Request data
+     * @param mixed[] $data Request data
+     *
      * @return void|bool
      */
-    protected function _isValidUpload($data = [])
+    protected function _isValidUpload(array $data = [])
     {
         $fileUpload = [];
         if (isset($data['file']) && is_array($data['file'])) {
@@ -48,9 +49,10 @@ trait UploadTrait
      *
      * @see http://php.net/manual/en/features.file-upload.errors.php
      * @param  string $code code value
+     *
      * @return string Message of the code.
      */
-    protected function _codeToMessage($code)
+    protected function _codeToMessage(string $code): string
     {
         switch ($code) {
             case UPLOAD_ERR_INI_SIZE:

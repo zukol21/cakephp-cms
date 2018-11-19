@@ -11,6 +11,11 @@
  */
 namespace Cms\View;
 
+use Cake\Core\Configure;
+use DirectoryIterator;
+use UnexpectedValueException;
+use \elFinder;
+
 class Shortcode
 {
     /**
@@ -184,8 +189,8 @@ class Shortcode
         }
 
         try {
-            $iterator = new \DirectoryIterator(WWW_ROOT . $path);
-        } catch (\UnexpectedValueException $e) {
+            $iterator = new DirectoryIterator(WWW_ROOT . $path);
+        } catch (UnexpectedValueException $e) {
             return sprintf($html['error'], 'No images found in: ' . $path);
         }
 
@@ -199,9 +204,9 @@ class Shortcode
                 continue;
             }
 
-            $options = \Cake\Core\Configure::read('TinymceElfinder.options');
+            $options = Configure::read('TinymceElfinder.options');
 
-            $elFinder = new \elFinder($options);
+            $elFinder = new elFinder($options);
             $volume = $elFinder->getVolume('l' . $options['roots'][0]['id'] . '_');
 
             $hash = $volume->getHash(dirname($file->getPathname()), $file->getFilename());
