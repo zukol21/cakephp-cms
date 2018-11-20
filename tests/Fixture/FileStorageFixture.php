@@ -22,5 +22,4 @@ class FileStorageFixture extends BaseFixture
             'modified' => '2012-01-01 12:00:00',
         ],
     ];
-
 }
