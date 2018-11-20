@@ -11,9 +11,9 @@
  */
 namespace Cms\Controller;
 
+use Cake\Http\Exception\NotFoundException;
 use Cms\Controller\AppController;
 use Cms\Controller\UploadTrait;
-use InvalidArgumentException;
 
 /**
  * Articles Controller
@@ -76,7 +76,7 @@ class ArticlesController extends AppController
      * @param string $siteId Site id or slug
      * @param string $type Site type
      *
-     * @throws \InvalidArgumentException
+     * @throws \Cake\Http\Exception\NotFoundException
      *
      * @return \Cake\Http\Response|void|null
      */
@@ -87,7 +87,7 @@ class ArticlesController extends AppController
         $typeOptions = $this->Articles->getTypeOptions($type);
 
         if (empty($typeOptions)) {
-            throw new InvalidArgumentException('Unsupported Article type provided.');
+            throw new NotFoundException('Unsupported Article type provided.');
         }
 
         $site = $this->Articles->Sites->getSite($siteId);
@@ -125,7 +125,7 @@ class ArticlesController extends AppController
      * @param string $type Site type.
      * @param string $id Article id.
      *
-     * @throws \InvalidArgumentException
+     * @throws \Cake\Http\Exception\NotFoundException
      *
      * @return \Cake\Http\Response|void|null
      */
@@ -136,7 +136,7 @@ class ArticlesController extends AppController
         $typeOptions = $this->Articles->getTypeOptions($type);
 
         if (empty($typeOptions)) {
-            throw new InvalidArgumentException('Unsupported Article type provided.');
+            throw new NotFoundException('Unsupported Article type provided.');
         }
 
         $site = $this->Articles->Sites->getSite($siteId);

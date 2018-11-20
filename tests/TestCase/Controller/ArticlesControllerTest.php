@@ -17,7 +17,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         'plugin.cms.articles',
         'plugin.cms.categories',
         'plugin.cms.sites',
-        'plugin.Burzum/FileStorage.file_storage'
+        'plugin.cms.file_storage'
     ];
 
     public function setUp()
@@ -115,9 +115,6 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertSession('The article could not be saved. Please, try again.', 'Flash.flash.0.message');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testAddInvalidType(): void
     {
         $this->post('/cms/site/blog/articles/add/foobar');
@@ -157,7 +154,6 @@ class ArticlesControllerTest extends IntegrationTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
      * @dataProvider idsProvider
      */
     public function testEditInvalidType(string $id): void

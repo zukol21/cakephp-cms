@@ -15,7 +15,7 @@ class SitesControllerTest extends IntegrationTestCase
         'plugin.cms.sites',
         'plugin.cms.articles',
         'plugin.cms.categories',
-        'plugin.Burzum/FileStorage.file_storage'
+        'plugin.cms.file_storage'
     ];
 
     public function setUp()

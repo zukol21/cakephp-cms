@@ -23,7 +23,7 @@ class CategoriesControllerTest extends IntegrationTestCase
         'plugin.cms.categories',
         'plugin.cms.articles',
         'plugin.cms.sites',
-        'plugin.Burzum/FileStorage.file_storage'
+        'plugin.cms.file_storage'
     ];
 
     public function setUp()
