@@ -51,7 +51,7 @@ foreach ($typeOptions['fields'] as $field => $options) {
             break;
     }
 
-    echo $this->Form->input($fieldName, $inputOptions);
+    echo $this->Form->control($fieldName, $inputOptions);
 }
 
 // load tinyMCE if needed

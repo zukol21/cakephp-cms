@@ -23,6 +23,13 @@ class CategoriesTableTest extends TestCase
     public $CategoriesTable;
 
     /**
+     * Sites object
+     *
+     * @var \Cms\Model\Table\SitesTable
+     */
+    public $Sites;
+
+    /**
      * Fixtures
      *
      * @var array
@@ -43,7 +50,18 @@ class CategoriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Categories') ? [] : ['className' => 'Cms\Model\Table\CategoriesTable'];
-        $this->CategoriesTable = TableRegistry::get('Categories', $config);
+        /**
+         * @var \Cms\Model\Table\CategoriesTable $table
+         */
+        $table = TableRegistry::get('Categories', $config);
+        $this->CategoriesTable = $table;
+
+        $config = TableRegistry::exists('Sites') ? [] : ['className' => 'Cms\Model\Table\SitesTable'];
+        /**
+         * @var \Cms\Model\Table\SitesTable $table
+         */
+        $table = TableRegistry::get('Sites', $config);
+        $this->Sites = $table;
     }
 
     /**
@@ -63,15 +81,15 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->assertTrue($this->CategoriesTable->hasBehavior('Timestamp'));
         $this->assertTrue($this->CategoriesTable->hasBehavior('Tree'));
         $this->assertTrue($this->CategoriesTable->hasBehavior('Slug'));
-        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('Sites'));
-        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->association('ParentCategories'));
-        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('ChildCategories'));
-        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->association('Articles'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->getAssociation('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->CategoriesTable->getAssociation('ParentCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->getAssociation('ChildCategories'));
+        $this->assertInstanceOf(HasMany::class, $this->CategoriesTable->getAssociation('Articles'));
         $this->assertInstanceOf(CategoriesTable::class, $this->CategoriesTable);
     }
 
@@ -80,7 +98,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $this->assertInstanceOf(Validator::class, $this->CategoriesTable->validationDefault(new Validator()));
     }
@@ -90,7 +108,7 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->assertInstanceOf(RulesChecker::class, $this->CategoriesTable->buildRules(new RulesChecker()));
     }
@@ -100,9 +118,9 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetBySite()
+    public function testGetBySite(): void
     {
-        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $site = $this->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('general', $site);
         $this->assertNotEmpty($result);
         $this->assertInternalType('object', $result);
@@ -115,9 +133,9 @@ class CategoriesTableTest extends TestCase
      * @return void
      * @expectedException \InvalidArgumentException
      */
-    public function testGetBySiteWithoutId()
+    public function testGetBySiteWithoutId(): void
     {
-        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $site = $this->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('', $site);
     }
 
@@ -127,9 +145,9 @@ class CategoriesTableTest extends TestCase
      * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      * @return void
      */
-    public function testGetBySiteWithWrongId()
+    public function testGetBySiteWithWrongId(): void
     {
-        $site = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $site = $this->Sites->getSite('00000000-0000-0000-0000-000000000001');
         $result = $this->CategoriesTable->getBySite('non-existing-id', $site);
     }
 
@@ -138,19 +156,19 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testUniqueSlug()
+    public function testUniqueSlug(): void
     {
         $data = ['name' => 'Foo bar', 'site_id' => '00000000-0000-0000-0000-000000000001'];
         $entity = $this->CategoriesTable->newEntity();
         $entity = $this->CategoriesTable->patchEntity($entity, $data);
 
         $this->CategoriesTable->save($entity);
-        $this->assertEquals('foo-bar', $entity->slug);
+        $this->assertEquals('foo-bar', $entity->get('slug'));
 
         $anotherEntity = $this->CategoriesTable->newEntity();
         $anotherEntity = $this->CategoriesTable->patchEntity($anotherEntity, $data);
         $this->CategoriesTable->save($anotherEntity);
-        $this->assertEquals('foo-bar-1', $anotherEntity->slug);
+        $this->assertEquals('foo-bar-1', $anotherEntity->get('slug'));
     }
 
     /**
@@ -158,9 +176,9 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetSiteById()
+    public function testGetSiteById(): void
     {
-        $entity = $this->CategoriesTable->Sites->getSite('00000000-0000-0000-0000-000000000001');
+        $entity = $this->Sites->getSite('00000000-0000-0000-0000-000000000001');
 
         $this->assertInstanceOf(\Cake\ORM\Entity::class, $entity);
         $this->assertNotEmpty($entity->id);
@@ -171,23 +189,12 @@ class CategoriesTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetSiteBySlug()
+    public function testGetSiteBySlug(): void
     {
-        $entity = $this->CategoriesTable->Sites->getSite('blog');
+        $entity = $this->Sites->getSite('blog');
 
         $this->assertInstanceOf(\Cake\ORM\Entity::class, $entity);
-        $this->assertNotEmpty($entity->slug);
-    }
-
-    /**
-     * Test getSite method
-     *
-     * @expectedException \InvalidArgumentException
-     * @return void
-     */
-    public function testGetSiteWithoutId()
-    {
-        $entity = $this->CategoriesTable->Sites->getSite(null);
+        $this->assertNotEmpty($entity->get('slug'));
     }
 
     /**
@@ -196,12 +203,12 @@ class CategoriesTableTest extends TestCase
      * @expectedException \Cake\Datasource\Exception\RecordNotFoundException
      * @return void
      */
-    public function testGetSiteWithNonExistingId()
+    public function testGetSiteWithNonExistingId(): void
     {
-        $entity = $this->CategoriesTable->Sites->getSite('non-existing-id');
+        $entity = $this->Sites->getSite('non-existing-id');
     }
 
-    public function testGetTreeList()
+    public function testGetTreeList(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
 
@@ -213,7 +220,7 @@ class CategoriesTableTest extends TestCase
         $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId));
     }
 
-    public function testGetTreeListWithCategoryId()
+    public function testGetTreeListWithCategoryId(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
         $categoryId = '00000000-0000-0000-0000-000000000001';
@@ -225,7 +232,7 @@ class CategoriesTableTest extends TestCase
         $this->assertEquals($expected, $this->CategoriesTable->getTreeList($siteId, $categoryId));
     }
 
-    public function testGetTreeListWithArticles()
+    public function testGetTreeListWithArticles(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
 

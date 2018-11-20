@@ -4,7 +4,7 @@ use Cake\Routing\Router;
 Router::plugin(
     'Cms',
     function ($routes) {
-        $routes->extensions(['json']);
+        $routes->setExtensions(['json']);
 
         $routes->scope('/site', function ($routes) {
             // Categories routes

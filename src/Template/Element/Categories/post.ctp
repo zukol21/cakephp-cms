@@ -18,10 +18,10 @@ if (!empty($url)) {
 <?= $this->Form->create($category, $formOptions) ?>
     <div class="row">
         <div class="col-md-6">
-            <?= $this->Form->input('name') ?>
+            <?= $this->Form->control('name') ?>
         </div>
         <div class="col-md-6">
-            <?= $this->Form->input('parent_id', [
+            <?= $this->Form->control('parent_id', [
                 'options' => $categories,
                 'escape' => false,
                 'empty' => true

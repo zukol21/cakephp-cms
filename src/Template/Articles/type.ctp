@@ -10,7 +10,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$this->Breadcrumbs->templates([
+$this->Breadcrumbs->setTemplates([
     'separator' => '',
 ]);
 $this->Breadcrumbs->add($site->name, [

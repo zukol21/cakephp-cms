@@ -13,6 +13,7 @@ namespace Cms\Controller;
 
 use App\Controller\AppController as BaseController;
 use Cake\Event\Event;
+use Cake\Utility\Hash;
 use Cms\Model\Table\ArticlesTable;
 
 class AppController extends BaseController
@@ -38,7 +39,7 @@ class AppController extends BaseController
         parent::beforeFilter($event);
 
         $table = $this->{$this->name};
-        $table = $table->association('Articles') ? $this->{$this->name}->Articles->target() : $table;
+        $table = $table->hasAssociation('Articles') ? $this->{$this->name}->Articles->getTarget() : $table;
 
         if (!$table instanceof ArticlesTable) {
             return;
@@ -47,9 +48,10 @@ class AppController extends BaseController
         // pass article types to all Views
         $this->set('types', $table->getTypes());
 
-        $searchQuery = $this->request->query('q') ?: '';
+        $searchQuery = Hash::get($this->request->getQueryParams(), 'q', '');
 
-        $searchTitle = $searchQuery ? __('Search Results for') . ' \'' . $searchQuery . '\'' : '';
+        $searchTitle = $searchQuery ? sprintf("%s '%s'", (string)__('Search Results for'), $searchQuery) : '';
+
         // pass search title to all Views
         $this->set('searchTitle', $searchTitle);
 

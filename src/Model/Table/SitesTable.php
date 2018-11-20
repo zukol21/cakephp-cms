@@ -11,6 +11,7 @@
  */
 namespace Cms\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -19,6 +20,9 @@ use InvalidArgumentException;
 
 /**
  * Sites Model
+ *
+ * @property \Cms\Model\Table\CategoriesTable $Categories
+ * @property \Cms\Model\Table\ArticlesTable $Articles
  */
 class SitesTable extends Table
 {
@@ -33,9 +37,9 @@ class SitesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_sites');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_sites');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Slug.Slug');
@@ -100,11 +104,13 @@ class SitesTable extends Table
      * @param string $id Site id or slug.
      * @param bool $categories Flag for containing associated categories.
      * @param bool $articles Flag for containing associated articles.
-     * @return \Cake\ORM\Entity
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function getSite($id, $categories = false, $articles = false)
+    public function getSite(string $id, bool $categories = false, bool $articles = false): EntityInterface
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Site id or slug cannot be empty.');
@@ -117,16 +123,27 @@ class SitesTable extends Table
         $contain = $this->_getContainAssociations($id, $categories, $articles);
 
         $query = $this->find('all')
-            ->limit(1)
-            ->where(['Sites.id' => $id])
-            ->orWhere(['Sites.slug' => $id])
-            ->andWhere(['Sites.active' => true])
-            ->contain($contain);
+            ->where([
+                'AND' => [
+                    'Sites.active' => true,
+                    'OR' => [
+                        'Sites.id' => $id,
+                        'Sites.slug' => $id
+                    ]
+                ]
+            ])
+            ->limit(1);
+        // using objects over arrays.
+        $query->enableHydration(true);
+        $query->contain($contain);
 
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
         $site = $query->firstOrFail();
 
         // skip if site object has no categories
-        if (!(bool)$categories || !$site->categories) {
+        if (!$categories || !$site->get('categories')) {
             return $site;
         }
 
@@ -144,19 +161,20 @@ class SitesTable extends Table
      * @param string $id Site id or slug.
      * @param bool $categories Flag for containing associated categories.
      * @param bool $articles Flag for containing associated articles.
-     * @return array
+     *
+     * @return mixed[] $result of associations
      */
-    protected function _getContainAssociations($id, $categories = false, $articles = false)
+    protected function _getContainAssociations(string $id, bool $categories = false, bool $articles = false): array
     {
         $result = [];
 
-        if ((bool)$categories) {
+        if ($categories) {
             $result['Categories'] = function ($q) {
                 return $q->order(['Categories.lft' => 'ASC']);
             };
         }
 
-        if ((bool)$articles) {
+        if ($articles) {
             $result['Articles'] = function ($q) use ($id) {
                 return $q->contain(['ArticleFeaturedImages'])
                     ->applyOptions(['site_id' => $id]);
@@ -169,22 +187,22 @@ class SitesTable extends Table
     /**
      * Adds node property to site's associated categories.
      *
-     * @param \Cake\ORM\Entity $site Site object
+     * @param \Cake\Datasource\EntityInterface $site Site object
      * @return void
      */
-    protected function _addNodeToCategories(Entity $site)
+    protected function _addNodeToCategories(EntityInterface $site): void
     {
-        $tree = $this->Categories->getTreeList($site->id);
+        $tree = $this->Categories->getTreeList($site->get('id'));
 
         if (empty($tree)) {
             return;
         }
 
-        foreach ($site->categories as $category) {
-            if (!array_key_exists($category->id, $tree)) {
+        foreach ($site->get('categories') as $category) {
+            if (!array_key_exists($category->get('id'), $tree)) {
                 continue;
             }
-            $category->node = $tree[$category->id];
+            $category->set('node', $tree[$category->get('id')]);
         }
     }
 }

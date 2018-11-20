@@ -47,7 +47,11 @@ class ArticlesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Articles') ? [] : ['className' => 'Cms\Model\Table\ArticlesTable'];
-        $this->Articles = TableRegistry::get('Articles', $config);
+        /**
+         * @var \Cms\Model\Table\ArticlesTable $table
+         */
+        $table = TableRegistry::get('Articles', $config);
+        $this->Articles = $table;
 
         // load default plugin config
         Configure::load('Cms.cms');
@@ -70,22 +74,22 @@ class ArticlesTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
-        $this->assertEquals('qobo_cms_articles', $this->Articles->table());
+        $this->assertEquals('qobo_cms_articles', $this->Articles->getTable());
 
-        $this->assertEquals('title', $this->Articles->displayField());
-        $this->assertEquals('id', $this->Articles->primaryKey());
+        $this->assertEquals('title', $this->Articles->getDisplayField());
+        $this->assertEquals('id', $this->Articles->getPrimaryKey());
 
         $this->assertTrue($this->Articles->hasBehavior('Timestamp'));
         $this->assertTrue($this->Articles->hasBehavior('Trash'));
         $this->assertTrue($this->Articles->hasBehavior('Slug'));
 
-        $this->assertInstanceOf(HasMany::class, $this->Articles->association('ArticleFeaturedImages'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Sites'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Categories'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Author'));
-        $this->assertInstanceOf(BelongsTo::class, $this->Articles->association('Editor'));
+        $this->assertInstanceOf(HasMany::class, $this->Articles->getAssociation('ArticleFeaturedImages'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Sites'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Categories'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Author'));
+        $this->assertInstanceOf(BelongsTo::class, $this->Articles->getAssociation('Editor'));
 
         $this->assertInstanceOf(ArticlesTable::class, $this->Articles);
     }
@@ -95,7 +99,7 @@ class ArticlesTableTest extends TestCase
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $data = [
             'title' => 'Foo bar',
@@ -113,8 +117,8 @@ class ArticlesTableTest extends TestCase
 
         $this->Articles->save($entity);
 
-        $this->assertNotEmpty($entity->id);
-        $this->assertEquals('foo-bar', $entity->slug);
+        $this->assertNotEmpty($entity->get('id'));
+        $this->assertEquals('foo-bar', $entity->get('slug'));
 
         $this->assertInstanceOf(Validator::class, $this->Articles->validationDefault(new Validator()));
     }
@@ -124,12 +128,12 @@ class ArticlesTableTest extends TestCase
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->assertInstanceOf(RulesChecker::class, $this->Articles->buildRules(new RulesChecker()));
     }
 
-    public function testSaveWithShortcode()
+    public function testSaveWithShortcode(): void
     {
         $data = [
             'title' => 'An Article with a Shortcode',
@@ -150,7 +154,7 @@ class ArticlesTableTest extends TestCase
         $this->assertInstanceOf(Article::class, $saved);
     }
 
-    public function testGetTypes()
+    public function testGetTypes(): void
     {
         $result = $this->Articles->getTypes();
 
@@ -159,7 +163,7 @@ class ArticlesTableTest extends TestCase
         $this->assertArrayHasKey('article', $result);
     }
 
-    public function testGetTypesDoubleCall()
+    public function testGetTypesDoubleCall(): void
     {
         $this->Articles->getTypes();
         $result = $this->Articles->getTypes();
@@ -169,7 +173,7 @@ class ArticlesTableTest extends TestCase
         $this->assertArrayHasKey('article', $result);
     }
 
-    public function testGetTypesWithDisabledType()
+    public function testGetTypesWithDisabledType(): void
     {
         Configure::write('CMS.Articles.types.article.enabled', false);
         $result = $this->Articles->getTypes();
@@ -177,7 +181,7 @@ class ArticlesTableTest extends TestCase
         $this->assertArrayNotHasKey('article', $result);
     }
 
-    public function testGetTypesWithoutOptions()
+    public function testGetTypesWithoutOptions(): void
     {
         $result = $this->Articles->getTypes(false);
 
@@ -186,7 +190,7 @@ class ArticlesTableTest extends TestCase
         $this->assertContains('article', $result);
     }
 
-    public function testGetOptions()
+    public function testGetOptions(): void
     {
         $result = $this->Articles->getTypeOptions('article');
 
@@ -195,14 +199,14 @@ class ArticlesTableTest extends TestCase
         $this->assertArrayHasKey('fields', $result);
     }
 
-    public function testGetOptionsWithWrongType()
+    public function testGetOptionsWithWrongType(): void
     {
         $result = $this->Articles->getTypeOptions('foobar');
 
         $this->assertEmpty($result);
     }
 
-    public function testSetSearchQuery()
+    public function testSetSearchQuery(): void
     {
         $this->assertEquals('', $this->Articles->getSearchQuery());
 
@@ -210,15 +214,7 @@ class ArticlesTableTest extends TestCase
         $this->assertEquals('foo', $this->Articles->getSearchQuery());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetSearchQueryWrongParameter()
-    {
-        $this->Articles->setSearchQuery([]);
-    }
-
-    public function testApplySearch()
+    public function testApplySearch(): void
     {
         $query = $this->Articles->find();
         $expected = clone $query;
@@ -228,7 +224,7 @@ class ArticlesTableTest extends TestCase
         $this->assertNotEquals($expected, $query);
     }
 
-    public function testApplySearchWithoutQuery()
+    public function testApplySearchWithoutQuery(): void
     {
         $query = $this->Articles->find();
         $expected = clone $query;
@@ -238,18 +234,18 @@ class ArticlesTableTest extends TestCase
         $this->assertEquals($expected, $query);
     }
 
-    public function testGetArticle()
+    public function testGetArticle(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
-        $entity = $this->Articles->getArticle($id);
+        $entity = $this->Articles->getArticle($id, null);
 
         $this->assertInstanceOf(Article::class, $entity);
         $this->assertNull($entity->get('category'));
         $this->assertNull($entity->get('article_featured_images'));
     }
 
-    public function testGetArticleWithAssociated()
+    public function testGetArticleWithAssociated(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
@@ -260,23 +256,7 @@ class ArticlesTableTest extends TestCase
         $this->assertInternalType('array', $entity->get('article_featured_images'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticleEmptyParameter()
-    {
-        $this->Articles->getArticle('');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticleWrongParameter()
-    {
-        $this->Articles->getArticle(['foo']);
-    }
-
-    public function testGetArticles()
+    public function testGetArticles(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
         $type = 'article';
@@ -293,7 +273,7 @@ class ArticlesTableTest extends TestCase
         }
     }
 
-    public function testGetArticlesWithAssociated()
+    public function testGetArticlesWithAssociated(): void
     {
         $siteId = '00000000-0000-0000-0000-000000000001';
         $type = 'article';
@@ -310,23 +290,7 @@ class ArticlesTableTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticlesInvalidFirstParameter()
-    {
-        $this->Articles->getArticles([], '00000000-0000-0000-0000-000000000001');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetArticlesInvalidSecondParameter()
-    {
-        $this->Articles->getArticles('00000000-0000-0000-0000-000000000001', []);
-    }
-
-    public function testGetArticlesByCategory()
+    public function testGetArticlesByCategory(): void
     {
         $ids = [
             '00000000-0000-0000-0000-000000000001',
@@ -343,7 +307,7 @@ class ArticlesTableTest extends TestCase
         }
     }
 
-    public function testUniqueSlug()
+    public function testUniqueSlug(): void
     {
         $data = [
             'title' => 'First Article',

@@ -15,6 +15,7 @@ use ArrayObject;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
@@ -31,6 +32,10 @@ use InvalidArgumentException;
 /**
  * Articles Model
  *
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
+ * @property \Cms\Model\Table\SitesTable $Sites
+ * @property \Cms\Model\Table\CategoriesTable $Categories
+ * @property \Muffin\Slug\Model\Behavior\SlugBehavior $Slug
  */
 class ArticlesTable extends Table
 {
@@ -62,7 +67,7 @@ class ArticlesTable extends Table
     /**
      * Article searchable fields.
      *
-     * @var string
+     * @var mixed[]
      */
     protected $_searchableFields = ['title', 'excerpt', 'content'];
 
@@ -76,14 +81,14 @@ class ArticlesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_articles');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_articles');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Muffin/Trash.Trash');
         $this->addBehavior('Muffin/Slug.Slug', [
-            'unique' => function (Entity $entity, $slug, $separator) {
+            'unique' => function (EntityInterface $entity, $slug, $separator) {
                 return $this->_uniqueSlug($entity, $slug, $separator);
             }
         ]);
@@ -169,13 +174,15 @@ class ArticlesTable extends Table
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
-    public function beforeFind(Event $event, Query $query, $options)
+    public function beforeFind(Event $event, Query $query, ArrayObject $options): void
     {
         $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
 
         $event = new Event((string)EventName::ARTICLES_SHOW_UNPUBLISHED(), $this, ['siteId' => $siteId]);
-        $this->eventManager()->dispatch($event);
+        $this->getEventManager()->dispatch($event);
 
         $query->order(['Articles.publish_date' => 'DESC']);
         if (!(bool)$event->result) {
@@ -191,8 +198,10 @@ class ArticlesTable extends Table
 
     /**
      * {@inheritDoc}
+     *
+     * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options): void
     {
         $types = $this->getTypes($entity->get('type'));
         $fields = $types[$entity->get('type')]['fields'];
@@ -214,7 +223,12 @@ class ArticlesTable extends Table
             }
 
             foreach ($shortcodes as $shortcode) {
-                $cacheKey = 'shortcode_' . md5(json_encode($shortcode));
+                $encoded = json_encode($shortcode);
+                if (!$encoded) {
+                    continue;
+                }
+
+                $cacheKey = 'shortcode_' . md5($encoded);
                 // delete shortcode cache
                 Cache::delete($cacheKey);
             }
@@ -226,7 +240,7 @@ class ArticlesTable extends Table
      *
      * @return string
      */
-    public function getSearchQuery()
+    public function getSearchQuery(): string
     {
         return $this->_searchQuery;
     }
@@ -235,9 +249,10 @@ class ArticlesTable extends Table
      * Search query setter.
      *
      * @param string $searchQuery Search query string
+     *
      * @return void
      */
-    public function setSearchQuery($searchQuery)
+    public function setSearchQuery(string $searchQuery): void
     {
         if (!is_string($searchQuery)) {
             throw new InvalidArgumentException('Search query must be a string.');
@@ -251,9 +266,10 @@ class ArticlesTable extends Table
      *
      * @param \Cake\ORM\Query $query Query instance
      * @param string $searchQuery Search query value
+     *
      * @return void
      */
-    public function applySearch(Query $query, $searchQuery)
+    public function applySearch(Query $query, string $searchQuery): void
     {
         if (empty($searchQuery)) {
             return;
@@ -271,13 +287,15 @@ class ArticlesTable extends Table
      * Fetch and return Article by id or slug.
      *
      * @param string $id Article id or slug.
-     * @param string $siteId Site id.
+     * @param string|null $siteId Site id.
      * @param bool $associated Contain associated articles and images.
-     * @return \Cake\ORM\Entity
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function getArticle($id, $siteId = null, $associated = false)
+    public function getArticle(string $id, ?string $siteId, bool $associated = false): EntityInterface
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Article id or slug cannot be empty.');
@@ -296,13 +314,23 @@ class ArticlesTable extends Table
         }
 
         $query = $this->find('all')
-            ->limit(1)
-            ->where(['Articles.id' => $id])
-            ->orWhere(['Articles.slug' => $id])
-            ->contain($contain)
-            ->applyOptions(['site_id' => $siteId]);
+            ->where([
+                'OR' => [
+                    'Articles.id' => $id,
+                    'Articles.slug' => $id
+                ]
+            ]);
+        $query->enableHydration(true);
+        $query->limit(1);
+        $query->contain($contain);
+        $query->applyOptions(['site_id' => $siteId]);
 
-        return $query->firstOrFail();
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
+        $result = $query->firstOrFail();
+
+        return $result;
     }
 
     /**
@@ -311,11 +339,13 @@ class ArticlesTable extends Table
      * @param string $siteId Site id.
      * @param string $type Type name.
      * @param bool $associated Contain associated categories and images.
-     * @return \Cake\ORM\Entity
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\ResultSetInterface
      */
-    public function getArticles($siteId, $type, $associated = false)
+    public function getArticles(string $siteId, string $type, bool $associated = false): ResultSetInterface
     {
         if (!is_string($siteId)) {
             throw new InvalidArgumentException('Site id or slug must be a string.');
@@ -326,7 +356,7 @@ class ArticlesTable extends Table
         }
 
         $contain = [];
-        if ((bool)$associated) {
+        if ($associated) {
             $contain = [
                 'Categories',
                 'ArticleFeaturedImages'
@@ -342,20 +372,27 @@ class ArticlesTable extends Table
         }
 
         $query = $this->find('all')
-            ->where($conditions)
-            ->contain($contain)
-            ->applyOptions(['site_id' => $siteId]);
+            ->where($conditions);
+        $query->enableHydration(true);
+        $query->contain($contain);
+        $query->applyOptions(['site_id' => $siteId]);
 
-        return $query->all();
+        /**
+         * @var \Cake\Datasource\ResultSetInterface
+         */
+        $result = $query->all();
+
+        return $result;
     }
 
     /**
      * Returns supported types.
      *
      * @param bool $withOptions Flag for including type options
-     * @return array
+     *
+     * @return mixed[]
      */
-    public function getTypes($withOptions = true)
+    public function getTypes(bool $withOptions = true): array
     {
         if (!empty($this->_types)) {
             return $this->_types;
@@ -387,7 +424,7 @@ class ArticlesTable extends Table
             $v['label'] = $v['label'] ? $v['label'] : Inflector::humanize($k);
         }
 
-        if (!(bool)$withOptions) {
+        if (! $withOptions) {
             return array_keys($this->_types);
         }
 
@@ -398,9 +435,9 @@ class ArticlesTable extends Table
      * Returns type options.
      *
      * @param string $type Type name
-     * @return array
+     * @return mixed[]
      */
-    public function getTypeOptions($type)
+    public function getTypeOptions(string $type): array
     {
         $result = [];
 
@@ -417,42 +454,52 @@ class ArticlesTable extends Table
     /**
      * Returns specified category(ies) articles.
      *
-     * @param array $ids Category(ies) ID(s)
-     * @return \Cake\ORM\ResultSet
+     * @param mixed[] $ids Category(ies) ID(s)
+     * @return \Cake\Datasource\ResultSetInterface
      */
-    public function getArticlesByCategory(array $ids)
+    public function getArticlesByCategory(array $ids): ResultSetInterface
     {
         $query = $this->find('all')
-            ->where(['Articles.category_id IN' => $ids])
-            ->contain(['ArticleFeaturedImages']);
+            ->where(['Articles.category_id IN' => $ids]);
+        $query->enableHydration(true);
+        $query->contain(['ArticleFeaturedImages']);
 
-        return $query->all();
+        /**
+         * @var \Cake\Datasource\ResultSetInterface
+         */
+        $result = $query->all();
+
+        return $result;
     }
 
     /**
      * Returns a unique slug.
      *
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @param string $slug Slug.
      * @param string $separator Separator.
+     *
      * @return string Unique slug.
      */
-    protected function _uniqueSlug(Entity $entity, $slug, $separator)
+    protected function _uniqueSlug(EntityInterface $entity, string $slug, string $separator): string
     {
-        $behavior = $this->behaviors()->Slug;
+        $behavior = $this->getBehavior('Slug');
 
-        $primaryKey = $this->primaryKey();
-        $field = $this->aliasField($behavior->config('field'));
+        /**
+         * @var string
+         */
+        $primaryKey = $this->getPrimaryKey();
+        $field = $this->aliasField($behavior->getConfig('field'));
 
         $conditions = [$field => $slug];
-        $conditions += $behavior->config('scope');
+        $conditions += $behavior->getConfig('scope');
         if ($id = $entity->{$primaryKey}) {
             $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('maxLength');
+        $length = $behavior->getConfig('maxLength');
 
         while (!$this->find('withTrashed', ['conditions' => $conditions])->isEmpty()) {
             $i++;

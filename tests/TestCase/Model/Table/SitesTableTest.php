@@ -43,7 +43,11 @@ class SitesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Sites') ? [] : ['className' => 'Cms\Model\Table\SitesTable'];
-        $this->Sites = TableRegistry::get('Sites', $config);
+        /**
+         * @var \Cms\Model\Table\SitesTable $table
+         */
+        $table = TableRegistry::get('Sites', $config);
+        $this->Sites = $table;
     }
 
     /**
@@ -63,13 +67,13 @@ class SitesTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->assertTrue($this->Sites->hasBehavior('Timestamp'));
         $this->assertTrue($this->Sites->hasBehavior('Slug'));
         $this->assertTrue($this->Sites->hasBehavior('Trash'));
-        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Categories'));
-        $this->assertInstanceOf(HasMany::class, $this->Sites->association('Articles'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->getAssociation('Categories'));
+        $this->assertInstanceOf(HasMany::class, $this->Sites->getAssociation('Articles'));
         $this->assertInstanceOf(SitesTable::class, $this->Sites);
     }
 
@@ -78,16 +82,18 @@ class SitesTableTest extends TestCase
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testValidationDefault(): void
     {
         $data = ['name' => 'Foo bar', 'active' => true];
         $entity = $this->Sites->newEntity();
         $entity = $this->Sites->patchEntity($entity, $data);
+        /**
+         * @var \Cms\Model\Entity\Site $entity
+         */
+        $entity = $this->Sites->save($entity);
 
-        $this->Sites->save($entity);
-
-        $this->assertNotEmpty($entity->id);
-        $this->assertEquals('foo-bar', $entity->slug);
+        $this->assertNotEmpty($entity->get('id'));
+        $this->assertEquals('foo-bar', $entity->get('slug'));
 
         $this->assertInstanceOf(Validator::class, $this->Sites->validationDefault(new Validator()));
     }
@@ -97,12 +103,12 @@ class SitesTableTest extends TestCase
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testBuildRules(): void
     {
         $this->assertInstanceOf(RulesChecker::class, $this->Sites->buildRules(new RulesChecker()));
     }
 
-    public function testGetSite()
+    public function testGetSite(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
@@ -113,7 +119,7 @@ class SitesTableTest extends TestCase
         $this->assertNull($entity->get('categories'));
     }
 
-    public function testGetSiteWithCategories()
+    public function testGetSiteWithCategories(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
@@ -125,7 +131,7 @@ class SitesTableTest extends TestCase
         $this->assertNotEmpty($categories);
     }
 
-    public function testGetSiteWithArticles()
+    public function testGetSiteWithArticles(): void
     {
         $id = '00000000-0000-0000-0000-000000000001';
 
@@ -140,16 +146,8 @@ class SitesTableTest extends TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testGetSiteEmptyParameter()
+    public function testGetSiteEmptyParameter(): void
     {
         $this->Sites->getSite('');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetSiteWrongParameter()
-    {
-        $this->Sites->getSite(['foo']);
     }
 }
