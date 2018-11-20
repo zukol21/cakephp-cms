@@ -23,7 +23,7 @@ class SitesController extends AppController
     /**
      * Index method
      *
-     * @return void
+     * @return \Cake\Http\Response|void|null
      */
     public function index()
     {
@@ -36,11 +36,12 @@ class SitesController extends AppController
     /**
      * View method
      *
-     * @param string|null $id Site id or slug.
-     * @return void
+     * @param string $id Site id or slug.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function view($id = null)
+    public function view(string $id)
     {
         $site = $this->Sites->getSite($id, true, true);
 
@@ -53,19 +54,25 @@ class SitesController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response
+     * @return \Cake\Http\Response|void|null
      */
     public function add()
     {
         $this->request->allowMethod(['post']);
 
         $site = $this->Sites->newEntity();
-        $site = $this->Sites->patchEntity($site, $this->request->data);
+        $site = $this->Sites->patchEntity($site, (array)$this->request->getData());
+
         if ($this->Sites->save($site)) {
-            $this->Flash->success(__('The site has been saved.'));
-            $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'view', $site->slug];
+            $this->Flash->success((string)__('The site has been saved.'));
+            $redirectUrl = [
+                'plugin' => 'Cms',
+                'controller' => 'Sites',
+                'action' => 'view',
+                $site->get('slug')
+            ];
         } else {
-            $this->Flash->error(__('The site could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The site could not be saved. Please, try again.'));
             $redirectUrl = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
         }
 
@@ -76,25 +83,26 @@ class SitesController extends AppController
      * Edit method
      *
      * @param string|null $id Site id.
-     * @return \Cake\Network\Response
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null
      */
-    public function edit($id = null)
+    public function edit(?string $id)
     {
         $this->request->allowMethod(['patch', 'post', 'put']);
 
         $site = $this->Sites->get($id);
-        $site = $this->Sites->patchEntity($site, $this->request->data);
+        $site = $this->Sites->patchEntity($site, (array)$this->request->getData());
+
         if ($this->Sites->save($site)) {
-            $this->Flash->success(__('The site has been saved.'));
+            $this->Flash->success((string)__('The site has been saved.'));
         } else {
-            $this->Flash->error(__('The site could not be saved. Please, try again.'));
+            $this->Flash->error((string)__('The site could not be saved. Please, try again.'));
         }
 
         $redirect = ['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index'];
-        if ($site->active) {
+        if ($site->get('active')) {
             $redirect['action'] = 'view';
-            $redirect[] = $site->slug;
+            $redirect[] = $site->get('slug');
         }
 
         return $this->redirect($redirect);
@@ -103,18 +111,21 @@ class SitesController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Site id.
-     * @return \Cake\Network\Response|null Redirects to index.
+     * @param string $id Site id.
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     *
+     * @return \Cake\Http\Response|void|null Redirects to index.
      */
-    public function delete($id = null)
+    public function delete(string $id)
     {
         $this->request->allowMethod(['post', 'delete']);
         $site = $this->Sites->get($id);
+
         if ($this->Sites->delete($site)) {
-            $this->Flash->success(__('The site has been deleted.'));
+            $this->Flash->success((string)__('The site has been deleted.'));
         } else {
-            $this->Flash->error(__('The site could not be deleted. Please, try again.'));
+            $this->Flash->error((string)__('The site could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['plugin' => 'Cms', 'controller' => 'Sites', 'action' => 'index']);

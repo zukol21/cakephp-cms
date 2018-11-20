@@ -83,7 +83,7 @@ $this->start('article-footer')
 <div class="box-footer small">
     <div class="text-muted text-right">
     <?php
-    if ('type' === $this->request->action) {
+    if ('type' === $this->request->getParam('action')) {
         $assocUrl = $this->Html->link($article->category->name, [
             'controller' => 'Categories',
             'action' => 'view',

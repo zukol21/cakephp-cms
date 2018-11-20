@@ -11,7 +11,7 @@
  */
 namespace Cms\Model\Table;
 
-use Cake\ORM\Entity;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -22,7 +22,11 @@ use InvalidArgumentException;
  *
  * @property \Cake\ORM\Association\BelongsTo $ParentCategories
  * @property \Cake\ORM\Association\HasMany $ChildCategories
- * @property \Cake\ORM\Association\BelongsToMany $Articles
+ * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Cms\Model\Table\SitesTable $Sites
+ *
+ * @mixin \Muffin\Slug\Model\Behavior\SlugBehavior
+ *
  */
 class CategoriesTable extends Table
 {
@@ -45,14 +49,14 @@ class CategoriesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('qobo_cms_categories');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('qobo_cms_categories');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Tree');
         $this->addBehavior('Muffin/Slug.Slug', [
-            'unique' => function (Entity $entity, $slug, $separator) {
+            'unique' => function (EntityInterface $entity, $slug, $separator) {
                 return $this->_uniqueSlug($entity, $slug, $separator);
             }
         ]);
@@ -115,13 +119,15 @@ class CategoriesTable extends Table
     /**
      * Fetch and return Category by id or slug and associated Site id.
      *
-     * @param string $id Category id or slug.
-     * @param \Cake\ORM\Entity $site Site entity.
-     * @return \Cake\ORM\Entity
+     * @param string|null $id Category id or slug.
+     * @param \Cake\Datasource\EntityInterface $site Site entity.
+     *
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @throws \InvalidArgumentException
+     *
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function getBySite($id, Entity $site)
+    public function getBySite(?string $id, EntityInterface $site): EntityInterface
     {
         if (empty($id)) {
             throw new InvalidArgumentException('Category id or slug cannot be empty.');
@@ -132,12 +138,24 @@ class CategoriesTable extends Table
         }
 
         $query = $this->find('all')
-            ->limit(1)
-            ->where(['Categories.id' => $id])
-            ->orWhere(['Categories.slug' => $id])
-            ->andWhere(['Categories.site_id' => $site->id]);
+            ->where([
+                'AND' => [
+                    'Categories.site_id' => $site->id,
+                    'OR' => [
+                        'Categories.id' => $id,
+                        'Categories.slug' => $id
+                    ]
+                ]
+            ])
+            ->limit(1);
+        $query->enableHydration(true);
 
-        return $query->firstOrFail();
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
+        $result = $query->firstOrFail();
+
+        return $result;
     }
 
     /**
@@ -147,9 +165,9 @@ class CategoriesTable extends Table
      * @param string $categoryId Site Id.
      * @param bool $filteredArticles flag in order to display a category if there is at least one article under this category.
      *
-     * @return array
+     * @return mixed[]
      */
-    public function getTreeList($siteId = '', $categoryId = '', $filteredArticles = false)
+    public function getTreeList(string $siteId = '', string $categoryId = '', bool $filteredArticles = false): array
     {
         $key = $siteId . $categoryId;
 
@@ -188,29 +206,33 @@ class CategoriesTable extends Table
     /**
      * Returns a unique slug.
      *
-     * @param \Cake\ORM\Entity $entity Entity.
+     * @param \Cake\Datasource\EntityInterface $entity Entity.
      * @param string $slug Slug.
      * @param string $separator Separator.
+     *
      * @return string Unique slug.
      */
-    protected function _uniqueSlug(Entity $entity, $slug, $separator)
+    protected function _uniqueSlug(EntityInterface $entity, ?string $slug, ?string $separator): string
     {
-        $behavior = $this->behaviors()->Slug;
+        $behavior = $this->getBehavior('Slug');
 
-        $primaryKey = $this->primaryKey();
-        $field = $this->aliasField($behavior->config('field'));
+        /**
+         * @var string
+         */
+        $primaryKey = $this->getPrimaryKey();
+        $field = $this->aliasField($behavior->getConfig('field'));
 
         $conditions = [$field => $slug];
         // add site id to conditions
-        $conditions['Categories.site_id'] = $entity->site_id;
-        $conditions += $behavior->config('scope');
+        $conditions['Categories.site_id'] = $entity->get('site_id');
+        $conditions += $behavior->getConfig('scope');
         if ($id = $entity->{$primaryKey}) {
             $conditions['NOT'][$this->aliasField($primaryKey)] = $id;
         }
 
         $i = 0;
         $suffix = '';
-        $length = $behavior->config('maxLength');
+        $length = $behavior->getConfig('maxLength');
 
         while ($this->exists($conditions)) {
             $i++;

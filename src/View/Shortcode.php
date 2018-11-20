@@ -11,6 +11,10 @@
  */
 namespace Cms\View;
 
+use Cake\Core\Configure;
+use DirectoryIterator;
+use UnexpectedValueException;
+
 class Shortcode
 {
     /**
@@ -19,7 +23,7 @@ class Shortcode
      * @param string $content Content to search for shortcodes
      * @return string the output of the shortcodes
      */
-    public static function doShortcode($content)
+    public static function doShortcode(string $content): string
     {
         if (! is_string($content)) {
             return '';
@@ -45,9 +49,9 @@ class Shortcode
      * Shortcodes getter.
      *
      * @param string $content Content to look for shortcodes
-     * @return array
+     * @return mixed[]
      */
-    public static function get($content)
+    public static function get(string $content): array
     {
         if (!is_string($content)) {
             return [];
@@ -77,7 +81,7 @@ class Shortcode
      *
      * @return string The Regex string
      */
-    public static function getShortcodeRegex()
+    public static function getShortcodeRegex(): string
     {
         // @codingStandardsIgnoreStart
         return
@@ -115,10 +119,10 @@ class Shortcode
     /**
      * Shortcode parser.
      *
-     * @param array $shortcode Shortcode to parse
+     * @param mixed[] $shortcode Shortcode to parse
      * @return string
      */
-    public static function parse(array $shortcode)
+    public static function parse(array $shortcode): string
     {
         if (empty($shortcode)) {
             return '';
@@ -137,9 +141,9 @@ class Shortcode
      * Shortcodes getter.
      *
      * @param string $shortcode Shortcode
-     * @return array
+     * @return mixed[]
      */
-    protected static function getParams($shortcode)
+    protected static function getParams(string $shortcode): array
     {
         preg_match_all('/\s(\w+)=["|\'](.*?)["|\']/', $shortcode, $matches);
 
@@ -163,10 +167,10 @@ class Shortcode
      * classes references, and variables that could be set
      * as class properties ($imageExtensions and $html).
      *
-     * @param array $params Shortcode parameters
+     * @param mixed[] $params Shortcode parameters
      * @return string
      */
-    protected static function renderGallery(array $params)
+    protected static function renderGallery(array $params): string
     {
         $imageExtensions = ['jpeg', 'jpg', 'png', 'gif'];
         $html = [
@@ -184,8 +188,8 @@ class Shortcode
         }
 
         try {
-            $iterator = new \DirectoryIterator(WWW_ROOT . $path);
-        } catch (\UnexpectedValueException $e) {
+            $iterator = new DirectoryIterator(WWW_ROOT . $path);
+        } catch (UnexpectedValueException $e) {
             return sprintf($html['error'], 'No images found in: ' . $path);
         }
 
@@ -199,9 +203,12 @@ class Shortcode
                 continue;
             }
 
-            $options = \Cake\Core\Configure::read('TinymceElfinder.options');
+            $options = Configure::read('TinymceElfinder.options');
 
             $elFinder = new \elFinder($options);
+            /**
+             * @var \elFinderVolumeLocalFileSystem $volume
+             */
             $volume = $elFinder->getVolume('l' . $options['roots'][0]['id'] . '_');
 
             $hash = $volume->getHash(dirname($file->getPathname()), $file->getFilename());

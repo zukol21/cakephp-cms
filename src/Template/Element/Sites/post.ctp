@@ -26,12 +26,12 @@ $checked = $site ? $site->active : true;
 <?= $this->Form->create($site, $formOptions); ?>
     <div class="row">
         <div class="col-md-6">
-            <?= $this->Form->input('name') ?>
+            <?= $this->Form->control('name') ?>
         </div>
         <div class="col-md-6">
             <?php
             $label = $this->Form->label('active');
-            echo $this->Form->input('active', [
+            echo $this->Form->control('active', [
                 'type' => 'checkbox',
                 'checked' => $checked,
                 'class' => 'square',

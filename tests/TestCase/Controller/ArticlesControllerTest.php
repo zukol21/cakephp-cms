@@ -7,13 +7,17 @@ use Cake\TestSuite\IntegrationTestCase;
 use Cms\Model\Entity\Article;
 use Cms\Model\Entity\Site;
 
+/**
+ * @property \Cms\Model\Table\ArticlesTable $Articles
+ * @property \Cms\Model\Table\ArticleFeaturedImagesTable $ArticleFeaturedImages
+ */
 class ArticlesControllerTest extends IntegrationTestCase
 {
     public $fixtures = [
         'plugin.cms.articles',
         'plugin.cms.categories',
         'plugin.cms.sites',
-        'plugin.Burzum/FileStorage.file_storage'
+        'plugin.cms.file_storage'
     ];
 
     public function setUp()
@@ -30,7 +34,11 @@ class ArticlesControllerTest extends IntegrationTestCase
 
         $this->enableRetainFlashMessages();
 
-        $this->Articles = TableRegistry::get('Cms.Articles');
+        /**
+         * @var \Cms\Model\Table\ArticlesTable $table
+         */
+        $table = TableRegistry::get('Cms.Articles');
+        $this->Articles = $table;
 
         // Save featured image
         $data = [
@@ -51,7 +59,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         parent::tearDown();
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->get('/cms/site/blog/articles/view/article/first-article');
         $this->assertResponseOk();
@@ -65,7 +73,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertInternalType('array', $this->viewVariable('filteredCategories'));
     }
 
-    public function testType()
+    public function testType(): void
     {
         $this->get('/cms/site/blog/type/article/view');
         $this->assertResponseOk();
@@ -78,7 +86,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertInternalType('array', $this->viewVariable('filteredCategories'));
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
             'title' => 'New Article',
@@ -96,7 +104,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertSession('The article has been saved.', 'Flash.flash.0.message');
     }
 
-    public function testAddValidationError()
+    public function testAddValidationError(): void
     {
         $data = [];
         $this->post('/cms/site/blog/articles/add/article', $data);
@@ -107,10 +115,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertSession('The article could not be saved. Please, try again.', 'Flash.flash.0.message');
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testAddInvalidType()
+    public function testAddInvalidType(): void
     {
         $this->post('/cms/site/blog/articles/add/foobar');
 
@@ -121,7 +126,7 @@ class ArticlesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testEdit($id)
+    public function testEdit(string $id): void
     {
         $data = [
             'title' => 'Modified article title',
@@ -134,20 +139,24 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertRedirect('/');
         $this->assertSession('The article has been saved.', 'Flash.flash.0.message');
 
-        $entity = $this->Articles->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id])
-            ->contain('ArticleFeaturedImages')
-            ->first();
+        $query = $this->Articles->find()
+            ->where(['OR' => ['id' => $id, 'slug' => $id]]);
+
+        $query->enableHydration(true);
+        $query->contain('ArticleFeaturedImages');
+
+        /**
+         * @var \Cake\Datasource\EntityInterface
+         */
+        $entity = $query->first();
 
         $this->assertEquals($data['title'], $entity->get('title'));
     }
 
     /**
-     * @expectedException InvalidArgumentException
      * @dataProvider idsProvider
      */
-    public function testEditInvalidType($id)
+    public function testEditInvalidType(string $id): void
     {
         $this->put('/cms/site/blog/articles/edit/foobar/' . $id);
 
@@ -158,7 +167,7 @@ class ArticlesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider errorsProvider
      */
-    public function testEditUploadError($code, $message)
+    public function testEditUploadError(int $code, string $message): void
     {
         $data = [
             'title' => 'Modified article title',
@@ -176,7 +185,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         }
     }
 
-    public function testEditNoUploadError()
+    public function testEditNoUploadError(): void
     {
         $data = [
             'title' => 'Modified article title',
@@ -194,7 +203,7 @@ class ArticlesControllerTest extends IntegrationTestCase
     /**
      * @dataProvider idsProvider
      */
-    public function testDelete($id)
+    public function testDelete(string $id): void
     {
         $this->delete('/cms/site/blog/articles/delete/' . $id);
 
@@ -207,7 +216,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertTrue($query->isEmpty());
     }
 
-    public function testDeleteInvalidId()
+    public function testDeleteInvalidId(): void
     {
         $id = '00000000-0000-0000-0000-000000000404';
         $this->delete('/cms/site/blog/articles/delete/' . $id);
@@ -216,7 +225,10 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertResponseCode(404);
     }
 
-    public function idsProvider()
+    /**
+     * @return mixed[]
+     */
+    public function idsProvider(): array
     {
         return [
             ['00000000-0000-0000-0000-000000000001'],
@@ -224,7 +236,10 @@ class ArticlesControllerTest extends IntegrationTestCase
         ];
     }
 
-    public function errorsProvider()
+    /**
+     * @return mixed[]
+     */
+    public function errorsProvider(): array
     {
         return [
             [1, 'The uploaded file exceeds the upload_max_filesize directive in php.ini'],
