@@ -194,6 +194,7 @@ class Shortcode
         }
 
         $result = '';
+        $files = [];
         foreach ($iterator as $file) {
             if (!$file->isFile()) {
                 continue;
