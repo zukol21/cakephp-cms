@@ -21,23 +21,30 @@
         "sort-packages": true,
         "optimize-autoloader": true
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/QoboLtd/cakephp-file-storage.git"
+        }
+    ],
     "require": {
         "hashmode/cakephp-tinymce-elfinder": "^1.0",
         "muffin/slug": "^1.0",
-        "qobo/cakephp-utils": "^10.0"
+        "qobo/cakephp-utils": "^10.3"
     },
     "require-dev": {
         "qobo/cakephp-composer-dev": "^v1.0"
     },
     "autoload": {
         "psr-4": {
-            "Cms\\": "src/"
+            "Cms\\": "src/",
+            "Burzum\\FileStorage\\": "vendor/burzum/cakephp-file-storage/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Cms\\Test\\": "tests/",
-            "Burzum\\FileStorage\\Test\\": "vendor/cakedc/users/tests/",
+            "Burzum\\FileStorage\\Test\\": "vendor/burzum/cakephp-file-storage/tests/",
             "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     },
@@ -56,5 +63,6 @@
         "test": "Runs phpcs and phpunit without coverage",
         "test-coverage": "Runs phpcs and phpunit with coverage enabled"
     },
-    "prefer-stable": true
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }
