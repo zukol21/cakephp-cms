@@ -143,8 +143,7 @@ class ArticlesControllerTest extends IntegrationTestCase
         $this->assertSession('The article has been saved.', 'Flash.flash.0.message');
 
         $query = $this->Articles->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id]);
+            ->where(['OR' => ['id' => $id, 'slug' => $id]]);
 
         $query->enableHydration(true);
         $query->contain('ArticleFeaturedImages');

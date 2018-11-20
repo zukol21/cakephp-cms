@@ -120,8 +120,7 @@ class CategoriesControllerTest extends IntegrationTestCase
          * @var \Cake\Datasource\EntityInterface
          */
         $entity = $this->Categories->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id])
+            ->where(['OR' => ['id' => $id, 'slug' => $id]])
             ->first();
         $this->assertEquals($data['name'], $entity->get('name'));
     }
@@ -160,8 +159,7 @@ class CategoriesControllerTest extends IntegrationTestCase
          * @var \Cake\Datasource\EntityInterface
          */
         $result = $this->Categories->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id])
+            ->where(['OR' => ['id' => $id, 'slug' => $id]])
             ->first();
 
         $this->delete('/cms/site/blog/categories/moveNode/' . $id . '/' . $action);
@@ -174,8 +172,7 @@ class CategoriesControllerTest extends IntegrationTestCase
          * @var \Cake\Datasource\EntityInterface
          */
         $entity = $this->Categories->find()
-            ->where(['id' => $id])
-            ->orWhere(['slug' => $id])
+            ->where(['OR' => ['id' => $id, 'slug' => $id]])
             ->first();
 
         $this->assertNotEquals($result->get('lft'), $entity->get('lft'));

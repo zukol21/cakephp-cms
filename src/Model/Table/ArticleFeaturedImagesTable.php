@@ -11,10 +11,10 @@
  */
 namespace Cms\Model\Table;
 
-use Burzum\FileStorage\Model\Table\ImageStorageTable;
+use Burzum\FileStorage\Model\Table\FileStorageTable;
 use Cake\Datasource\EntityInterface;
 
-class ArticleFeaturedImagesTable extends ImageStorageTable
+class ArticleFeaturedImagesTable extends FileStorageTable
 {
     /**
      * Save the entity to the file storage table.

@@ -169,7 +169,7 @@ class CategoriesController extends AppController
 
         // persist tree structure per site
         $treeBehavior = $this->Categories->getBehavior('Tree');
-        $treeBehavior->config('scope', ['site_id' => $category->get('site_id')]);
+        $treeBehavior->setConfig('scope', ['site_id' => $category->get('site_id')]);
 
         if ($this->Categories->{$moveFunction}($category)) {
             $this->Flash->success((string)__('{0} has been moved {1} successfully.', $category->get('name'), $action));

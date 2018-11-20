@@ -39,7 +39,7 @@ class AppController extends BaseController
         parent::beforeFilter($event);
 
         $table = $this->{$this->name};
-        $table = $table->association('Articles') ? $this->{$this->name}->Articles->getTarget() : $table;
+        $table = $table->hasAssociation('Articles') ? $this->{$this->name}->Articles->getTarget() : $table;
 
         if (!$table instanceof ArticlesTable) {
             return;

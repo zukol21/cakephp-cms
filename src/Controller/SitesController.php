@@ -84,8 +84,6 @@ class SitesController extends AppController
      *
      * @param string|null $id Site id.
      *
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     *
      * @return \Cake\Http\Response|void|null
      */
     public function edit(?string $id)

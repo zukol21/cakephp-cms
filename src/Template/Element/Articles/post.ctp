@@ -47,14 +47,14 @@ $publishDate = $article && $article->publish_date ?
 <?= $this->Form->create($article, $formOptions) ?>
 <div class="row">
     <div class="col-lg-4 col-lg-push-8">
-        <?= $this->Form->input('category_id', [
+        <?= $this->Form->control('category_id', [
             'type' => 'select',
             'options' => $categories,
             'value' => isset($category) ? $category->get('id') : null,
             'class' => 'select2',
             'required' => true
         ]); ?>
-        <?= $this->Form->input('publish_date', [
+        <?= $this->Form->control('publish_date', [
             'type' => 'text',
             'required' => true,
             'class' => 'form-control datetimepicker',
