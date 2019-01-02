@@ -14,8 +14,8 @@ use Cake\I18n\Time;
 
 echo $this->Html->css(
     [
-        'AdminLTE./plugins/daterangepicker/daterangepicker',
-        'AdminLTE./plugins/select2/select2.min',
+        'AdminLTE./bower_components/bootstrap-daterangepicker/daterangepicker',
+        'AdminLTE./bower_components/select2/dist/css/select2.min',
         'Cms.style',
         'Qobo/Utils.select2-bootstrap.min',
         'Qobo/Utils.select2-style'
@@ -26,9 +26,9 @@ echo $this->Html->css(
 );
 echo $this->Html->script(
     [
-        'AdminLTE./plugins/daterangepicker/moment.min',
-        'AdminLTE./plugins/daterangepicker/daterangepicker',
-        'AdminLTE./plugins/select2/select2.full.min',
+        'AdminLTE./bower_components/moment/min/moment.min',
+        'AdminLTE./bower_components/bootstrap-daterangepicker/daterangepicker',
+        'AdminLTE./bower_components/select2/dist/js/select2.full.min',
         'Cms.select2.init',
         'Cms.datetimepicker.init',
     ],
