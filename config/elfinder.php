@@ -13,7 +13,7 @@ return [
         ],
         'static_files' => [
             'js' => [
-                'jquery' => 'AdminLTE./plugins/jQuery/jquery-2.2.3.min',
+                'jquery' => 'AdminLTE./bower_components/jquery/dist/jquery.min.js',
                 'jquery_ui' => 'Cms./plugins/jquery-ui/jquery-ui.min'
             ],
             'css' => [
