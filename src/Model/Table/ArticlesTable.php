@@ -179,7 +179,7 @@ class ArticlesTable extends Table
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options): void
     {
-        $siteId = !empty($options['site_id']) ? $options['site_id'] : null;
+        $siteId = !empty($options['site_id']) ? $options['site_id'] : '';
 
         $event = new Event((string)EventName::ARTICLES_SHOW_UNPUBLISHED(), $this, ['siteId' => $siteId]);
         $this->getEventManager()->dispatch($event);
